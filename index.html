@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/jquery-1.11.0.min.js"></script>
-    <script src="js/underscore-min.js"></script>
+    <script src="js/vendor/jquery-1.11.0.min.js"></script>
+    <script src="js/vendor/underscore-min.js"></script>
 </head>
 <body>
 
@@ -143,9 +143,16 @@
     </div>
 </div>
 
-<script src="js/map.js" type="text/javascript"></script>
-<script src="js/content.js" type="text/javascript"></script>
-<script src="js/script.js" type="text/javascript"></script>
+<!-- Data, then the game (no page access), then Jack's AI, then the interface. See docs/architecture.md -->
+<script src="js/data/map.js"></script>
+<script src="js/data/content.js"></script>
+<script src="js/core/random.js"></script>
+<script src="js/core/board.js"></script>
+<script src="js/core/rules.js"></script>
+<script src="js/core/engine.js"></script>
+<script src="js/ai/jack.js"></script>
+<script src="js/ui/renderer.js"></script>
+<script src="js/main.js"></script>
 
 </body>
 </html>

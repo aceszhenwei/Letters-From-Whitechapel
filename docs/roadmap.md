@@ -25,5 +25,6 @@
 
 ## Code
 
-- Split `js/script.js` into files for the game, Jack's AI and drawing.
-- Speed up the full-game tests (most of their time is jsdom running jQuery selectors).
+- Speed up the page tests (most of their time is jsdom running jQuery selectors). Moving more of them to the core and headless layers would help.
+- Give the default AI its own seeded random source, so interface changes can never shift Jack's choices (this changes the golden traces, so it needs a deliberate re-recording).
+- Name the phases instead of numbering them (0 to 11) across the engine, the interface and the content.
