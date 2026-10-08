@@ -36,7 +36,7 @@ function makeJack(core, name, random) {
 	if (name === 'baseline') return WC.createJackAI(WC.board, WC.random.create(random), _);
 	const variants = WC.strategicVariants || {};
 	if (!variants[name]) throw new Error('Unknown Jack strategy: ' + name);
-	return WC.createStrategicJack(WC.board, WC.rules, WC.deduction, WC.random.create(random), _, variants[name]);
+	return WC.createStrategicJack(WC.board, WC.deduction, WC.random.create(random), _, variants[name]);
 }
 
 function makePolice(core, name) {

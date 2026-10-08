@@ -42,7 +42,7 @@ function summarise(games) {
 		chosenDanger: mean(decisions.map((d) => d.chosenDanger ? 1 : 0)),
 		policeCandidates: mean(decisions.map((d) => d.candidates)),
 		hideoutCandidates: mean(games.filter((g) => g.nights > 1).map((g) => g.hideoutCandidates)),
-		decisionMs: { mean: mean(decisions.map((d) => d.ms)), p95: percentile(decisions.map((d) => d.ms), 0.95), max: Math.max(0, ...decisions.map((d) => d.ms)) }
+		decisionMs: { mean: mean(decisions.map((d) => d.ms)), p95: percentile(decisions.map((d) => d.ms), 0.95), max: decisions.reduce((m, d) => Math.max(m, d.ms), 0) }
 	};
 }
 

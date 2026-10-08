@@ -204,7 +204,46 @@ WC.deduction = (function (board, _) {
 		if (options.trail) {
 			result.visited = trail();
 		}
+		result.next = function (move, police) {
+			return project(layers[last], options.remaining, move, police);
+		};
 		return result;
+
+		function project(layer, remaining, move, police) {
+			// What the police would believe after one more move of this type, with the policemen where they are.
+			// Cheap: one step on from the last layer (all clue deadlines have passed, so the masks no longer matter)
+			var kinds = move == 'carriage' ? [{ kind: 'free' }, { kind: 'free' }] : (move == 'alley' ? [{ kind: 'alley' }] : [{ kind: 'walk', police: police }]);
+			var left = remaining === undefined ? undefined : remaining - kinds.length;
+			var currentLayer = layer;
+			_.each(kinds, function (step, index) {
+				var next = new Map();
+				currentLayer.forEach(function (weight, key) {
+					var targets = successors(Math.floor(key / 4096), step);
+					_.each(targets, function (to) {
+						next.set(to * 4096, (next.get(to * 4096) || 0) + weight / targets.length);
+					});
+				});
+				var stepsLeft = left === undefined ? undefined : left + (kinds.length - 1 - index);
+				if (bound && stepsLeft !== undefined) {
+					next.forEach(function (weight, key) {
+						var mapid = Math.floor(key / 4096);
+						if (!_.has(bound, mapid) || bound[mapid] > stepsLeft) {
+							next.delete(key);
+						}
+					});
+				}
+				currentLayer = next;
+			});
+			var distribution = marginal(currentLayer);
+			return {
+				current: distribution,
+				size: _.size(distribution),
+				entropy: entropy(distribution),
+				next: function (nextMove, nextPolice) {
+					return project(currentLayer, left, nextMove, nextPolice);
+				}
+			};
+		}
 
 		function trail() {
 			// How likely each circle is to be on Jack's route tonight, using everything known up to now.
