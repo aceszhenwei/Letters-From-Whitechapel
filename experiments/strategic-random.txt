@@ -1,0 +1,9 @@
+strategic vs random police, seeds 1-5000
+  games 5000  Jack wins 4712 (94.2%, 95% CI 93.6%-94.9%)
+  police wins 288: arrested 279, out of moves 6, trapped 3
+  nights escaped per game 3.87; lost games end on night 2.69, after move 3.6
+  moves to hideout 6.5 (shortest possible 5.7); distance to hideout per move 2.58
+  coaches 5.33, alleys 1.17 per game
+  moves with every option in reach of police 6.9%; moves onto such a circle 44.3%
+  police candidates for Jack's position 70.7; possible hideouts after the game 34.7
+  decision time 33.56 ms mean, 103.76 ms p95, 750.2 ms max; 984 s total
