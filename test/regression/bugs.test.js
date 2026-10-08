@@ -141,13 +141,13 @@ test('arresting Jack ends the game', () => {
 	assert.strictEqual(window.game.config.state, 11);
 });
 
-test('Jack running out of moves ends the game', () => {
+test('Jack using his last move without reaching his hideout ends the game', () => {
 	const window = loadGame();
 	const from = numbered(window)[10];
-	setupNight(window, { base: numbered(window)[150], from, remaining: 0 });
+	setupNight(window, { base: numbered(window)[150], from, remaining: 1 });
 	window.game.nextState(9);
 	assert.strictEqual(window.game.config.over, true);
-	assert.match(window.$('.game-over').text(), /ran out of moves/);
+	assert.match(window.$('.game-over').text(), /used his last move/);
 });
 
 test('a new night (nextState(0)) starts fresh', () => {
@@ -159,8 +159,8 @@ test('a new night (nextState(0)) starts fresh', () => {
 	assert.strictEqual(window.jack.length, 2);
 	assert.strictEqual(window.police.length, 2);
 	assert.strictEqual(window.game.config.state, 2, 'waiting for the police to be placed');
-	assert.strictEqual(window.game.config.remainingMoves, window.game.config.startingMoves);
-	assert.strictEqual(window.game.config.womenMarked.length, 4);
-	assert.strictEqual(window.game.config.womenUnmarked.length, 4);
+	assert.strictEqual(window.game.config.timeOfCrime, 1);
+	assert.strictEqual(window.game.config.womenMarked.length, 4, 'second night: 4 of 7 women are marked');
+	assert.strictEqual(window.game.config.womenUnmarked.length, 3);
 	assert.strictEqual(window.$('.move-tracker .murder').length, 0);
 });

@@ -97,8 +97,11 @@ test('a carriage uses a token and two moves, and both stops go on Jack\'s route'
 	const night = window._.last(jack);
 	assert.deepStrictEqual(Array.from(night.route), [from, option.via, option.mapid]);
 	assert.strictEqual(night.carriages, 2);
-	assert.strictEqual(game.config.remainingMoves, 7);
+	assert.strictEqual(game.config.remainingMoves, 6);
+	assert.strictEqual(night.trackPosition, 14);
 	assert.strictEqual(window.$('.move-tracker .carriage').length, 2);
+	assert.ok(window.$('.move-tracker span').eq(12).hasClass('carriage'), 'covers the two spaces after Jack\'s pawn');
+	assert.ok(window.$('.move-tracker span').eq(13).hasClass('carriage'));
 	assert.match(window.$('.jack-log').text(), /carriage/);
 });
 
@@ -115,7 +118,7 @@ test('an alley uses a token and one move', () => {
 	const night = window._.last(jack);
 	assert.deepStrictEqual(Array.from(night.route), [from, option.mapid]);
 	assert.strictEqual(night.alleys, 1);
-	assert.strictEqual(game.config.remainingMoves, 8);
+	assert.strictEqual(game.config.remainingMoves, 7);
 	assert.strictEqual(window.$('.move-tracker .alley').length, 1);
 	assert.match(window.$('.jack-log').text(), /alley/);
 });

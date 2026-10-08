@@ -7,15 +7,17 @@ const { startGame, playGame } = require('../helpers/game');
 
 const endings = [
 	/^Jack has been arrested at \d+\. The police win!$/,
-	/^Jack ran out of moves before reaching his base\. The police win!$/,
+	/^Jack has used his last move without reaching his hideout\. The police win!$/,
 	/^Jack is trapped by the police and cannot move\. The police win!$/,
-	/^Jack has escaped for 4 nights\. Jack wins!$/
+	/^Jack has killed five victims and escaped on all four nights\. Jack wins!$/
 ];
 
 // Check every move Jack made was legal (walking ignores police here, they move after Jack)
 function checkJacksRoute(window, night, index) {
 	const { map, jack, game } = window;
-	const route = [night.route[0]];
+	// Jack starts at his crime scene (both of them on the double event night)
+	assert.strictEqual(night.murder.length, game.config.victims[index]);
+	const route = Array.from(night.murder);
 	let carriages = 0;
 	let alleys = 0;
 	for (const move of night.moves) {
@@ -36,6 +38,15 @@ function checkJacksRoute(window, night, index) {
 		}
 		route.push(move.mapid);
 	}
+	const finished = index < window.jack.length - 1 || /Jack wins/.test(window.$('.game-over').text());
+	if (finished) {
+		assert.strictEqual(route[route.length - 1], game.config.base, `night ${index}: Jack escaped to his hideout`);
+		assert.strictEqual(night.moves[night.moves.length - 1].type, 'walk', `night ${index}: with a normal move`);
+	}
+	// Moves used: the spaces from the Time of the Crime token to Jack's pawn, never past 15
+	const used = night.moves.reduce((sum, move) => sum + (move.type === 'carriage' ? 2 : 1), 0) + night.murder.length - 1;
+	assert.strictEqual(night.trackPosition, night.murderMove[0] + used, `night ${index}: move track`);
+	assert.ok(night.trackPosition <= game.config.totalMoves);
 	assert.deepStrictEqual(route, Array.from(night.route), `night ${index}: route matches the moves`);
 	assert.strictEqual(night.carriages, game.config.carriages[index] - carriages);
 	assert.strictEqual(night.alleys, game.config.alleys[index] - alleys);
@@ -45,7 +56,7 @@ function checkJacksRoute(window, night, index) {
 
 const totals = { alleys: 0, carriages: 0, clues: 0, endings: new Set() };
 
-for (const seed of [1, 2, 3, 4, 5, 6]) {
+for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
 	test(`full game with seed ${seed}`, () => {
 		const window = startGame({ seed });
 		const $ = window.$;
@@ -56,7 +67,8 @@ for (const seed of [1, 2, 3, 4, 5, 6]) {
 				assert.deepStrictEqual(window.errors, []);
 				assert.ok(window.game.config.remainingMoves >= 0);
 				assert.strictEqual($('.location-number').length, numbers, 'the map is drawn once');
-				assert.ok($('.token-murder').length <= 1, 'one crime scene token at a time');
+				assert.strictEqual($('.token-murder').length, window.game.config.crimeScenes.length, 'every crime scene stays on the map');
+				assert.ok(window.game.config.timeOfCrime >= 1 && window.game.config.timeOfCrime <= 5);
 			}
 		});
 		assert.strictEqual(result, 'over', 'the game finishes');
