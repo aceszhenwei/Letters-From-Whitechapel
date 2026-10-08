@@ -22,8 +22,8 @@ var game = {
 		totalMoves: 20,
 		startingMoves: 15,
 		remainingMoves: 15,
-		lanterns: 3,
-		carriages: 3,
+		carriages: [3, 2, 2, 1], // Special movement tokens for each night
+		alleys: [2, 2, 1, 1],
 		women: 8,
 		wretched: 4,
 		police: 5,
@@ -31,7 +31,8 @@ var game = {
 		womenMarked: new Array(),
 		womenUnmarked: new Array(),
 		nights: 4,
-		over: false
+		over: false,
+		debug: false // Calculate Jack's shortest routes to base on every move (CPU intensive)
 	},
 	nextState: function(x) {
 		if (game.config.over) {
@@ -73,22 +74,25 @@ var game = {
 		}
 	},
 	preparingTheScene: function () {
-		// TODO: Update carrages and lanterns
+		var night = jack.length;
 		$('<p></p>', {
-			text: 'Jack collects the special movement tokens (' + game.config.carriages + ' carriages and ' + game.config.lanterns + ' lanterns).'
+			text: 'Jack collects the special movement tokens (' + game.config.carriages[night] + ' carriages and ' + game.config.alleys[night] + ' alleys).'
 		}).prependTo('.preparing-the-scene');
 
 		// Reset the night
 		game.config.remainingMoves = game.config.startingMoves;
 		game.config.womenMarked = new Array();
 		game.config.womenUnmarked = new Array();
-		$('.move-tracker p span').removeClass('active murder');
+		$('.move-tracker p span').removeClass('active murder carriage alley');
 		$('.move-tracker p span:nth-child(' + (game.config.totalMoves - game.config.remainingMoves + 1) + ')').addClass('active');
 
 		jack[jack.length] = { // New night
 			route: new Array(),
+			moves: new Array(), // Each move Jack makes: { mapid, type: 'walk', 'alley' or 'carriage', via }
 			murder: new Array(),
-			murderMove: new Array()
+			murderMove: new Array(),
+			carriages: game.config.carriages[night],
+			alleys: game.config.alleys[night]
 		}
 		police[police.length] = {
 			fake: new Array(),
@@ -100,6 +104,7 @@ var game = {
 			arrest: new Array(), // How many adjacent numbers are arrestable
 			clue: new Array()
 		}
+		draw.jackLog();
 		game.nextState(1);
 	},
 	theTargetsAreIdentified: function () {
@@ -287,7 +292,22 @@ var game = {
 			return;
 		}
 		if ( jack.canMove() ) {
-			_.last(jack).route.push(jack.move());
+			var move = jack.move();
+			var night = _.last(jack);
+			var trackerMove = game.config.totalMoves - game.config.remainingMoves + 1;
+			if (move.type == 'carriage') {
+				night.route.push(move.via); // Jack passes through, so police can find clues here
+				night.carriages--;
+				game.config.remainingMoves--; // A carriage uses two moves
+				$('.move-tracker p span:nth-child(' + trackerMove + '), .move-tracker p span:nth-child(' + (trackerMove + 1) + ')').addClass('carriage');
+			}
+			if (move.type == 'alley') {
+				night.alleys--;
+				$('.move-tracker p span:nth-child(' + trackerMove + ')').addClass('alley');
+			}
+			night.route.push(move.mapid);
+			night.moves.push(move);
+			draw.jackLog();
 		} else {
 			game.end('Jack is trapped by the police and cannot move. The police win!');
 			return;
@@ -328,9 +348,8 @@ var game = {
 				draw.createElement(a, 'police', classes).appendTo('.map');
 				policeCounter++;
 			}
-			if (a == _.last(jack).murder[_.last(jack).murder.length - 1]) {
-				var classes = 'label label-info token token-murder token-murder-' + a;
-				draw.createElement(a, '', classes).appendTo('.map');
+			if (a == _.last(_.last(jack).murder)) {
+				draw.murder(a);
 			}
 		}
 		$('.token-police').click(function(){
@@ -402,8 +421,7 @@ var game = {
 
 			}
 			if (a == _.last(_.last(jack).murder)) {
-				var classes = 'label label-info token token-murder token-murder-' + a;
-				draw.createElement(a, 'murder', classes).appendTo('.map');
+				draw.murder(a);
 			}
 		}
 		$('.token-arrest-adjacent').click(function(){
@@ -446,7 +464,7 @@ var game = {
 						$('.token-search').remove();
 						_.last(police).search[index] = undefined;
 						_.last(police).clue.push(mapidAdjacent);
-						draw.map();
+						draw.clue(mapidAdjacent);
 					} else {
 						console.log('No clue found.');
 						$(this).remove();
@@ -523,10 +541,8 @@ var game = {
 
 		var arrayMoves = new Array();
 
-		for (var a in arrayToSort) {
-			console.log('Crunching route ' + a + '/' + arrayToSort.length);
-			var shortestRoutes = jack.bruteForceRoute(arrayToSort[a]);
-			arrayMoves.push(shortestRoutes.moves);
+		for (var a = 0; a < arrayToSort.length; a++) {
+			arrayMoves.push(jack.baseDistance(arrayToSort[a]));
 		}
 
 		var object = _.sortBy(_.map(arrayToSort, function(mapid, index) {
@@ -574,11 +590,9 @@ var game = {
 	},
 	arrestable: function (mapid) {
 		// Show all searchable (or arrestable) numbered map ids given a police location
-		return _.compact(_.map(map[mapid].adjacent, function (adj) {
-			if (_.has(map[adj], 'number')) {
-				return adj;
-			}
-		}));
+		return _.filter(map[mapid].adjacent, function (adj) {
+			return _.has(map[adj], 'number');
+		});
 	},
 	searchable: function (mapid) {
 		// Filter locations with clues and murder spots
@@ -593,35 +607,49 @@ var game = {
 	}
 }
 
-jack.move = function () { // Returns a SyntaxError error if Jack can't move
+jack.move = function () {
+	// Returns Jack's next move: { mapid: destination, type: 'walk', 'alley' or 'carriage', via: carriage stop }
 
-	// TODO: If close to base but too early in the night; avoid base
+	var from = _.last(_.last(jack).route);
+	var arrestable = jack.arrestable();
+	var walks = jack.oneStep(from, true); // Prevent moving through police
 
-	var shortestRoutes = jack.bruteForceRoute( _.last(_.last(jack).route) );
-	var shortestRoutesAvoidPolice = jack.bruteForceRoute( _.last(_.last(jack).route), true );
+	if (game.config.debug) { // Save this info to jack for console reference
+		_.last(jack).shortestRoutes = jack.bruteForceRoute(from);
+		_.last(jack).shortestRoutesAvoidPolice = jack.bruteForceRoute(from, true);
+	}
 
-	var adjacentNumber = jack.oneStep(_.last(_.last(jack).route), true); // Prevent moving through police
-	var adjacent = new Array();
-	var baseX = map[game.config.base].position[0];
-	var baseY = map[game.config.base].position[1];
+	var special = jack.chooseSpecial(from, walks, arrestable);
+	if (special) {
+		return special;
+	}
+	return { mapid: jack.walk(walks, arrestable), type: 'walk' };
+}
 
+jack.arrestable = function () {
 	// Everywhere police could be
 	var policeMoves = _.flatten(_.map(_.flatten(_.last(police).route), function (mapid) {
 		return game.twoSteps(mapid);
 	}));
 
-	// Everywhere police could arrest
-	var arrestable = new Array();
-	arrestable = game.sort(
+	// Everywhere police could arrest (and angles from which it can be arrested)
+	return _.countBy(game.sort(
 		_.flatten(_.map(policeMoves, function (mapid) {
 			return game.arrestable(mapid);
 		}))
-	);
-
-	// Everywhere police could arrest (and angles from which it can be arrested)
-	arrestable = _.countBy(arrestable, function (num) {
+	), function (num) {
 		return num;
 	});
+}
+
+jack.walk = function (adjacentNumber, arrestable) {
+	// Choose an adjacent number to walk to
+
+	// TODO: If close to base but too early in the night; avoid base
+
+	var adjacent = new Array();
+	var baseX = map[game.config.base].position[0];
+	var baseY = map[game.config.base].position[1];
 
 	var randomIndex;
 
@@ -663,10 +691,98 @@ jack.move = function () { // Returns a SyntaxError error if Jack can't move
 
 	// Save this info to jack for console reference
 	_.last(jack).adjacent = adjacent;
-	_.last(jack).shortestRoutes = shortestRoutes;
-	_.last(jack).shortestRoutesAvoidPolice = shortestRoutesAvoidPolice;
 
 	return adjacent[randomIndex].mapid;
+}
+
+jack.specialOptions = function (from) {
+	// Everywhere Jack could go using an alley or a carriage
+	var night = _.last(jack);
+	var options = new Array();
+	if (night.alleys > 0) {
+		_.each(map[from].alley, function (mapid) { // Alleys cut through the block, police can't block them
+			options.push({ mapid: mapid, type: 'alley', moves: 1 });
+		});
+	}
+	if (night.carriages > 0 && game.config.remainingMoves >= 2) {
+		_.each(jack.oneStep(from), function (via) { // Carriages move two steps and can pass police
+			_.each(jack.oneStep(via), function (mapid) {
+				if (mapid != from && !_.findWhere(options, { mapid: mapid, type: 'carriage' })) {
+					options.push({ mapid: mapid, type: 'carriage', via: via, moves: 2 });
+				}
+			});
+		});
+	}
+	return options;
+}
+
+jack.chooseSpecial = function (from, walks, arrestable) {
+	// Decide whether to use an alley or a carriage, returns the move or false
+	var options = jack.specialOptions(from);
+	if (options.length == 0) {
+		return false;
+	}
+	var remaining = game.config.remainingMoves;
+	var arrestCount = function (mapid) {
+		return _.has(arrestable, mapid) ? arrestable[mapid] : 0;
+	}
+	_.each(options, function (option) {
+		option.arrestable = arrestCount(option.mapid);
+		option.baseMoves = jack.baseDistance(option.mapid);
+		option.inTime = option.baseMoves <= remaining - option.moves;
+	});
+	var best = function (list) {
+		// Prefer reaching base in time, then avoiding arrest, then being close to base, then saving moves
+		list = _.sortBy(list, 'moves');
+		list = _.sortBy(list, 'baseMoves');
+		list = _.sortBy(list, 'arrestable');
+		list = _.sortBy(list, function (option) { return option.inTime ? 0 : 1; });
+		return _.first(list);
+	}
+
+	// Blocked by police: a special move is the only way out
+	if (walks.length == 0) {
+		return best(options);
+	}
+
+	// Running out of time: walking can't reach base before the night ends
+	var walksInTime = _.filter(walks, function (mapid) {
+		return jack.baseDistance(mapid) <= remaining - 1;
+	});
+	var optionsInTime = _.where(options, { inTime: true });
+	if (walksInTime.length == 0 && optionsInTime.length > 0) {
+		return best(optionsInTime);
+	}
+
+	// Cornered: every walk could be arrested, but a special move gets away
+	var walksSafe = _.filter(walks, function (mapid) {
+		return arrestCount(mapid) == 0;
+	});
+	var optionsSafe = _.where(optionsInTime, { arrestable: 0 });
+	if (walksSafe.length == 0 && optionsSafe.length > 0) {
+		return best(optionsSafe);
+	}
+
+	return false;
+}
+
+jack.baseDistance = function (mapid) {
+	// Fewest walking moves from a number to Jack's base (ignoring police)
+	if (!jack.distances || jack.distances.base !== game.config.base) {
+		jack.distances = { base: game.config.base, moves: {} };
+		jack.distances.moves[game.config.base] = 0;
+		var queue = [game.config.base];
+		while (queue.length > 0) {
+			var current = queue.shift();
+			_.each(jack.oneStep(current), function (next) {
+				if (!_.has(jack.distances.moves, next)) {
+					jack.distances.moves[next] = jack.distances.moves[current] + 1;
+					queue.push(next);
+				}
+			});
+		}
+	}
+	return _.has(jack.distances.moves, mapid) ? jack.distances.moves[mapid] : Infinity;
 }
 
 jack.oneStep = function (mapid, avoidPolice) {
@@ -675,37 +791,21 @@ jack.oneStep = function (mapid, avoidPolice) {
 	avoidPolice = typeof avoidPolice !== 'undefined' ? avoidPolice : false; // Can pass police by default
 
 	var nextStep = function (array, blacklist) {
-		var nonNumbers = _.compact(_.map(array, function (id) {
-			if (_.indexOf(blacklist, id) == -1) { // If it's not been processed already
-				blacklist.push(id); // Make sure it's not processed again
-
-				// Can Jack pass police?
-				if (avoidPolice) {
-					if (_.indexOf(_.last(police).now, id) == -1) { // Jack can't pass police
-						if (map[id].number) {
-							adjacentNumbers.push(id); // Store numbers
-						} else {
-							return id; // Return non numbers
-						}
-					}
-				} else {
-					if (map[id].number) {
-						adjacentNumbers.push(id); // Store numbers
-					} else {
-						return id; // Return non numbers
-					}
-				}
-
+		_.each(array, function (id) {
+			if (_.indexOf(blacklist, id) !== -1) { // If it's been processed already
+				return;
 			}
-		}));
-		// Loop
-		if (nonNumbers.length > 0) {
-			nonNumbers = _.flatten(_.map(nonNumbers, function (num) {
-				nextStep(map[num].adjacent, blacklist);
-			}));
-		} else {
-			return nonNumbers;
-		}
+			blacklist.push(id); // Make sure it's not processed again
+
+			if (avoidPolice && _.indexOf(_.last(police).now, id) !== -1) { // Jack can't pass police
+				return;
+			}
+			if (map[id].number) {
+				adjacentNumbers.push(id); // Store numbers
+			} else {
+				nextStep(map[id].adjacent, blacklist); // Keep walking through crossings (map id 0 is a crossing too)
+			}
+		});
 	}
 
 	nextStep(map[mapid].adjacent, []); // Go
@@ -713,7 +813,8 @@ jack.oneStep = function (mapid, avoidPolice) {
 }
 
 jack.canMove = function () {
-	return !_.isEmpty(jack.oneStep(_.last(_.last(jack).route), true));
+	var from = _.last(_.last(jack).route);
+	return !_.isEmpty(jack.oneStep(from, true)) || !_.isEmpty(jack.specialOptions(from));
 }
 
 jack.mapidToRoutes = function (mapid) {
@@ -794,6 +895,7 @@ jack.bruteForceRoute = function (mapid, avoidPolice) {
    ----- */
 var draw = {
 	map: function() {
+		$('.map .location, .map .location-number, .map .token-clue').remove(); // Safe to redraw
 		for (var a = 0; a < map.length; a++) {
 			if (map[a].position != undefined) {
 				if (map[a].number != undefined) {
@@ -812,12 +914,35 @@ var draw = {
 				}
 				if (police.length > 0) {
 					if ( _.indexOf(_.last(police).clue, a) !== -1 ) {
-						var classes = 'label label-info token token-clue token-clue-' + a;
-						draw.createElement(a, '', classes).prependTo('.map');
+						draw.clue(a);
 					}
 				}
 			}
 		}
+	},
+	murder: function (mapid) {
+		$('.token-murder').remove(); // Only one crime scene is shown at a time
+		var classes = 'label label-info token token-murder token-murder-' + mapid;
+		draw.createElement(mapid, '', classes).appendTo('.map');
+	},
+	clue: function (mapid) {
+		var classes = 'label label-info token token-clue token-clue-' + mapid;
+		draw.createElement(mapid, '', classes).prependTo('.map');
+	},
+	jackLog: function () {
+		// Special movement tokens are played face up, so the police know when Jack uses them
+		var night = _.last(jack);
+		$('.jack-log').empty();
+		$('<p></p>', {
+			text: 'Night ' + jack.length + ': Jack has ' + night.carriages + ' carriages and ' + night.alleys + ' alleys left.'
+		}).appendTo('.jack-log');
+		_.each(night.moves, function (move, index) {
+			if (move.type != 'walk') {
+				$('<p></p>', {
+					text: 'Move ' + (index + 1) + ': Jack used ' + (move.type == 'carriage' ? 'a carriage (two moves).' : 'an alley.')
+				}).appendTo('.jack-log');
+			}
+		});
 	},
 	createElement: function (mapid, labelText, classes) {
 		return $('<span></span>', {
@@ -837,7 +962,13 @@ var draw = {
 
 /* Start
    ----- */
-draw.map();
-draw.updateTitle();
-game.selectBase();
-game.nextState();
+game.start = function () {
+	draw.map();
+	draw.updateTitle();
+	game.selectBase();
+	game.nextState();
+}
+
+if (!window.WHITECHAPEL_NO_AUTOSTART) { // Tests load the game without starting it
+	game.start();
+}

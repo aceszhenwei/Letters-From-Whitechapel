@@ -12,7 +12,6 @@ map[3].position = [164.142,31.381];
 map[3].adjacent = [4, 2];
 map[3].number = 1;
 map[3].adjacentNumber = [6, 116, 113, 110, 119, 121, 123, 124];
-map[3].lantern = [119, 121];
 map[4].position = [188.66, 34.386];
 map[4].adjacent = [5, 119, 3];
 map[5].position = [258.914, 34.524];
@@ -28,14 +27,12 @@ map[8].adjacent = [9, 7];
 map[8].number = 3;
 map[8].murder = true;
 map[8].adjacentNumber = [10, 72, 118, 116, 6];
-map[8].lantern = [72, 118];
 map[9].position = [372.387, 24.132];
 map[9].adjacent = [10, 72, 8];
 map[10].position = [461.444, 24.359];
 map[10].adjacent = [11, 9];
 map[10].number = 5;
 map[10].adjacentNumber = [14, 51, 53, 68, 70, 72, 8];
-map[10].lantern = [70, 72];
 map[11].position = [490.261, 39.543];
 map[11].adjacent = [12, 69, 10];
 map[12].position = [546.599, 67.586];
@@ -46,24 +43,20 @@ map[14].position = [588.906, 62.847];
 map[14].adjacent = [15, 45, 13];
 map[14].number = 17;
 map[14].adjacentNumber = [16, 44, 46, 51, 53, 68, 70, 10];
-map[14].lantern = [46, 51];
 map[15].position = [622.286, 64.033];
 map[15].adjacent = [16, 45, 14];
 map[16].position = [671.469, 65.016];
 map[16].adjacent = [17, 41, 15];
 map[16].number = 18;
 map[16].adjacentNumber = [19, 42, 40, 44, 46, 14];
-map[16].lantern = [42, 40, 44];
 map[17].position = [696.94, 64.214];
 map[17].adjacent = [18, 16];
 map[18].position = [747.718, 67.589];
 map[18].adjacent = [19, 42, 17];
-map[18].lantern = [40, 44];
 map[19].position = [754.303, 86.433];
 map[19].adjacent = [35, 18];
 map[19].number = 20;
 map[19].adjacentNumber = [22, 29, 32, 34, 42, 16];
-map[19].lantern = [34, 36, 38, 40, 42];
 map[20].position = [806.944, 87.611];
 map[20].adjacent = [21, 32, 35];
 map[21].position = [827.062, 74.644];
@@ -73,7 +66,6 @@ map[22].adjacent = [23, 21];
 map[22].number = 21;
 map[22].murder = true;
 map[22].adjacentNumber = [25, 29, 32, 34, 19];
-map[22].lantern = [25, 27, 29];
 map[23].position = [909.549, 39.867];
 map[23].adjacent = [24, 22];
 map[24].position = [963.538, 19.789];
@@ -82,21 +74,18 @@ map[25].position = [980.337, 67.292];
 map[25].adjacent = [26, 24];
 map[25].number = 23;
 map[25].adjacentNumber = [158, 27, 22];
-map[25].lantern = [27, 29, 22];
 map[26].position = [930.754, 95.759];
 map[26].adjacent = [25, 157, 27];
 map[27].position = [908.884, 103.268];
 map[27].adjacent = [26, 28];
 map[27].number = 22;
 map[27].adjacentNumber = [25, 158, 29];
-map[27].lantern = [29, 22, 25];
 map[28].position = [888.595, 110.915];
 map[28].adjacent = [27, 29];
 map[29].position = [848.228, 125.95];
 map[29].adjacent = [28, 31, 30];
 map[29].number = 42;
 map[29].adjacentNumber = [22, 27, 163, 165, 36, 34, 32, 19];
-map[29].lantern = [32, 22, 25, 27];
 map[30].position = [837.354, 99.592];
 map[30].adjacent = [29, 21];
 map[31].position = [825.677, 134.792];
@@ -105,7 +94,6 @@ map[32].position = [816.665, 112.495];
 map[32].adjacent = [31, 20];
 map[32].number = 41;
 map[32].adjacentNumber = [22, 29, 163, 165, 36, 34, 19];
-map[32].lantern = [29, 34];
 map[33].position = [774.733, 153.397];
 map[33].adjacent = [31, 164, 36, 34];
 map[33].station = true;
@@ -113,75 +101,64 @@ map[34].position = [767.333, 128.309];
 map[34].adjacent = [33, 35];
 map[34].number = 40;
 map[34].adjacentNumber = [22, 29, 32, 163, 165, 36, 19];
-map[34].lantern = [32, 36, 38, 40, 42, 19];
 map[35].position = [760.848, 103.999];
 map[35].adjacent = [20, 34, 19];
 map[36].position = [732.006, 171.448];
 map[36].adjacent = [33, 37];
 map[36].number = 57;
 map[36].adjacentNumber = [34, 32, 29, 163, 165, 38];
-map[36].lantern = [165, 168, 170, 172, 174, 38, 40, 42, 19, 34];
 map[37].position = [704.635, 184.141];
 map[37].adjacent = [36, 38];
 map[38].position = [676.369, 197.637];
 map[38].adjacent = [37, 59, 39];
 map[38].number = 56;
 map[38].adjacentNumber = [36, 174, 351, 176, 61, 57, 40];
-map[38].lantern = [42, 19, 34, 36, 165, 168, 170, 172, 174, 57, 47, 40];
 map[39].position = [658.843, 163.479];
 map[39].adjacent = [38, 40];
 map[40].position = [642.441, 136.911];
 map[40].adjacent = [41, 39, 43];
 map[40].number = 39;
 map[40].adjacentNumber = [16, 42, 38, 47, 44];
-map[40].lantern = [16, 42, 19, 34, 36, 38, 57, 47, 44];
 map[41].position = [679.795, 109.281];
 map[41].adjacent = [42, 40, 16];
 map[42].position = [707, 90];
 map[42].adjacent = [18, 41];
 map[42].number = 19;
 map[42].adjacentNumber = [19, 40, 16];
-map[42].lantern = [19, 34, 36, 38, 40, 16];
 map[43].position = [625.004, 148.268];
 map[43].adjacent = [40, 47, 44];
 map[44].position = [620.017, 129.734];
 map[44].adjacent = [43, 45];
 map[44].number = 38;
 map[44].adjacentNumber = [16, 40, 47, 46, 14];
-map[44].lantern = [16, 40, 47, 49, 46];
 map[45].position = [615.168, 112];
 map[45].adjacent = [44, 46, 14, 15];
 map[46].position = [599.905, 114.916];
 map[46].adjacent = [45, 50];
 map[46].number = 36;
 map[46].adjacentNumber = [16, 44, 49, 54, 55, 53, 51, 14];
-map[46].lantern = [44, 47, 49, 51, 14];
 map[47].position = [611.247, 157.965];
 map[47].adjacent = [43, 48];
 map[47].number = 37;
 map[47].adjacentNumber = [44, 40, 57, 61, 156, 64, 54, 49];
-map[47].lantern = [44, 40, 38, 57, 49, 46];
 map[48].position = [597.12, 167.249];
 map[48].adjacent = [47, 56, 49];
 map[49].position = [591.67, 141.627];
 map[49].adjacent = [48, 50];
 map[49].number = 35;
 map[49].adjacentNumber = [46, 47, 57, 61, 156, 64, 54, 55, 53, 51];
-map[49].lantern = [46, 44, 47, 54];
 map[50].position = [584.605, 118.051];
 map[50].adjacent = [46, 49, 52, 51];
 map[51].position = [577.922, 90.98];
 map[51].adjacent = [50, 13];
 map[51].number = 16;
 map[51].adjacentNumber = [14, 46, 49, 54, 55, 53, 68, 70, 10];
-map[51].lantern = [14, 46, 53];
 map[52].position = [558.304, 124.615];
 map[52].adjacent = [50, 54, 55, 53];
 map[53].position = [549.606, 100.078];
 map[53].adjacent = [52, 12];
 map[53].number = 15;
 map[53].adjacentNumber = [14, 51, 46, 49, 54, 55, 68, 70, 10];
-map[53].lantern = [51, 55, 66, 68];
 map[54].position = [565.625, 154.61];
 map[54].adjacent = [56, 52];
 map[54].number = 34;
@@ -245,7 +222,6 @@ map[74].position = [387.5, 133];
 map[74].adjacent = [75, 76, 73];
 map[74].number = 30;
 map[74].adjacentNumber = [70, 68, 66, 83, 80, 79, 98, 100, 108, 115, 118, 72];
-map[74].lantern = [70, 68, 83, 82, 80, 108, 110, 113, 115]; // Ambiguous lantern position
 map[75].position = [436, 124];
 map[75].adjacent = [67, 74];
 map[76].position = [392.097, 150.358];
@@ -1351,3 +1327,73 @@ map.debug = function () {
 	return errorCount + ' errors';
 
 }
+map.computeAlleys = function () {
+	// Jack can use an alley to move from a numbered position to any other numbered position around the same block.
+	// The streets form a planar graph, so every block is a bounded face of it. Trace each face by always turning
+	// onto the next street clockwise, skip the outer face (the largest), then link the numbers around each block.
+	var angle = function (from, to) {
+		return Math.atan2(map[to].position[1] - map[from].position[1], map[to].position[0] - map[from].position[0]);
+	}
+	var around = new Array(); // Adjacent places of each place, sorted by angle
+	for (var a = 0; a < map.length; a++) {
+		var unique = map[a].adjacent.filter(function (id, index, array) { return array.indexOf(id) == index; });
+		around[a] = unique.sort(function (x, y) { return angle(a, x) - angle(a, y); });
+	}
+
+	var visited = {};
+	var faces = new Array();
+	for (var a = 0; a < map.length; a++) {
+		for (var b = 0; b < around[a].length; b++) {
+			var face = new Array();
+			var from = a;
+			var to = around[a][b];
+			while (!visited[from + ',' + to]) {
+				visited[from + ',' + to] = true;
+				face.push(from);
+				var index = around[to].indexOf(from);
+				var next = around[to][(index - 1 + around[to].length) % around[to].length];
+				from = to;
+				to = next;
+			}
+			if (face.length > 0) {
+				faces.push(face);
+			}
+		}
+	}
+
+	var area = function (face) {
+		var sum = 0;
+		for (var a = 0; a < face.length; a++) {
+			var p = map[face[a]].position;
+			var q = map[face[(a + 1) % face.length]].position;
+			sum += p[0] * q[1] - q[0] * p[1];
+		}
+		return Math.abs(sum / 2);
+	}
+	var outer = 0;
+	for (var a = 1; a < faces.length; a++) {
+		if (area(faces[a]) > area(faces[outer])) {
+			outer = a;
+		}
+	}
+
+	for (var a = 0; a < map.length; a++) {
+		if (map[a].number) {
+			map[a].alley = new Array();
+		}
+	}
+	for (var a = 0; a < faces.length; a++) {
+		if (a == outer) continue;
+		var numbers = faces[a].filter(function (id) { return map[id].number; });
+		for (var b = 0; b < numbers.length; b++) {
+			for (var c = 0; c < numbers.length; c++) {
+				if (numbers[b] != numbers[c] && map[numbers[b]].alley.indexOf(numbers[c]) == -1) {
+					map[numbers[b]].alley.push(numbers[c]);
+				}
+			}
+		}
+	}
+	return faces.length - 1; // Number of blocks
+}
+
+map.computeAlleys();

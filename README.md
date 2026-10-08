@@ -10,11 +10,30 @@ Read about [Letters From Whitechapel at boardgamegeek.com](https://boardgamegeek
 
 Play as the five police charaters on the hunt for an artificially intelegent serial killer in the web browser based version.
 
+## Special Movement
+
+Jack has carriages and alleys to help him escape. Each night he gets fewer of them (3, 2, 2 and 1 carriages; 2, 2, 1 and 1 alleys).
+
+- **Carriage:** Jack moves two numbers in one turn, even past police. It uses two spaces on the move track.
+- **Alley:** Jack cuts through a block to any number around the same block, even past police.
+
+The police see on the move track and below the title when Jack uses one. Alleys are worked out from the map itself: the streets form a planar graph, and every block is one of its faces (see `map.computeAlleys` in `js/map.js`).
+
+## Tests
+
+The tests run the game in a simulated browser ([jsdom](https://github.com/jsdom/jsdom)) with Node.js 22 or later:
+
+```
+npm install
+npm test
+```
+
+- `test/unit` checks the map data, random numbers, movement and Jack's special moves.
+- `test/regression` has a test for each bug that has been fixed, and plays whole seeded games checking the rules after every action.
+
 ## In Development
 
-- Indicate when Jack is blocked by police
-- Develop Carrages and Lanterns
-- Develop more than one night
+- Different numbers of women and wretched for each night
 
 I welcome support from any developers who wish to continue working on this browser based version of my favorite board game.
 
