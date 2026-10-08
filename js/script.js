@@ -44,6 +44,7 @@ var game = {
 			game.config.state = x;
 		}
 		$('.state').hide();
+		draw.progress('');
 		draw.updateTitle();
 		switch(game.config.state) {
 			case 0:
@@ -86,9 +87,6 @@ var game = {
 	},
 	preparingTheScene: function () {
 		var night = jack.length;
-		$('<p></p>', {
-			text: 'Jack collects the special movement tokens (' + game.config.carriages[night] + ' carriages and ' + game.config.alleys[night] + ' alleys).'
-		}).prependTo('.preparing-the-scene');
 
 		// Reset the night
 		game.config.remainingMoves = game.config.totalMoves - 5;
@@ -116,6 +114,8 @@ var game = {
 			arrest: new Array(), // How many adjacent numbers are arrestable
 			clue: new Array()
 		}
+		game.log(nights[night].name + ', ' + nights[night].date + (nights[night].note ? ' (' + nights[night].note.toLowerCase() + ')' : '') + '. Jack has ' + game.config.carriages[night] + ' coaches and ' + game.config.alleys[night] + ' alleys.', 'night');
+		draw.updateTitle();
 		draw.jackLog();
 		game.nextState(1);
 	},
@@ -152,13 +152,15 @@ var game = {
 		$('.patrolling-the-streets').show();
 		$('.patrolling-the-streets .next-state').hide();
 		var positions = game.patrolPositions();
-		var text = 'The head of the investigation places ' + game.config.police + ' police patrol tokens and ' + game.config.fakePolice + ' fake police tokens on the map.';
+		var text = 'Place ' + game.config.police + ' real patrols and ' + game.config.fakePolice + ' fake ones to mislead Jack: choose Real or Fake beside a crossing.';
 		if (positions.required.length > 0) {
-			text += ' There must be a token where each policeman ended last night, and ' + positions.others + ' on yellow-bordered crossings without a policeman.';
+			text += ' There must be a patrol where each policeman ended last night, and ' + positions.others + ' on yellow-bordered crossings without a policeman.';
 		}
-		$('<p></p>', {
-			text: text
-		}).prependTo('.state.patrolling-the-streets');
+		draw.phaseText('patrolling-the-streets', text);
+		var patrolProgress = function () {
+			draw.progress('Real ' + _.last(police).start.length + ' of ' + game.config.police + ' · Fake ' + _.last(police).fake.length + ' of ' + game.config.fakePolice);
+		}
+		patrolProgress();
 		for (var a = 0; a < map.length; a++) {
 			if (($.inArray(a, game.config.womenMarked) !== -1) || ($.inArray(a, game.config.womenUnmarked) !== -1)) {
 				var classes = 'label label-info token token-woman token-woman-' + a;
@@ -168,9 +170,9 @@ var game = {
 		_.each(positions.all, function (a) {
 			var required = _.contains(positions.required, a) ? ' required' : '';
 			var classes = 'label label-info selectable token token-police marked token-police-' + a + required;
-			draw.createElement(a, 'police', classes).appendTo('.map');
+			draw.createElement(a, 'Real', classes).appendTo('.map');
 			classes = 'label label-info selectable token token-police unmarked token-police-' + a + required;
-			draw.createElement(a, 'not police', classes).appendTo('.map');
+			draw.createElement(a, 'Fake', classes).appendTo('.map');
 		});
 		var placedElsewhere = function () { // Tokens not on a crossing where a policeman ended last night
 			return _.difference(_.union(_.last(police).start, _.last(police).fake), positions.required).length;
@@ -211,9 +213,11 @@ var game = {
 					}
 				}
 			}
+			patrolProgress();
 			if (_.last(police).start.length >= game.config.police && _.last(police).fake.length >= game.config.fakePolice) {
 				$('.token-woman').remove();
 				$('.token-police').remove();
+				game.log('The patrols are on the streets.', 'police');
 				game.nextState(3);
 			}
 		});
@@ -225,9 +229,7 @@ var game = {
 		game.nextState(4);
 	},
 	bloodOnTheStreets: function () {
-		$('<p></p>', {
-			text: 'Jack chooses between killing or waiting.'
-		}).prependTo('.state.blood-on-the-streets');
+		draw.phaseText('blood-on-the-streets', 'Jack chooses between killing or waiting.');
 
 		if (_.last(jack).murder.length > 0) {
 			console.log('Error: Multiple murders attempted.');
@@ -242,16 +244,11 @@ var game = {
 		}
 	},
 	suspenseGrows: function() {
-		$('.suspense-grows').show();
-		if ($.inArray(_.last(_.last(police).revealed), _.last(police).fake) !== -1) {
-			$('<p></p>', {
-				text: 'Jack has discovered that a police token is not real.'
-			}).prependTo('.state.suspense-grows');
-		}
-
 		// Move the Time of the Crime token on to the next Roman numeral
 		game.config.timeOfCrime++;
 		draw.tracker();
+		game.log('Jack waits. The time of the crime moves to ' + game.roman(game.config.timeOfCrime) + '.', 'jack');
+		draw.phaseText('suspense-grows', 'Jack is waiting. Move each Wretched to a nearby circle: click a Wretched, then where it goes. They can\'t pass a patrol, stop next to one, or stop on a crime scene.');
 
 		var patrols = game.patrolTokens();
 		for (var a = 0; a < map.length; a++) {
@@ -271,15 +268,20 @@ var game = {
 			return game.wretchedMoves(mapid).length > 0;
 		});
 		var movedWretched = 0;
+		var wretchedProgress = function () {
+			draw.progress('Wretched moved: ' + movedWretched + ' of ' + toMove.length);
+		}
 		var done = function () {
 			$('.token-wretched').remove();
 			$('.token-police').remove();
 			game.nextState(6);
 		}
 		if (toMove.length == 0) {
+			game.log('No Wretched can move.', 'police');
 			done();
 			return;
 		}
+		wretchedProgress();
 		_.each(game.config.womenMarked, function (a) {
 			var selectable = _.contains(toMove, a) ? ' selectable' : '';
 			var classes = 'label label-info token token-wretched token-wretched-' + a + selectable;
@@ -292,6 +294,7 @@ var game = {
 			if (moves.length == 0) { // Blocked by another Wretched that moved, so it stays
 				$(this).removeClass('selectable').unbind('click');
 				movedWretched++;
+				wretchedProgress();
 				if (movedWretched >= toMove.length) {
 					done();
 				}
@@ -309,6 +312,7 @@ var game = {
 					$('.token-move-wretched').remove();
 					wretched.remove();
 					movedWretched++;
+					wretchedProgress();
 					if (movedWretched >= toMove.length) {
 						done();
 					}
@@ -333,7 +337,14 @@ var game = {
 		});
 	},
 	readyToKill: function () {
-		game.revealPolice();
+		var revealed = game.revealPolice();
+		if (revealed !== undefined) {
+			if (_.contains(_.last(police).fake, revealed)) {
+				game.log('Jack reveals a patrol: it was fake, and is removed.', 'jack');
+			} else {
+				game.log('Jack reveals a patrol: a real policeman.', 'jack');
+			}
+		}
 		game.nextState(4);
 	},
 	alarmWhistles: function () {
@@ -372,10 +383,19 @@ var game = {
 		game.config.remainingMoves -= moves;
 		draw.tracker();
 		draw.jackLog();
+		var moveLabel = spans.eq(night.trackPosition - 1).text();
+		if (move.type == 'carriage') {
+			game.log('Jack takes a coach (moves ' + spans.eq(night.trackPosition - 2).text() + ' and ' + moveLabel + ').', 'jack');
+		} else if (move.type == 'alley') {
+			game.log('Jack slips through an alley (move ' + moveLabel + ').', 'jack');
+		} else {
+			game.log('Jack moves (move ' + moveLabel + ').', 'jack');
+		}
 
 		// Jack declares his escape when a normal move takes him to his hideout (not a special movement)
 		if (move.mapid == game.config.base && move.type == 'walk') {
 			console.log('Jack has reached his base.');
+			game.log('Jack has reached his hideout. The night is over.', 'night');
 			$('.token').remove(); // Clue markers are removed, crime scenes stay
 			if (jack.length >= game.config.nights) {
 				game.end('Jack has killed five victims and escaped on all four nights. Jack wins!');
@@ -393,9 +413,8 @@ var game = {
 	huntingTheMonster: function () {
 		$('.hunting-the-monster').show();
 		$('.hunting-the-monster .next-state').hide();
-		$('<p></p>', {
-			text: 'Each policeman pawn moves.'
-		}).prependTo('.state.hunting-the-monster');
+		draw.phaseText('hunting-the-monster', 'Move each policeman up to two crossings: click a policeman, then a highlighted crossing, or Stay. Policemen can pass each other but not share a crossing.');
+		draw.progress('Policemen moved: 0 of ' + _.last(police).now.length);
 
 		var movedPolice = 0;
 		var policeCounter = 0;
@@ -420,9 +439,10 @@ var game = {
 							police[police.length - 1].route[index].push(mapid);
 							police[police.length - 1].now[index] = mapid;
 						}
-						$(this).removeClass('selectable token-move-police').addClass('token-police').text('real police').unbind('click');
+						$(this).removeClass('selectable token-move-police').addClass('token-police police-' + index).text('policeman').unbind('click');
 						$('.token-move-police').remove();
 						movedPolice++;
+						draw.progress('Policemen moved: ' + movedPolice + ' of ' + _.last(police).now.length);
 						if (movedPolice >= _.last(police).now.length) {
 							$('.token-police').remove();
 							game.nextState(11);
@@ -433,14 +453,15 @@ var game = {
 			$('.token-police-' + mapid).remove();
 
 			var classes = 'label label-info selectable token token-move-police token-police-' + mapid;
-			draw.createElement(mapid, 'don\'t move', classes).data('mapidPrev', mapid).click(function(){
+			draw.createElement(mapid, 'Stay', classes).data('mapidPrev', mapid).click(function(){
 				var index = _.last(police).now.indexOf(mapid); // Find previous map id in array
 				if (index !== -1) {
 					police[police.length - 1].route[index].push($(this).data('mapid'));
 				}
-				$(this).removeClass('selectable token-move-police').addClass('token-police').text('real police').unbind('click');
+				$(this).removeClass('selectable token-move-police').addClass('token-police police-' + index).text('policeman').attr('title', 'policeman').unbind('click');
 				$('.token-move-police').remove();
 				movedPolice++;
+				draw.progress('Policemen moved: ' + movedPolice + ' of ' + _.last(police).now.length);
 				if (movedPolice >= _.last(police).now.length) {
 					$('.token-police').remove();
 					game.nextState(11);
@@ -452,9 +473,7 @@ var game = {
 		$('.clues-and-suspicion').show();
 		$('.clues-and-suspicion .next-state').hide();
 
-		$('<p></p>', {
-			text: 'Each policeman pawn either looks for clues or executes an arrest.'
-		}).prependTo('.clues-and-suspicion');
+		draw.phaseText('clues-and-suspicion', 'Each policeman either searches or arrests. A search checks the circles next to him one at a time until a clue turns up. An arrest checks one circle: if Jack is there, you win.');
 
 		_.last(police).search = _.map(_.last(police).now, function (mapid) {
 			return game.searchable(mapid);
@@ -467,21 +486,24 @@ var game = {
 		var acted = 0;
 		var actionDone = function () {
 			acted++;
+			draw.progress('Policemen acted: ' + acted + ' of ' + _.last(police).now.length);
 			if (acted >= _.last(police).now.length) {
 				$('.token.selectable').remove();
+				$('.token-pawn').remove();
 				game.nextState(9);
 			}
 		}
 
 		var canAct = 0;
 		_.each(_.last(police).now, function (a, index) {
+			draw.createElement(a, 'policeman', 'label token token-pawn police-' + index).appendTo('.map');
 			if (_.last(police).search[index].length > 0) {
 				var classes = 'label label-info selectable token token-search-adjacent token-search-adjacent-' + a;
-				draw.createElement(a, 'search', classes).appendTo('.map');
+				draw.createElement(a, 'Search', classes).appendTo('.map');
 			}
 			if (_.last(police).arrest[index].length > 0) {
 				var classes = 'label label-info selectable token token-arrest-adjacent token-arrest-adjacent-' + a;
-				draw.createElement(a, 'arrest', classes).appendTo('.map');
+				draw.createElement(a, 'Arrest', classes).appendTo('.map');
 			}
 			if (_.last(police).search[index].length > 0 || _.last(police).arrest[index].length > 0) {
 				canAct++;
@@ -489,9 +511,11 @@ var game = {
 		});
 		acted = _.last(police).now.length - canAct; // Policemen with no numbered circles next to them can't act
 		if (canAct == 0) {
+			$('.token-pawn').remove();
 			game.nextState(9);
 			return;
 		}
+		draw.progress('Policemen acted: ' + acted + ' of ' + _.last(police).now.length);
 
 		$('.token-arrest-adjacent').click(function(){
 			var mapid = $(this).data('mapid');
@@ -499,7 +523,7 @@ var game = {
 
 			for (var b = 0; b < _.last(police).arrest[index].length; b++) {
 				var classes = 'label label-info selectable token token-arrest';
-				draw.createElement(_.last(police).arrest[index][b], 'arrest', classes).click(function(){
+				draw.createElement(_.last(police).arrest[index][b], 'Arrest here', classes).click(function(){
 					var mapid = $(this).data('mapid');
 					if (mapid == _.last(_.last(jack).route)) {
 						console.log('Jack has been arrested.');
@@ -507,6 +531,7 @@ var game = {
 						return;
 					} else {
 						console.log('Jack has not been arrested.');
+						game.log('Arrest at ' + map[mapid].number + ': Jack is not there.', 'police');
 					}
 					$('.token-arrest').remove();
 					actionDone();
@@ -519,23 +544,29 @@ var game = {
 			var mapid = $(this).data('mapid');
 			var index = _.indexOf(_.last(police).now, mapid);
 			var search = _.last(police).search[index];
+			var empty = new Array(); // Numbers searched without a clue
 
 			for (var b = 0; b < search.length; b++) {
 				var classes = 'label label-info selectable token token-search token-search-' + search[b];
-				draw.createElement(search[b], 'search', classes).click(function(){
+				draw.createElement(search[b], 'Search here', classes).click(function(){
 					var mapidAdjacent = $(this).data('mapid');
 					if ($.inArray(mapidAdjacent, _.last(jack).route) !== -1) {
 						console.log('Clue found at ' + map[mapidAdjacent].number + '.');
+						game.log((empty.length ? 'No clue at ' + empty.join(', ') + ', then a clue' : 'Clue') + ' found at ' + map[mapidAdjacent].number + '! Jack has been there tonight.', 'clue');
 						$('.token-search').remove();
 						_.last(police).clue.push(mapidAdjacent);
 						draw.clue(mapidAdjacent);
 						actionDone(); // Finding a clue ends the search
 					} else {
 						console.log('No clue found.');
+						empty.push(map[mapidAdjacent].number);
 						$(this).remove();
 						search[_.indexOf(search, mapidAdjacent)] = undefined;
 						if (_.isEmpty(_.reject(search, _.isUndefined))) {
+							game.log('No clue at ' + empty.join(', ') + '.', 'police');
 							actionDone(); // Nothing left to search
+						} else {
+							draw.progress('No clue at ' + map[mapidAdjacent].number + '. Search another circle.');
 						}
 					}
 				}).appendTo('.map');
@@ -574,16 +605,32 @@ var game = {
 	},
 	end: function (message) {
 		console.log(message);
+		game.log(message, 'end');
 		game.config.over = true;
 		$('.token').remove();
 		$('.state').hide();
-		$('.game-over').text(message).show();
+		draw.progress('');
+		$('.game-over').text(message);
+		$('.ending').addClass('open');
+	},
+	log: function (text, kind) {
+		// The case log: everything the police know, newest first
+		$('<li></li>', {
+			class: 'event kind-' + (kind || 'info'),
+			'data-night': jack.length > 0 ? 'Night ' + jack.length : '',
+			text: text
+		}).prependTo('.event-log');
+	},
+	roman: function (number) {
+		return ['', 'I', 'II', 'III', 'IV', 'V'][number];
 	},
 	revealPolice: function() {
 		// Jack reveals one of the Police Patrol tokens he hasn't revealed yet
 		var hidden = _.difference(_.union(_.last(police).start, _.last(police).fake), _.last(police).revealed);
 		if (hidden.length > 0) {
-			_.last(police).revealed.push(hidden[game.randomInt(0, hidden.length)]);
+			var mapid = hidden[game.randomInt(0, hidden.length)];
+			_.last(police).revealed.push(mapid);
+			return mapid;
 		}
 	},
 	murder: function() {
@@ -617,6 +664,13 @@ var game = {
 		night.trackPosition = position + scenes.length - 1;
 		game.config.remainingMoves = game.config.totalMoves - night.trackPosition;
 		draw.tracker();
+		var numbers = _.map(scenes, function (mapid) { return map[mapid].number; });
+		if (numbers.length > 1) {
+			game.log('The double event: bodies are found at ' + numbers.join(' and ') + '. The whistles blow!', 'crime');
+		} else {
+			game.log('A body is found at ' + numbers[0] + '. The whistles blow!', 'crime');
+		}
+		draw.jackLog();
 	},
 	sortSevenSteps: function (arrayToSort) {
 		// Sort by moves to base (7 being optimal)
@@ -1029,45 +1083,125 @@ var draw = {
 		draw.createElement(mapid, '', classes).prependTo('.map');
 	},
 	jackLog: function () {
-		// Special movement tokens are played face up, so the police know when Jack uses them
+		// What the police know about Jack. Special movement tokens are played face up
 		var night = _.last(jack);
-		$('.jack-log').empty();
-		$('<p></p>', {
-			text: 'Night ' + jack.length + ': Jack has ' + night.carriages + ' carriages and ' + night.alleys + ' alleys left.'
-		}).appendTo('.jack-log');
-		_.each(night.moves, function (move, index) {
-			if (move.type != 'walk') {
-				$('<p></p>', {
-					text: 'Move ' + (index + 1) + ': Jack used ' + (move.type == 'carriage' ? 'a carriage (two moves).' : 'an alley.')
-				}).appendTo('.jack-log');
-			}
+		var murdered = night.murder.length > 0;
+		var stats = [
+			['Coaches left', night.carriages],
+			['Alleys left', night.alleys],
+			['Moves left', murdered ? game.config.remainingMoves : '–'],
+			['Victims', game.config.crimeScenes.length + ' of 5']
+		];
+		var list = $('<dl></dl>', { class: 'stats' });
+		_.each(stats, function (stat) {
+			var item = $('<div></div>', { class: 'stat' }).appendTo(list);
+			$('<dt></dt>', { text: stat[0] }).appendTo(item);
+			$('<dd></dd>', { text: stat[1] }).appendTo(item);
 		});
+		$('.jack-log').empty().append(list);
+		var used = _.filter(night.moves, function (move) { return move.type != 'walk'; });
+		if (used.length > 0) {
+			$('<p></p>', {
+				class: 'stat-note',
+				text: 'Tonight Jack used ' + _.map(used, function (move) { return move.type == 'carriage' ? 'a coach' : 'an alley'; }).join(', ') + '.'
+			}).appendTo('.jack-log');
+		}
 	},
 	createElement: function (mapid, labelText, classes) {
+		var place = map[mapid].number ? 'number ' + map[mapid].number : 'crossing';
 		return $('<span></span>', {
 			'data-mapid': mapid,
 			class: classes,
 			text: labelText,
-			style: 'left:' + map[mapid].position[0] + ';' + 'top:' + map[mapid].position[1] + ';'
+			title: labelText ? labelText + ' (' + place + ')' : place,
+			style: 'left:' + map[mapid].position[0] + 'px;' + 'top:' + map[mapid].position[1] + 'px;'
 		});
 	},
+	streets: function () {
+		// The dotted streets, drawn from the map data
+		$('.map .streets').remove();
+		var ns = 'http://www.w3.org/2000/svg';
+		var svg = document.createElementNS(ns, 'svg');
+		svg.setAttribute('class', 'streets');
+		svg.setAttribute('viewBox', '0 0 1000 663');
+		svg.setAttribute('aria-hidden', 'true');
+		var path = '';
+		for (var a = 0; a < map.length; a++) {
+			for (var b = 0; b < map[a].adjacent.length; b++) {
+				var c = map[a].adjacent[b];
+				if (a < c) { // Each street once
+					path += 'M' + map[a].position.join(' ') + 'L' + map[c].position.join(' ');
+				}
+			}
+		}
+		var streets = document.createElementNS(ns, 'path');
+		streets.setAttribute('d', path);
+		svg.appendChild(streets);
+		$('.map .vintage-map').after(svg);
+	},
 	updateTitle: function() {
-		$('h1').remove();
-		$('<h1></h1>', {
-			text: state[game.config.state].title,
-		}).prependTo('.container');
+		// The phase card and the night in the header
+		var current = state[game.config.state];
+		$('.phase-title').text(current.title);
+		$('.phase-part').text(current.part);
+		$('.phase-description').text(current.description + '.');
+		var steps = $('.phase-steps');
+		if (steps.children().length == 0) { // Built once, then only the current phase changes
+			_.each(state, function (item, index) {
+				if (index == 0 || index == 9) {
+					$('<li></li>', { class: 'phase-steps-part', text: item.part }).appendTo(steps);
+				}
+				$('<li></li>', { class: 'phase-step phase-step-' + index, text: item.title }).appendTo(steps);
+			});
+		}
+		steps.children('.current').removeClass('current');
+		steps.children('.phase-step-' + game.config.state).addClass('current');
+		var night = nights[jack.length - 1];
+		if (night) {
+			$('.night-name').text(night.name + ' of four');
+			$('.night-date').text(night.date + (night.note ? ' · ' + night.note : ''));
+		}
+	},
+	phaseText: function (name, text) {
+		// Instructions for the current phase (replacing what was there)
+		$('.state.' + name).empty().append($('<p></p>', { text: text })).show();
+	},
+	progress: function (text) {
+		$('.phase-progress').text(text);
+	},
+	fit: function () {
+		// Scale the 1000 by 663 board to the space available
+		var width = $('.board').width();
+		if (!width) {
+			return;
+		}
+		var scale = Math.min(1, width / 1000);
+		$('.map').css('transform', 'scale(' + scale + ')');
+		$('.board').css('height', Math.round(663 * scale) + 'px');
 	}
 }
 
 /* Start
    ----- */
 game.start = function () {
+	draw.streets();
 	draw.map();
+	draw.fit();
 	draw.updateTitle();
 	game.selectBase();
 	game.nextState();
 }
 
 if (!window.WHITECHAPEL_NO_AUTOSTART) { // Tests load the game without starting it
-	game.start();
+	$(function () {
+		$('.intro').addClass('open');
+		$('.start-game').click(function () {
+			$('.intro').removeClass('open');
+			game.start();
+		}).focus();
+		$('.new-game').click(function () {
+			window.location.reload();
+		});
+		$(window).resize(draw.fit);
+	});
 }
