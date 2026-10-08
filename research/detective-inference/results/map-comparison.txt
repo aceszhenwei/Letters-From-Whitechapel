@@ -1,0 +1,8 @@
+numbered circles: 195
+walking connections: ours 767, whitechapelR 767, shared 767
+  only ours (0): 
+  only whitechapelR (0): 
+alleys: ours 452, whitechapelR 452, shared 452
+  only ours (0): 
+  only whitechapelR (0): 
+  of whitechapelR-only alleys, also walking connections here: 0
