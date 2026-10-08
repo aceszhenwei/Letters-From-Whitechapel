@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased: interface and documentation
+## Unreleased: clean-up
+
+- Removed the unused Bootstrap 3 files and the `user-interface.html` mock-up.
+- README: our own description, credit to the original project, and a note that this is an unofficial fan project. Removed the original author's donation link.
+
+## Interface and documentation ([aceszhenwei/Letters-From-Whitechapel#4](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/4))
 
 - **New interface:** a dark Victorian frame around a parchment board, a sidebar with the current phase, instructions and progress, Jack's public status and a case log, plus intro and game-over dialogs.
 - **Board:** circle numbers are visible, streets are drawn as dotted lines from the map data, and tokens are modelled on the physical pieces (coloured policemen, translucent clue and crime scene markers).

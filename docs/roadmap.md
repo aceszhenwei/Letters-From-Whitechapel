@@ -26,5 +26,4 @@
 ## Code
 
 - Split `js/script.js` into files for the game, Jack's AI and drawing.
-- Remove the unused Bootstrap 3 copy and `user-interface.html` mock-up once nobody needs them.
 - Speed up the full-game tests (most of their time is jsdom running jQuery selectors).
