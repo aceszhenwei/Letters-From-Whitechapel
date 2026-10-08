@@ -24,8 +24,8 @@
 
 var svgString = '';
 
-for (a = 0; a < map.length; a++) { // For every place
-	for (b = 0; b < map[a].adjacent.length; b++) { // For every adjacent place
+for (var a = 0; a < map.length; a++) { // For every place
+	for (var b = 0; b < map[a].adjacent.length; b++) { // For every adjacent place
 		if (a != map[a].adjacent[b]) { // If the adjacent place is not same as the place
 			svgString = svgString + '&lt;line fill="none" stroke="#000000" x1="' + map[a].position[0] + '" y1="' + map[a].position[1] + '" x2="' + map[map[a].adjacent[b]].position[0] + '" y2="' + map[map[a].adjacent[b]].position[1] + '"/&gt;<br>';
 		}

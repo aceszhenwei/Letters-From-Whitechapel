@@ -1,5 +1,5 @@
 var map = new Array();
-for (a = 0; a < 429; a++ ){
+for (var a = 0; a < 429; a++ ){
 	map[a] = new Array();
 }
 map[0].position = [98.165, 63];
@@ -1296,7 +1296,7 @@ map[428].adjacentNumber = [243, 265, 248, 238, 239];
 map.key = function (key) {
 	// Returns an array of ids that have a key,
 	// for example game.mapKey('station') = [33, 56, 76, 190, 210, 312, 385]
-	array = new Array();
+	var array = new Array();
 	_.map(map, function(item, index) {
 		if (_.has(item, key)) {
 			array.push(index);
@@ -1307,8 +1307,8 @@ map.key = function (key) {
 
 map.debug = function () {
 	var errorCount = 0;
-	for (a = 0; a < map.length; a++) { // For every place
-		for (b = 0; b < map[a].adjacent.length; b++) { // For every adjacent place
+	for (var a = 0; a < map.length; a++) { // For every place
+		for (var b = 0; b < map[a].adjacent.length; b++) { // For every adjacent place
 			if (a != map[a].adjacent[b]) { // If the adjacent place is not same as the place
 				if (map[map[a].adjacent[b]].adjacent.indexOf(a) == -1) { // If the adjacent place has a connection back
 					errorCount++;
@@ -1321,9 +1321,9 @@ map.debug = function () {
 		}
 	}
 
-	for (a = 0; a < map.length; a++) { // For every place
+	for (var a = 0; a < map.length; a++) { // For every place
 		if (map[a].adjacentNumber) { // If adjacent numbers are listed
-			for (b = 0; b < map[a].adjacentNumber.length; b++) { // For every adjacent number listed
+			for (var b = 0; b < map[a].adjacentNumber.length; b++) { // For every adjacent number listed
 				if (!(map[ map[a].adjacentNumber[b] ].number)) { // If the adjacent number listed has a number
 					errorCount++;
 					console.log(errorCount + ': The position with an ID of ' + map[a].adjacentNumber[b] + ' is not a numbered position. Position ' + a + ' is listing this as an adjacent number.');
@@ -1332,9 +1332,9 @@ map.debug = function () {
 		}
 	}
 
-	for (a = 0; a < map.length; a++) { // For every place
+	for (var a = 0; a < map.length; a++) { // For every place
 		if (map[a].adjacentNumber) { // If adjacent numbers are listed
-			for (b = 0; b < map[a].adjacentNumber.length; b++) { // For every adjacent place
+			for (var b = 0; b < map[a].adjacentNumber.length; b++) { // For every adjacent place
 				if (a != map[a].adjacentNumber[b]) { // If the adjacent place is not same as the place
 					if (map[map[a].adjacentNumber[b]].adjacentNumber.indexOf(a) == -1) { // If the adjacent place has a connection back
 						errorCount++;
