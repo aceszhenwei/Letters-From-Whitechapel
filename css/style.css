@@ -185,3 +185,14 @@
 	background-color: #d9534f;
     color: #ffffff;
 }
+.move-tracker .label.carriage {
+	background-color: #f0ad4e;
+    color: #ffffff;
+}
+.move-tracker .label.alley {
+	background-color: #5bc0de;
+    color: #ffffff;
+}
+.jack-log p {
+    margin: 0;
+}
