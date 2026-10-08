@@ -240,6 +240,8 @@ Without the beam, time is barely higher (28.9 ms mean): the cost is dominated by
 
 ## 8. Evaluation method
 
+> **Map note.** Every number in sections 2, 6, 7 and 9 (and the calibration tables in section 3) was measured on the **previous map**, before the topology corrections that made whitechapelR's map canonical ([Map data](map-data.md#topology-corrections)). Those corrections change 12 walking links and 1 alley, so re-running the commands below on today's map gives slightly different games. The results are kept as recorded, in `experiments/` (see `experiments/README.md`).
+
 **Opponents.** A fair test needs an opponent that hunts, so `js/ai/police.js` adds a computer police player that sees only the police view (never Jack's route or hideout). The **deductive police** place patrols near red circles, keep the Wretched near real patrols, move each policeman to cover the most of Jack's likely position, arrest when one circle holds at least 20% of the belief, and otherwise search where his route most likely passed. Its two settings were chosen by trying alternatives against the baseline (comments in the code). The **random police** make random legal choices, like a careless player. The main results are against the deductive police; the random police check that the strategic AI isn't tuned to one opponent.
 
 **Seeds.** Each game has a seed; Jack and the police get separate random streams derived from it, so every Jack faces the same police dice on the same seed. Seeds 1 to 5,000 are the evaluation set, used once at the end. Seeds 300001 on were used while developing, and 900001 on for calibration, so the AI was never tuned on the games it is judged by.
