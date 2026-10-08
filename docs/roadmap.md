@@ -7,13 +7,15 @@
 
 ## Board data
 
+- Check the 13 connections where this map and whitechapelR's differ (listed in the [detective study](detective-inference-study.md#3-whitechapelr-what-it-does)) against a printed board.
 - Check the yellow-bordered crossings (`station`) against a printed board. The data has 7, exactly the number of patrol tokens, which leaves no choice of where to place them on the first night.
 
 ## Gameplay
 
 - **Two people on one screen.**
 - **A Jack that hides his hideout across nights**, and other next steps for the strategic AI (see [Jack's AI](jack-ai.md#what-would-come-next)).
-- **Difficulty levels:** choose the baseline or the strategic Jack from the intro dialog (today: `index.html?jack=strategic`).
+- **Stronger computer police**, in the order the [detective study](detective-inference-study.md#10-recommendations) ranks: guard the likely hideouts (H1) with hideout weights that don't assume Jack wanders (H2), and fix coach moves in the deduction (H3).
+- **Hard difficulty:** a third Jack level, once there is an AI to justify it (see [Detective inference](detective-inference-study.md#10-recommendations) for what the police need first).
 - **Play as Jack** against the computer police in `js/ai/police.js`, which already plays from the police view.
 - **Undo** for the police's last click within a phase.
 - **Save and resume** a game in browser storage.

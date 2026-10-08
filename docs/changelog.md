@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased: difficulty levels
+## Unreleased: difficulty levels and a study of the detectives
 
 - **Jack's difficulty:** choose Easy (the baseline AI, the default) or Normal (the strategic AI) in the setup dialog. The level shows in the top bar and is remembered; `?difficulty=normal` (or the older `?jack=strategic`) fixes it for testing. Nothing else changes with the level. See [Jack's AI](jack-ai.md#difficulty-levels).
+- **Study:** [Detective inference](detective-inference-study.md) compares the police's deduction with [whitechapelR](https://github.com/bmewing/whitechapelR), checks it against an exhaustive reference, and finds why the computer police lose to the strategic Jack. Scripts and results are in `research/detective-inference/`.
 
 ## Unreleased: a smarter Jack
 
