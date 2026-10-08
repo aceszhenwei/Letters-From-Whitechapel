@@ -118,7 +118,8 @@
 .map .token.police-4 {
     background-color: #ffcc33;
 }
-.map .token.token-murder {
+.map .token-murder {
+    position: absolute;
     display: block;
     padding: 2px;
     width: 24px;
@@ -131,7 +132,7 @@
     font-size: 19px;
     opacity: 1;
 }
-.map .token.token-murder:before {
+.map .token-murder:before {
   font-family: 'FontAwesome';
   content: "\f071";
 }

@@ -19,17 +19,19 @@ var police = new Array();
 var game = {
 	config: {
 		state: 0,
-		totalMoves: 20,
-		startingMoves: 15,
+		totalMoves: 20, // Spaces on the move track: Roman numerals V to I, then 1 to 15
 		remainingMoves: 15,
+		timeOfCrime: 1, // The Roman numeral the Time of the Crime token is on (1 to 5)
 		carriages: [3, 2, 2, 1], // Special movement tokens for each night
 		alleys: [2, 2, 1, 1],
-		women: 8,
-		wretched: 4,
+		women: [8, 7, 6, 4], // Woman tokens for each night
+		wretched: [5, 4, 3, 1], // How many of them are marked (the Wretched)
+		victims: [1, 1, 2, 1], // The third night is the double event
 		police: 5,
 		fakePolice: 2,
-		womenMarked: new Array(),
+		womenMarked: new Array(), // Where the Wretched are
 		womenUnmarked: new Array(),
+		crimeScenes: new Array(), // Crime Scene markers stay on the map for the whole game
 		nights: 4,
 		over: false,
 		debug: false // Calculate Jack's shortest routes to base on every move (CPU intensive)
@@ -53,11 +55,17 @@ var game = {
 			case 2:
 				game.patrollingTheStreets();
 			break;
+			case 3:
+				game.theVictimsAreChosen();
+			break;
 			case 4:
 				game.bloodOnTheStreets();
 			break;
 			case 5:
 				game.suspenseGrows();
+			break;
+			case 6:
+				game.readyToKill();
 			break;
 			case 8:
 				game.alarmWhistles();
@@ -73,6 +81,9 @@ var game = {
 			break;
 		}
 	},
+	night: function () {
+		return jack.length - 1; // The current night, 0 to 3
+	},
 	preparingTheScene: function () {
 		var night = jack.length;
 		$('<p></p>', {
@@ -80,17 +91,18 @@ var game = {
 		}).prependTo('.preparing-the-scene');
 
 		// Reset the night
-		game.config.remainingMoves = game.config.startingMoves;
+		game.config.remainingMoves = game.config.totalMoves - 5;
+		game.config.timeOfCrime = 1;
 		game.config.womenMarked = new Array();
 		game.config.womenUnmarked = new Array();
 		$('.move-tracker p span').removeClass('active murder carriage alley');
-		$('.move-tracker p span:nth-child(' + (game.config.totalMoves - game.config.remainingMoves + 1) + ')').addClass('active');
 
 		jack[jack.length] = { // New night
 			route: new Array(),
 			moves: new Array(), // Each move Jack makes: { mapid, type: 'walk', 'alley' or 'carriage', via }
 			murder: new Array(),
-			murderMove: new Array(),
+			murderMove: new Array(), // Move track spaces of the crime scenes
+			trackPosition: 0, // Move track space of Jack's pawn (1 is V, 5 is I, 6 is 1 and 20 is 15)
 			carriages: game.config.carriages[night],
 			alleys: game.config.alleys[night]
 		}
@@ -108,41 +120,67 @@ var game = {
 		game.nextState(1);
 	},
 	theTargetsAreIdentified: function () {
-		var mapMurders = map.key('murder');
-		mapMurders = game.sortSevenSteps(mapMurders);
-		while (game.config.womenMarked.length < game.config.wretched) {
+		// Jack places Woman tokens on red numbered circles, but not on crime scenes from earlier nights
+		var night = game.night();
+		var redCircles = _.difference(map.key('murder'), game.config.crimeScenes);
+		redCircles = game.sortSevenSteps(redCircles);
+		while (game.config.womenMarked.length < game.config.wretched[night] && redCircles.length > 0) {
 			// More likely to select murder spots 7 steps from base
-			var index = game.randomSafeIndex(0.9, mapMurders.length);
-			game.config.womenMarked.push(mapMurders[index]); // Randomly select wreched
-			mapMurders.splice(index, 1); // Prevent possibility of choosing duplicate locations
+			var index = game.randomSafeIndex(0.9, redCircles.length);
+			game.config.womenMarked.push(redCircles[index]); // Randomly select wreched
+			redCircles.splice(index, 1); // Prevent possibility of choosing duplicate locations
 		}
-		while (game.config.womenUnmarked.length < (game.config.women - game.config.wretched)) {
-			var index = game.randomInt(0, mapMurders.length);
-			game.config.womenUnmarked.push(mapMurders[index]); // Randomly select unmarked women
-			mapMurders.splice(index, 1); // Prevent possibility of choosing duplicate locations
+		while (game.config.womenUnmarked.length < (game.config.women[night] - game.config.wretched[night]) && redCircles.length > 0) {
+			var index = game.randomInt(0, redCircles.length);
+			game.config.womenUnmarked.push(redCircles[index]); // Randomly select unmarked women
+			redCircles.splice(index, 1); // Prevent possibility of choosing duplicate locations
 		}
 		game.nextState(2);
+	},
+	patrolPositions: function () {
+		// Where the Police Patrol tokens can go, and which of them must be used.
+		// First night: the yellow-bordered crossings. Later nights: a token on every crossing where a policeman
+		// ended the previous night, and the other two on yellow-bordered crossings without a policeman.
+		var previous = police.length > 1 ? police[police.length - 2].now : new Array();
+		return {
+			required: previous,
+			all: _.union(previous, _.difference(map.key('station'), previous)),
+			others: game.config.police + game.config.fakePolice - previous.length // Tokens placed away from policemen
+		};
 	},
 	patrollingTheStreets: function () {
 		$('.patrolling-the-streets').show();
 		$('.patrolling-the-streets .next-state').hide();
+		var positions = game.patrolPositions();
+		var text = 'The head of the investigation places ' + game.config.police + ' police patrol tokens and ' + game.config.fakePolice + ' fake police tokens on the map.';
+		if (positions.required.length > 0) {
+			text += ' There must be a token where each policeman ended last night, and ' + positions.others + ' on yellow-bordered crossings without a policeman.';
+		}
 		$('<p></p>', {
-			text: 'The head of the investigation places ' + game.config.police + ' police patrol tokens and ' + game.config.fakePolice + ' fake police tokens on the map.'
+			text: text
 		}).prependTo('.state.patrolling-the-streets');
 		for (var a = 0; a < map.length; a++) {
 			if (($.inArray(a, game.config.womenMarked) !== -1) || ($.inArray(a, game.config.womenUnmarked) !== -1)) {
 				var classes = 'label label-info token token-woman token-woman-' + a;
 				draw.createElement(a, '', classes).appendTo('.map');
 			}
-			if (map[a].station) {
-				var classes = 'label label-info selectable token token-police marked token-police-' + a;
-				draw.createElement(a, 'police', classes).appendTo('.map');
-				classes = 'label label-info selectable token token-police unmarked token-police-' + a;
-				draw.createElement(a, 'not police', classes).appendTo('.map');
-			}
+		}
+		_.each(positions.all, function (a) {
+			var required = _.contains(positions.required, a) ? ' required' : '';
+			var classes = 'label label-info selectable token token-police marked token-police-' + a + required;
+			draw.createElement(a, 'police', classes).appendTo('.map');
+			classes = 'label label-info selectable token token-police unmarked token-police-' + a + required;
+			draw.createElement(a, 'not police', classes).appendTo('.map');
+		});
+		var placedElsewhere = function () { // Tokens not on a crossing where a policeman ended last night
+			return _.difference(_.union(_.last(police).start, _.last(police).fake), positions.required).length;
 		}
 		$('.token-police').click(function(){
 			var mapid = $(this).data('mapid');
+			var placed = _.contains(_.last(police).start, mapid) || _.contains(_.last(police).fake, mapid);
+			if (!placed && !_.contains(positions.required, mapid) && placedElsewhere() >= positions.others) {
+				return; // Too many tokens away from the policemen
+			}
 			if ($(this).hasClass('marked')) {
 				if ($(this).hasClass('selected')) {
 					$(this).removeClass('selected');
@@ -176,36 +214,31 @@ var game = {
 			if (_.last(police).start.length >= game.config.police && _.last(police).fake.length >= game.config.fakePolice) {
 				$('.token-woman').remove();
 				$('.token-police').remove();
-				game.nextState(4);
+				game.nextState(3);
 			}
 		});
+	},
+	theVictimsAreChosen: function () {
+		// The marked women become Wretched, the others are removed. The Time of the Crime token goes on I
+		game.config.timeOfCrime = 1;
+		draw.tracker();
+		game.nextState(4);
 	},
 	bloodOnTheStreets: function () {
 		$('<p></p>', {
 			text: 'Jack chooses between killing or waiting.'
 		}).prependTo('.state.blood-on-the-streets');
 
-		if (jack[jack.length - 1].route.length == 0) {
-			if (game.config.totalMoves > game.config.remainingMoves) { // If Jack has enough moves to reveal a police token
-				var randomIndex = Math.random(); // Jack chooses between killing or waiting based on the toss of a coin
-				if (randomIndex > 0.5) {
-					game.config.remainingMoves++;
-					game.revealPolice();
-					game.nextState(5);
-				} else {
-					game.murder();
-					game.config.remainingMoves--;
-					$('.token-police').remove();
-					game.nextState(8);
-				}
-			} else { // Forced to murder
-				game.murder();
-				game.config.remainingMoves--;
-				$('.token-police').remove();
-				game.nextState(8);
-			}
-		} else {
+		if (_.last(jack).murder.length > 0) {
 			console.log('Error: Multiple murders attempted.');
+			return;
+		}
+		// On V Jack can no longer wait. Otherwise he decides on the toss of a coin
+		if (game.config.timeOfCrime < 5 && Math.random() > 0.5) {
+			game.nextState(5);
+		} else {
+			game.murder();
+			game.nextState(8);
 		}
 	},
 	suspenseGrows: function() {
@@ -216,121 +249,145 @@ var game = {
 			}).prependTo('.state.suspense-grows');
 		}
 
-		var movedWretched = 0;
+		// Move the Time of the Crime token on to the next Roman numeral
+		game.config.timeOfCrime++;
+		draw.tracker();
 
-		// Move the time of crime token back
-		var availableMoves = game.config.totalMoves - game.config.remainingMoves + 1;
-		$('.move-tracker p span').removeClass('active');
-		$('.move-tracker p span:nth-child(' + availableMoves + ')').addClass('active');
-
+		var patrols = game.patrolTokens();
 		for (var a = 0; a < map.length; a++) {
-			if ($.inArray(a, game.config.womenMarked) !== -1) {
-				var classes = 'label label-info selectable token token-wretched token-wretched-' + a;
-				draw.createElement(a, 'wretched', classes).appendTo('.map');
-			}
-			if ($.inArray(a, _.last(police).revealed) !== -1) {
-				if ($.inArray(a, _.last(police).start) !== -1) {
+			if ($.inArray(a, patrols) !== -1) {
+				if ($.inArray(a, _.last(police).revealed) !== -1) {
 					var classes = 'label label-info revealed token token-police token-police-' + a;
 					draw.createElement(a, 'real police', classes).appendTo('.map');
-				}
-			} else {
-				if (($.inArray(a, _.last(police).start) !== -1) || ($.inArray(a, _.last(police).fake) !== -1)) {
+				} else {
 					var classes = 'label label-info token token-police token-police-' + a;
 					draw.createElement(a, 'police', classes).appendTo('.map');
 				}
 			}
 		}
-		$('.token-wretched').click(function(){
-			var mapid = $(this).data('mapid');
 
-			// Cannot move wretched adjacent to a police token
-			var allPolice = _.union(_.last(police).start, _.last(police).fake);
-			var illegalMoves = _.map(allPolice, function(num, key) {
-				// But revealed police that are unmarked are fine
-				if (!(_.contains(_.intersection(_.last(police).revealed, _.last(police).fake), num))) {
-					return map[num].adjacent;
-				}
-			});
-			// Also cannot move wretched on top of another wretched
-			illegalMoves.push(game.config.womenMarked);
-
-			// TODO: Wretched tokens cannot move past police tokens or on crime scene markers
-
-			illegalMoves = _.flatten(illegalMoves);
-
-			for (var b = 0; b < map[mapid].adjacentNumber.length; b++) {
-				if ($.inArray(map[mapid].adjacentNumber[b], illegalMoves) == -1) {
-					var classes = 'label label-info selectable token token-move-wretched token-wretched-' + map[mapid].adjacentNumber[b];
-					draw.createElement(map[mapid].adjacentNumber[b], 'move here', classes).data('mapidPrev', mapid).click(function(){
-						var index = game.config.womenMarked.indexOf(mapid); // Find previous map id in array
-						if (index !== -1) {
-							game.config.womenMarked[index] = $(this).data('mapid'); // Replace map id in array with new location
-						}
-						$(this).removeClass('selectable token-move-wretched').addClass('token-wretched').text('wretched').unbind('click');
-						$('.token-move-wretched').remove();
-						movedWretched++;
-						if (movedWretched >= game.config.wretched) {
-							$('.token-wretched').remove();
-							game.nextState(4);
-						}
-					}).appendTo('.map');
-				}
-			}
-			$('.token-wretched-' + mapid).remove();
+		// Every Wretched with a legal move must move, the others stay where they are
+		var toMove = _.filter(game.config.womenMarked, function (mapid) {
+			return game.wretchedMoves(mapid).length > 0;
 		});
+		var movedWretched = 0;
+		var done = function () {
+			$('.token-wretched').remove();
+			$('.token-police').remove();
+			game.nextState(6);
+		}
+		if (toMove.length == 0) {
+			done();
+			return;
+		}
+		_.each(game.config.womenMarked, function (a) {
+			var selectable = _.contains(toMove, a) ? ' selectable' : '';
+			var classes = 'label label-info token token-wretched token-wretched-' + a + selectable;
+			draw.createElement(a, 'wretched', classes).appendTo('.map');
+		});
+		$('.token-wretched.selectable').click(function(){
+			var mapid = $(this).data('mapid');
+			var moves = game.wretchedMoves(mapid);
+			$('.token-move-wretched').remove();
+			if (moves.length == 0) { // Blocked by another Wretched that moved, so it stays
+				$(this).removeClass('selectable').unbind('click');
+				movedWretched++;
+				if (movedWretched >= toMove.length) {
+					done();
+				}
+				return;
+			}
+			var wretched = $(this);
+			for (var b = 0; b < moves.length; b++) {
+				var classes = 'label label-info selectable token token-move-wretched token-wretched-' + moves[b];
+				draw.createElement(moves[b], 'move here', classes).data('mapidPrev', mapid).click(function(){
+					var index = game.config.womenMarked.indexOf(mapid); // Find previous map id in array
+					if (index !== -1) {
+						game.config.womenMarked[index] = $(this).data('mapid'); // Replace map id in array with new location
+					}
+					$(this).removeClass('selectable token-move-wretched').addClass('token-wretched').text('wretched').unbind('click');
+					$('.token-move-wretched').remove();
+					wretched.remove();
+					movedWretched++;
+					if (movedWretched >= toMove.length) {
+						done();
+					}
+				}).appendTo('.map');
+			}
+		});
+	},
+	patrolTokens: function () {
+		// Police Patrol tokens on the map (fake ones are removed when Jack reveals them)
+		var last = _.last(police);
+		return _.difference(_.union(last.start, last.fake), _.intersection(last.revealed, last.fake));
+	},
+	wretchedMoves: function (mapid) {
+		// A Wretched moves to an adjacent numbered circle. It can't pass a Police Patrol token, end next to one,
+		// end on another Wretched, or end on a crime scene
+		var patrols = game.patrolTokens();
+		var nearPatrols = _.flatten(_.map(patrols, function (id) {
+			return game.arrestable(id);
+		}));
+		return _.filter(game.walk(mapid, patrols), function (id) {
+			return !_.contains(nearPatrols, id) && !_.contains(game.config.womenMarked, id) && !_.contains(game.config.crimeScenes, id);
+		});
+	},
+	readyToKill: function () {
+		game.revealPolice();
+		game.nextState(4);
 	},
 	alarmWhistles: function () {
 		_.last(police).route = _.map(_.last(police).start, function (mapid) { // Setup police to move
 			_.last(police).now.push(mapid);
 			return [mapid];
 		});
-		game.nextState(9);
+		if (_.last(jack).murder.length > 1) {
+			game.nextState(10); // Double event: the second crime scene was Jack's first move, so the police go first
+		} else {
+			game.nextState(9);
+		}
 	},
 	escapeTheNight: function () {
-		if (game.config.remainingMoves <= 0) {
-			game.end('Jack ran out of moves before reaching his base. The police win!');
-			return;
-		}
-		if ( jack.canMove() ) {
-			var move = jack.move();
-			var night = _.last(jack);
-			var trackerMove = game.config.totalMoves - game.config.remainingMoves + 1;
-			if (move.type == 'carriage') {
-				night.route.push(move.via); // Jack passes through, so police can find clues here
-				night.carriages--;
-				game.config.remainingMoves--; // A carriage uses two moves
-				$('.move-tracker p span:nth-child(' + trackerMove + '), .move-tracker p span:nth-child(' + (trackerMove + 1) + ')').addClass('carriage');
-			}
-			if (move.type == 'alley') {
-				night.alleys--;
-				$('.move-tracker p span:nth-child(' + trackerMove + ')').addClass('alley');
-			}
-			night.route.push(move.mapid);
-			night.moves.push(move);
-			draw.jackLog();
-		} else {
+		if (!jack.canMove()) {
 			game.end('Jack is trapped by the police and cannot move. The police win!');
 			return;
 		}
-
-		// Announce the end of the night (but not too early)
-		if (_.last(jack).route.length >= 6) {
-			if (_.last(_.last(jack).route) == game.config.base) {
-				console.log('Jack has reached his base.');
-				$('.token').remove();
-				if (jack.length >= game.config.nights) {
-					game.end('Jack has escaped for ' + game.config.nights + ' nights. Jack wins!');
-				} else {
-					game.nextState(0); // Start a new night
-				}
-				return;
-			}
+		var move = jack.move();
+		var night = _.last(jack);
+		var spans = $('.move-tracker p span');
+		var moves = (move.type == 'carriage') ? 2 : 1; // A carriage uses two moves
+		if (move.type == 'carriage') {
+			night.route.push(move.via); // Both stops are recorded, so police can find clues at either
+			night.carriages--;
+			spans.eq(night.trackPosition).addClass('carriage');
+			spans.eq(night.trackPosition + 1).addClass('carriage');
 		}
+		if (move.type == 'alley') {
+			night.alleys--;
+			spans.eq(night.trackPosition).addClass('alley');
+		}
+		night.route.push(move.mapid);
+		night.moves.push(move);
+		night.trackPosition += moves;
+		game.config.remainingMoves -= moves;
+		draw.tracker();
+		draw.jackLog();
 
-		$('.move-tracker p span:nth-child(' + _.last(jack).murderMove[_.last(jack).murderMove.length - 1] + ')').addClass('murder');
-		var availableMoves = game.config.totalMoves - game.config.remainingMoves + 1;
-		$('.move-tracker p span').removeClass('active');
-		$('.move-tracker p span:nth-child(' + availableMoves + ')').addClass('active');
+		// Jack declares his escape when a normal move takes him to his hideout (not a special movement)
+		if (move.mapid == game.config.base && move.type == 'walk') {
+			console.log('Jack has reached his base.');
+			$('.token').remove(); // Clue markers are removed, crime scenes stay
+			if (jack.length >= game.config.nights) {
+				game.end('Jack has killed five victims and escaped on all four nights. Jack wins!');
+			} else {
+				game.nextState(0); // Start a new night
+			}
+			return;
+		}
+		if (game.config.remainingMoves <= 0) {
+			game.end('Jack has used his last move without reaching his hideout. The police win!');
+			return;
+		}
 		game.nextState(10);
 	},
 	huntingTheMonster: function () {
@@ -347,9 +404,6 @@ var game = {
 				var classes = 'label label-info selectable revealed token token-police police-' + policeCounter + ' token-police-' + a;
 				draw.createElement(a, 'police', classes).appendTo('.map');
 				policeCounter++;
-			}
-			if (a == _.last(_.last(jack).murder)) {
-				draw.murder(a);
 			}
 		}
 		$('.token-police').click(function(){
@@ -402,9 +456,6 @@ var game = {
 			text: 'Each policeman pawn either looks for clues or executes an arrest.'
 		}).prependTo('.clues-and-suspicion');
 
-		var movedPolice = 0;
-		var completePolice = 0;
-
 		_.last(police).search = _.map(_.last(police).now, function (mapid) {
 			return game.searchable(mapid);
 		});
@@ -412,18 +463,36 @@ var game = {
 			return game.arrestable(mapid);
 		});
 
-		for (var a = 0; a < map.length; a++) {
-			if ($.inArray(a, _.last(police).now) !== -1) {
-				var classes = 'label label-info selectable token token-search-adjacent token-search-adjacent-' + a;
-				draw.createElement(a, 'search', classes).appendTo('.map');
-				classes = 'label label-info selectable token token-arrest-adjacent token-arrest-adjacent-' + a;
-				draw.createElement(a, 'arrest', classes).appendTo('.map');
-
-			}
-			if (a == _.last(_.last(jack).murder)) {
-				draw.murder(a);
+		// Each policeman takes one action: looking for clues or executing an arrest
+		var acted = 0;
+		var actionDone = function () {
+			acted++;
+			if (acted >= _.last(police).now.length) {
+				$('.token.selectable').remove();
+				game.nextState(9);
 			}
 		}
+
+		var canAct = 0;
+		_.each(_.last(police).now, function (a, index) {
+			if (_.last(police).search[index].length > 0) {
+				var classes = 'label label-info selectable token token-search-adjacent token-search-adjacent-' + a;
+				draw.createElement(a, 'search', classes).appendTo('.map');
+			}
+			if (_.last(police).arrest[index].length > 0) {
+				var classes = 'label label-info selectable token token-arrest-adjacent token-arrest-adjacent-' + a;
+				draw.createElement(a, 'arrest', classes).appendTo('.map');
+			}
+			if (_.last(police).search[index].length > 0 || _.last(police).arrest[index].length > 0) {
+				canAct++;
+			}
+		});
+		acted = _.last(police).now.length - canAct; // Policemen with no numbered circles next to them can't act
+		if (canAct == 0) {
+			game.nextState(9);
+			return;
+		}
+
 		$('.token-arrest-adjacent').click(function(){
 			var mapid = $(this).data('mapid');
 			var index = _.indexOf(_.last(police).now, mapid);
@@ -440,49 +509,44 @@ var game = {
 						console.log('Jack has not been arrested.');
 					}
 					$('.token-arrest').remove();
-					_.last(police).search[index] = undefined;
-					if (_.isEmpty(_.compact(_.flatten(_.last(police).search)))) {
-						$('.token.selectable').remove();
-						game.config.remainingMoves--;
-						game.nextState(9);
-					}
+					actionDone();
 				}).appendTo('.map');
 			}
-			$(this).prev().remove();
+			$('.token-search-adjacent-' + mapid).remove();
 			$(this).remove();
 		});
 		$('.token-search-adjacent').click(function(){
 			var mapid = $(this).data('mapid');
 			var index = _.indexOf(_.last(police).now, mapid);
+			var search = _.last(police).search[index];
 
-			for (var b = 0; b < _.last(police).search[index].length; b++) {
-				var classes = 'label label-info selectable token token-search token-search-' + _.last(police).search[index][b];
-				draw.createElement(_.last(police).search[index][b], 'search', classes).click(function(){
+			for (var b = 0; b < search.length; b++) {
+				var classes = 'label label-info selectable token token-search token-search-' + search[b];
+				draw.createElement(search[b], 'search', classes).click(function(){
 					var mapidAdjacent = $(this).data('mapid');
 					if ($.inArray(mapidAdjacent, _.last(jack).route) !== -1) {
 						console.log('Clue found at ' + map[mapidAdjacent].number + '.');
 						$('.token-search').remove();
-						_.last(police).search[index] = undefined;
 						_.last(police).clue.push(mapidAdjacent);
 						draw.clue(mapidAdjacent);
+						actionDone(); // Finding a clue ends the search
 					} else {
 						console.log('No clue found.');
 						$(this).remove();
-						_.last(police).search[index][_.indexOf(_.last(police).search[index], mapidAdjacent)] = undefined;
-					}
-					if (_.isEmpty(_.compact(_.flatten(_.last(police).search)))) {
-						$('.token.selectable').remove();
-						game.config.remainingMoves--;
-						game.nextState(9);
+						search[_.indexOf(search, mapidAdjacent)] = undefined;
+						if (_.isEmpty(_.reject(search, _.isUndefined))) {
+							actionDone(); // Nothing left to search
+						}
 					}
 				}).appendTo('.map');
 			}
-			$(this).next().remove();
+			$('.token-arrest-adjacent-' + mapid).remove();
 			$(this).remove();
 		});
 	},
 	selectBase: function () {
-		var mapNumbers = map.key('number');
+		// Jack may choose any numbered circle for his hideout, except a red one
+		var mapNumbers = _.difference(map.key('number'), map.key('murder'));
 		game.config.base = mapNumbers[ game.randomInt(0, mapNumbers.length) ];
 	},
 	randomFloat: function (highest) {
@@ -516,25 +580,43 @@ var game = {
 		$('.game-over').text(message).show();
 	},
 	revealPolice: function() {
-		var randomIndex = Math.floor(Math.random() * (_.last(police).start.length + _.last(police).fake.length)) + 1; // Randomly select a police (marked or unmarked)
-		if (randomIndex <= _.last(police).start.length) {
-			var mapid = _.last(police).start[randomIndex - 1];
-		} else {
-			var mapid = _.last(police).fake[randomIndex - _.last(police).start.length - 1];
+		// Jack reveals one of the Police Patrol tokens he hasn't revealed yet
+		var hidden = _.difference(_.union(_.last(police).start, _.last(police).fake), _.last(police).revealed);
+		if (hidden.length > 0) {
+			_.last(police).revealed.push(hidden[game.randomInt(0, hidden.length)]);
 		}
-		_.last(police).revealed.push(mapid);
 	},
 	murder: function() {
-		game.config.womenMarked = game.sortSevenSteps(game.config.womenMarked);
+		var night = _.last(jack);
+		var victims = Math.min(game.config.victims[game.night()], game.config.womenMarked.length);
+		var sorted = game.sortSevenSteps(game.config.womenMarked);
 
 		// TODO: If there are revealed police, murder far from them?
 
-		var randomIndex = game.randomSafeIndex(0.2, game.config.womenMarked.length);
-		
-		var mapid = game.config.womenMarked[randomIndex];
-		jack[jack.length - 1].route.push(mapid); // Put Jack at the scene of the crime
-		jack[jack.length - 1].murder.push(mapid);
-		jack[jack.length - 1].murderMove.push(game.config.totalMoves - game.config.remainingMoves + 1);
+		// Jack escapes from his last victim, so choose that one carefully
+		var last = sorted[game.randomSafeIndex(0.2, sorted.length)];
+		var others = _.without(sorted, last);
+		var scenes = new Array();
+		while (scenes.length < victims - 1) { // The double event: another victim first
+			var index = game.randomInt(0, others.length);
+			scenes.push(others[index]);
+			others.splice(index, 1);
+		}
+		scenes.push(last);
+
+		// Jack's pawn starts on the Time of the Crime token (the second crime scene of the double event uses his first move)
+		var position = 6 - game.config.timeOfCrime;
+		_.each(scenes, function (mapid, index) {
+			night.route.push(mapid); // Put Jack at the scene of the crime
+			night.murder.push(mapid);
+			night.murderMove.push(position + index);
+			game.config.crimeScenes.push(mapid);
+			game.config.womenMarked = _.without(game.config.womenMarked, mapid);
+			draw.crimeScene(mapid);
+		});
+		night.trackPosition = position + scenes.length - 1;
+		game.config.remainingMoves = game.config.totalMoves - night.trackPosition;
+		draw.tracker();
 	},
 	sortSevenSteps: function (arrayToSort) {
 		// Sort by moves to base (7 being optimal)
@@ -728,7 +810,8 @@ jack.chooseSpecial = function (from, walks, arrestable) {
 	}
 	_.each(options, function (option) {
 		option.arrestable = arrestCount(option.mapid);
-		option.baseMoves = jack.baseDistance(option.mapid);
+		// Jack can't declare his escape after a special movement, so landing on his hideout means stepping off and back
+		option.baseMoves = option.mapid == game.config.base ? 2 : jack.baseDistance(option.mapid);
 		option.inTime = option.baseMoves <= remaining - option.moves;
 	});
 	var best = function (list) {
@@ -787,8 +870,13 @@ jack.baseDistance = function (mapid) {
 
 jack.oneStep = function (mapid, avoidPolice) {
 	// Show all possible Jack movements
-	var adjacentNumbers = new Array();
 	avoidPolice = typeof avoidPolice !== 'undefined' ? avoidPolice : false; // Can pass police by default
+	return game.walk(mapid, avoidPolice ? _.last(police).now : []);
+}
+
+game.walk = function (mapid, blocked) {
+	// Numbered circles next to a numbered circle, along dotted lines through crossings, without passing the blocked crossings
+	var adjacentNumbers = new Array();
 
 	var nextStep = function (array, blacklist) {
 		_.each(array, function (id) {
@@ -797,7 +885,7 @@ jack.oneStep = function (mapid, avoidPolice) {
 			}
 			blacklist.push(id); // Make sure it's not processed again
 
-			if (avoidPolice && _.indexOf(_.last(police).now, id) !== -1) { // Jack can't pass police
+			if (_.indexOf(blocked, id) !== -1) { // Can't pass police
 				return;
 			}
 			if (map[id].number) {
@@ -920,10 +1008,21 @@ var draw = {
 			}
 		}
 	},
-	murder: function (mapid) {
-		$('.token-murder').remove(); // Only one crime scene is shown at a time
-		var classes = 'label label-info token token-murder token-murder-' + mapid;
+	crimeScene: function (mapid) {
+		// Crime Scene markers stay for the whole game, so they aren't tokens that get cleared
+		var classes = 'label label-info crime-scene token-murder token-murder-' + mapid;
 		draw.createElement(mapid, '', classes).appendTo('.map');
+	},
+	tracker: function () {
+		// The Time of the Crime token, then Jack's pawn once he has killed
+		var night = _.last(jack);
+		var spans = $('.move-tracker p span');
+		spans.removeClass('active murder');
+		_.each(night.murderMove, function (position) {
+			spans.eq(position - 1).addClass('murder');
+		});
+		var position = night.trackPosition > 0 ? night.trackPosition : 6 - game.config.timeOfCrime;
+		spans.eq(position - 1).addClass('active');
 	},
 	clue: function (mapid) {
 		var classes = 'label label-info token token-clue token-clue-' + mapid;

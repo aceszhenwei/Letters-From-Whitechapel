@@ -55,14 +55,16 @@ function startGame(options = {}) {
 	return window;
 }
 
-// Choose the police start positions: the first five marked tokens are real, the last two unmarked are fake
+// Choose the police start positions. Tokens marked "required" (where policemen ended last night) are used first:
+// five real ones, then two fake ones on other crossings
 function placePolice(window) {
 	const $ = window.$;
 	const marked = $('.token-police.marked');
-	for (let i = 0; i < 5; i++) marked.eq(i).click();
-	const unmarked = $('.token-police.unmarked');
-	unmarked.eq(unmarked.length - 2).click();
-	unmarked.eq(unmarked.length - 1).click();
+	const required = marked.filter('.required');
+	const real = required.length > 0 ? required : marked.slice(0, 5);
+	const others = marked.not(real);
+	real.each(function () { $(this).click(); });
+	others.slice(0, 2).each(function () { $(this).next().click(); });
 }
 
 // Play one player action as the police, returns a short description of what happened
@@ -86,10 +88,13 @@ function policeAction(window, random) {
 		case 11:
 			if ($('.token-arrest').length) { pick($('.token-arrest')).click(); return 'arrest'; }
 			if ($('.token-search').length) { pick($('.token-search')).click(); return 'search'; }
-			if ($('.token-search-adjacent').length) {
-				if (random() < 0.2) $('.token-arrest-adjacent').eq(0).click();
-				else $('.token-search-adjacent').eq(0).click();
-				return 'choose search or arrest';
+			if ($('.token-search-adjacent').length && (random() >= 0.2 || !$('.token-arrest-adjacent').length)) {
+				$('.token-search-adjacent').eq(0).click();
+				return 'choose search';
+			}
+			if ($('.token-arrest-adjacent').length) {
+				$('.token-arrest-adjacent').eq(0).click();
+				return 'choose arrest';
 			}
 			return 'stuck';
 		default:
@@ -124,7 +129,8 @@ function advanceTo(window, state, options = {}) {
 function setupNight(window, { base, from, police = [], remaining = 10, carriages = 3, alleys = 2 }) {
 	window.game.config.base = base;
 	window.game.config.remainingMoves = remaining;
-	window.jack.push({ route: [from], moves: [], murder: [from], murderMove: [6], carriages, alleys });
+	const trackPosition = window.game.config.totalMoves - remaining;
+	window.jack.push({ route: [from], moves: [], murder: [from], murderMove: [5], trackPosition, carriages, alleys });
 	window.police.push({
 		fake: [], start: police.slice(), revealed: [], route: police.map((id) => [id]), now: police.slice(),
 		search: [], arrest: [], clue: []
