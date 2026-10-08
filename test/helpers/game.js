@@ -59,7 +59,9 @@ function startGame(options = {}) {
 // five real ones, then two fake ones on other crossings
 function placePolice(window) {
 	const $ = window.$;
-	const marked = $('.token-police.marked');
+	const board = $('.map');
+	const q = (selector) => board.find(selector); // Only look on the board, it is much faster in jsdom
+	const marked = q('.token-police.marked');
 	const required = marked.filter('.required');
 	const real = required.length > 0 ? required : marked.slice(0, 5);
 	const others = marked.not(real);
@@ -70,6 +72,8 @@ function placePolice(window) {
 // Play one player action as the police, returns a short description of what happened
 function policeAction(window, random) {
 	const $ = window.$;
+	const board = $('.map');
+	const q = (selector) => board.find(selector);
 	const game = window.game;
 	if (game.config.over) return 'over';
 	const pick = (elements) => elements.eq(Math.floor(random() * elements.length));
@@ -78,22 +82,22 @@ function policeAction(window, random) {
 			placePolice(window);
 			return 'place police';
 		case 5:
-			if ($('.token-move-wretched').length) { pick($('.token-move-wretched')).click(); return 'move wretched'; }
-			if ($('.token-wretched.selectable').length) { $('.token-wretched.selectable').eq(0).click(); return 'select wretched'; }
+			if (q('.token-move-wretched').length) { pick(q('.token-move-wretched')).click(); return 'move wretched'; }
+			if (q('.token-wretched.selectable').length) { q('.token-wretched.selectable').eq(0).click(); return 'select wretched'; }
 			return 'stuck';
 		case 10:
-			if ($('.token-move-police').length) { pick($('.token-move-police')).click(); return 'move police'; }
-			if ($('.token-police.selectable').length) { $('.token-police.selectable').eq(0).click(); return 'select police'; }
+			if (q('.token-move-police').length) { pick(q('.token-move-police')).click(); return 'move police'; }
+			if (q('.token-police.selectable').length) { q('.token-police.selectable').eq(0).click(); return 'select police'; }
 			return 'stuck';
 		case 11:
-			if ($('.token-arrest').length) { pick($('.token-arrest')).click(); return 'arrest'; }
-			if ($('.token-search').length) { pick($('.token-search')).click(); return 'search'; }
-			if ($('.token-search-adjacent').length && (random() >= 0.2 || !$('.token-arrest-adjacent').length)) {
-				$('.token-search-adjacent').eq(0).click();
+			if (q('.token-arrest').length) { pick(q('.token-arrest')).click(); return 'arrest'; }
+			if (q('.token-search').length) { pick(q('.token-search')).click(); return 'search'; }
+			if (q('.token-search-adjacent').length && (random() >= 0.2 || !q('.token-arrest-adjacent').length)) {
+				q('.token-search-adjacent').eq(0).click();
 				return 'choose search';
 			}
-			if ($('.token-arrest-adjacent').length) {
-				$('.token-arrest-adjacent').eq(0).click();
+			if (q('.token-arrest-adjacent').length) {
+				q('.token-arrest-adjacent').eq(0).click();
 				return 'choose arrest';
 			}
 			return 'stuck';

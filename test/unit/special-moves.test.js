@@ -102,7 +102,7 @@ test('a carriage uses a token and two moves, and both stops go on Jack\'s route'
 	assert.strictEqual(window.$('.move-tracker .carriage').length, 2);
 	assert.ok(window.$('.move-tracker span').eq(12).hasClass('carriage'), 'covers the two spaces after Jack\'s pawn');
 	assert.ok(window.$('.move-tracker span').eq(13).hasClass('carriage'));
-	assert.match(window.$('.jack-log').text(), /carriage/);
+	assert.match(window.$('.jack-log').text(), /coach/);
 });
 
 test('an alley uses a token and one move', () => {
