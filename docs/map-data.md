@@ -1,6 +1,6 @@
 # Map data
 
-`js/map.js` describes the board as a graph of 429 places (map ids 0 to 428) joined by 592 street segments.
+`js/data/map.js` describes the board as a graph of 429 places (map ids 0 to 428) joined by 592 street segments.
 
 ## Fields
 
@@ -26,11 +26,13 @@ Map ids and printed numbers are different. Code uses map ids; anything shown to 
 
 ## Walking
 
-- **Jack and the Wretched** walk from a numbered circle along streets, through crossings, to the next numbered circle: `game.walk(mapid, blocked)`. It never passes a crossing in `blocked`, which is where the policemen or patrol tokens are.
-- **Policemen** move between crossings and pass through numbered circles without stopping: `game.oneStep` and `game.twoSteps`.
-- **Searches and arrests** reach only the numbered circles directly joined to a policeman's crossing: `game.arrestable`.
+- **Jack and the Wretched** walk from a numbered circle along streets, through crossings, to the next numbered circle: `WC.board.walk(mapid, blocked)`. It never passes a crossing in `blocked`, which is where the policemen or patrol tokens are.
+- **Policemen** move between crossings and pass through numbered circles without stopping: `WC.board.crossingSteps` and `WC.board.crossingsWithinTwo`.
+- **Searches and arrests** reach only the numbered circles directly joined to a policeman's crossing: `WC.board.adjacentNumbers`.
 
-`adjacentNumber` was entered by hand. A test checks it matches what `game.walk` works out for every circle.
+These are questions about the map alone, in `js/core/board.js`. Which of them are legal in a game (past which policemen, with which tokens) is decided in `js/core/rules.js`.
+
+`adjacentNumber` was entered by hand. A test checks it matches what `WC.board.walk` works out for every circle.
 
 ## Alleys
 
@@ -47,7 +49,7 @@ The tests check Euler's formula (places − streets + faces = 2), that alleys go
 
 ## Editing the map
 
-1. Change `js/map.js`. Keep connections two-way: if `a` lists `b` in `adjacent`, `b` must list `a`.
+1. Change `js/data/map.js`. Keep connections two-way: if `a` lists `b` in `adjacent`, `b` must list `a`.
 2. In a browser console on `index.html`, run `map.debug()`. It should return `"0 errors"`.
 3. Run `npm test`. The map tests check connections, numbering, planarity and alleys.
 4. The game draws streets from the data, so nothing else needs regenerating. `generate-svg-map.html` still prints SVG markup if you need it for other tools.

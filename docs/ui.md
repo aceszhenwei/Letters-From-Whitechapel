@@ -19,21 +19,30 @@ The page aims to feel like the board game on a table: a parchment board in a dar
 └───────────────────────────────────────────┴──────────────────┘
 ```
 
-Below 1100 pixels wide the page becomes one column, in this order: the phase card (what to do now), the board, the move track, Jack and the case log, then the legend. Below 600 pixels the move track wraps onto two rows and the list of phases is hidden. The board always scales to the width available (`draw.fit`), so there is no horizontal scrolling.
+Below 1100 pixels wide the page becomes one column, in this order: the phase card (what to do now), the board, the move track, Jack and the case log, then the legend. Below 600 pixels the move track wraps onto two rows and the list of phases is hidden. The board always scales to the width available (`WC.ui.draw.fit`), so there is no horizontal scrolling.
+
+## How the interface works
+
+The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't run it (see [Architecture](architecture.md)):
+
+- **It listens to the engine's events** (`game.on`) and draws what changed. For example, `murder` draws the crime scene markers, moves the track and writes the case log entry. `policeTurn` draws the police's choices for that phase.
+- **It shows only legal choices, taken from the rules.** These include `rules.patrolPositions`, `rules.wretchedMoves`, `rules.policeDestinations`, and each policeman's `search` and `arrest` lists.
+- **It sends clicks to the engine's police actions:** `togglePatrol`, `moveWretched`, `keepWretched`, `movePoliceman`, `chooseAction`, `search` and `arrest`. The engine checks the rules again and reports what happened.
+- **It owns all the wording:** instructions, progress lines, case log entries and the endings.
 
 ## Components
 
-| Component | Element | Filled by |
-|---|---|---|
-| Night and date | `.night-name`, `.night-date` | `draw.updateTitle` |
-| Phase card | `.phase-part`, `.phase-title`, `.phase-description`, `.phase-steps` | `draw.updateTitle` |
-| Instructions | `.state.<phase-name>` | `draw.phaseText(name, text)` |
-| Progress | `.phase-progress` | `draw.progress(text)` |
-| Jack's status | `.jack-log` | `draw.jackLog` |
-| Case log | `.event-log` | `game.log(text, kind)`, where `kind` is `night`, `crime`, `clue`, `jack`, `police` or `end` |
-| Board | `.board` > `.map` | `draw.streets`, `draw.map`, `draw.createElement` |
-| Move track | `.move-tracker p span` (20 spans) | `draw.tracker`, `game.escapeTheNight` |
-| Dialogs | `.overlay.intro`, `.overlay.ending` (shown with the `open` class) | Start-up code, `game.end` |
+| Component | Element | Drawn by (`WC.ui.draw`) | On |
+|---|---|---|---|
+| Night and date | `.night-name`, `.night-date` | `updateTitle` | `phase`, `nightStarted` |
+| Phase card | `.phase-part`, `.phase-title`, `.phase-description`, `.phase-steps` | `updateTitle` | `phase` |
+| Instructions | `.state.<phase-name>` | `phaseText(name, text)` | `policeTurn`, and phase 4 |
+| Progress | `.phase-progress` | `progress(text)` | Police actions' events |
+| Jack's status | `.jack-log` | `jackLog` | `nightStarted`, `murder`, `jackMoved` |
+| Case log | `.event-log` | `log(text, kind)`, where `kind` is `night`, `crime`, `clue`, `jack`, `police` or `end` | Most events |
+| Board | `.board` > `.map` | `streets`, `map`, `createElement` | `started` |
+| Move track | `.move-tracker p span` (20 spans) | `tracker` | `timeOfCrime`, `jackWaited`, `murder`, `jackMoved` |
+| Dialogs | `.overlay.intro`, `.overlay.ending` (shown with the `open` class) | Start-up code in `main.js`, the `gameOver` event | |
 
 ## Tokens on the board
 
@@ -89,6 +98,8 @@ Colours, radius, shadow and fonts are CSS variables at the top of `css/style.css
 
 ## Adding to the UI
 
-- **New phase instructions:** call `draw.phaseText('<state-class>', text)` in the phase function, and add the `.state` div to the phase card in `index.html` if it is new.
-- **Something the police learn:** call `game.log(text, kind)`.
+- **New phase instructions:** in `renderer.js`, call `draw.phaseText('<state-class>', text)` in that phase's `turns` function, and add the `.state` div to the phase card in `index.html` if it is new.
+- **Something the police learn:** have the engine report an event with the facts. Then add a handler in `renderer.js`'s `events` that calls `draw.log(text, kind)`.
 - **A new token:** create it with `draw.createElement(mapid, label, 'token token-<name> ...')`, then style `.map .token-<name>` in `style.css`. Size it in board pixels; the board scales as a whole.
+- **A new police action:** add the action to the engine (it checks a rule from `rules.js`), then a click in `renderer.js` that calls it. Don't decide in the interface whether the action is legal.
+- **Selecting elements:** prefer simple class selectors and filter functions over jQuery's `:not()`, `.not(selector)` and similar. Some of those make jQuery draw on `Math.random`, which shifts Jack's random choices in seeded games (see [Testing](testing.md#golden-traces)).

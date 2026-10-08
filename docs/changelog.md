@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased: modules for maintainability
+
+- **`js/script.js` split into modules** with one job each: `core/board.js` (map queries), `core/rules.js` (what is legal), `core/engine.js` (state, phases, effects, events), `ai/jack.js` (Jack's decisions) and `ui/renderer.js` (drawing and clicks). See [Architecture](architecture.md).
+- **One source of truth for the rules.** The engine, Jack's AI and the interface ask `rules.js` instead of each deciding legality.
+- **Jack's AI is replaceable.** It is six decision functions, given a view of what Jack knows. The engine checks each decision against the rules.
+- **No behaviour change.** Ten golden traces recorded before the refactor are reproduced step by step. One visible fix: a policeman keeps his colour from Hunting the monster into Clues and suspicion.
+- **Tests:** the core, a headless game and Jack's AI are tested without a page. Architecture tests guard the module boundaries.
+- **Moved:** vendored libraries to `js/vendor/`, data to `js/data/`.
+
 ## Unreleased: clean-up
 
 - Removed the unused Bootstrap 3 files and the `user-interface.html` mock-up.
