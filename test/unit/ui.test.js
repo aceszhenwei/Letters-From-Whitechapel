@@ -68,7 +68,7 @@ test('Jack\'s status shows tokens, moves left and victims', () => {
 		stats[window.$(this).find('dt').text()] = window.$(this).find('dd').text();
 	});
 	assert.strictEqual(stats['Victims'], '1 of 5');
-	assert.strictEqual(stats['Moves left'], String(window.game.config.remainingMoves));
+	assert.strictEqual(stats['Moves left'], String(window.game.state.remainingMoves));
 	assert.ok('Coaches left' in stats && 'Alleys left' in stats);
 });
 
@@ -76,7 +76,7 @@ test('the game-over dialog opens with the result', () => {
 	const window = loadGame();
 	const from = numbered(window)[10];
 	setupNight(window, { base: numbered(window)[150], from, remaining: 1 });
-	window.game.nextState(9);
+	window.game.enter(9);
 	assert.ok(window.$('.ending').hasClass('open'));
 	assert.match(window.$('.ending .game-over').text(), /The police win!/);
 	assert.match(window.$('.event-log .event').first().text(), /The police win!/);

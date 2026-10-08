@@ -5,12 +5,19 @@ const path = require('path');
 const { JSDOM } = require('jsdom');
 
 const root = path.join(__dirname, '..', '..');
+// The same scripts, in the same order, as index.html
 const scripts = [
-	'js/jquery-1.11.0.min.js',
-	'js/underscore-min.js',
-	'js/map.js',
-	'js/content.js',
-	'js/script.js'
+	'js/vendor/jquery-1.11.0.min.js',
+	'js/vendor/underscore-min.js',
+	'js/data/map.js',
+	'js/data/content.js',
+	'js/core/random.js',
+	'js/core/board.js',
+	'js/core/rules.js',
+	'js/core/engine.js',
+	'js/ai/jack.js',
+	'js/ui/renderer.js',
+	'js/main.js'
 ];
 
 // Small seeded random number generator (mulberry32) so games can be replayed exactly
@@ -40,7 +47,7 @@ function loadGame(options = {}) {
 	}
 	window.errors = errors;
 	if (options.base !== undefined) {
-		window.game.config.base = options.base;
+		window.game.state.base = options.base;
 	}
 	return window;
 }
@@ -48,8 +55,8 @@ function loadGame(options = {}) {
 // Start a game and stop when the police need to be placed
 function startGame(options = {}) {
 	const window = loadGame(options);
-	if (options.base !== undefined) {
-		window.game.selectBase = () => {};
+	if (options.base !== undefined) { // Jack's AI chooses this hideout
+		window.game.ai = Object.assign({}, window.WC.jackAI, { chooseHideout: () => options.base });
 	}
 	window.game.start();
 	return window;
@@ -75,9 +82,9 @@ function policeAction(window, random) {
 	const board = $('.map');
 	const q = (selector) => board.find(selector);
 	const game = window.game;
-	if (game.config.over) return 'over';
+	if (game.state.over) return 'over';
 	const pick = (elements) => elements.eq(Math.floor(random() * elements.length));
-	switch (game.config.state) {
+	switch (game.state.phase) {
 		case 2:
 			placePolice(window);
 			return 'place police';
@@ -122,7 +129,7 @@ function playGame(window, options = {}) {
 function advanceTo(window, state, options = {}) {
 	const random = seededRandom(options.seed || 1);
 	for (let i = 0; i < 2000; i++) {
-		if (window.game.config.state === state) return true;
+		if (window.game.state.phase === state) return true;
 		const action = policeAction(window, random);
 		if (action === 'over' || action === 'stuck') return false;
 	}
@@ -131,24 +138,30 @@ function advanceTo(window, state, options = {}) {
 
 // Set up a night by hand: Jack standing at `from`, policemen on the crossings in `police`
 function setupNight(window, { base, from, police = [], remaining = 10, carriages = 3, alleys = 2 }) {
-	window.game.config.base = base;
-	window.game.config.remainingMoves = remaining;
-	const trackPosition = window.game.config.totalMoves - remaining;
-	window.jack.push({ route: [from], moves: [], murder: [from], murderMove: [5], trackPosition, carriages, alleys });
-	window.police.push({
+	const state = window.game.state;
+	state.base = base;
+	state.remainingMoves = remaining;
+	const trackPosition = window.WC.rules.config.trackLength - remaining;
+	state.jack.push({ route: [from], moves: [], murder: [from], murderMove: [5], trackPosition, carriages, alleys });
+	state.police.push({
 		fake: [], start: police.slice(), revealed: [], route: police.map((id) => [id]), now: police.slice(),
 		search: [], arrest: [], clue: []
 	});
 }
 
+// Jack's AI chooses his hideout (what game.start does before the first night)
+function chooseHideout(window) {
+	window.game.state.base = window.WC.jackAI.chooseHideout(window.WC.rules.hideoutChoices());
+}
+
 // Map ids of the numbered positions, and the crossings next to a position
 function numbered(window) {
-	return window.map.key('number');
+	return window.WC.board.numbered();
 }
 function crossingsAround(window, mapid) {
 	return window.map[mapid].adjacent.filter((id) => !window.map[id].number);
 }
 
 module.exports = {
-	loadGame, startGame, placePolice, policeAction, playGame, advanceTo, setupNight, numbered, crossingsAround, seededRandom
+	loadGame, startGame, placePolice, policeAction, playGame, advanceTo, setupNight, chooseHideout, numbered, crossingsAround, seededRandom
 };

@@ -1,15 +1,12 @@
 // Records what happens in a seeded game, so a refactor can prove it plays exactly the same game.
-// This is the only test code that knows where the game keeps its state.
+// The golden traces were recorded from the code before the module refactor, when this read the state
+// from game.config and the jack and police arrays; that is the only part that changed.
 
 const crypto = require('crypto');
 const { startGame, policeAction, seededRandom } = require('./game');
 
 function gameState(window) {
-	if (window.game.state) { // After the refactor: one state object
-		return window.game.state;
-	}
-	const config = window.game.config; // Before: game.config plus the jack and police arrays
-	return Object.assign({}, config, { phase: config.state, jack: window.jack, police: window.police });
+	return window.game.state;
 }
 
 const list = (array) => Array.from(array || []);
