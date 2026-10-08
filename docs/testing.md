@@ -70,7 +70,7 @@ Because the default AI draws on `Math.random`, which jQuery's selector engine al
 
 ### The strategic AI and the golden traces
 
-The golden traces play the baseline AI, which is still the game's default, so they are unchanged. The strategic AI is checked by the properties above, and its playing strength by simulation, not by tests (`node tools/simulate.js`, see [Jack's AI](jack-ai.md#evaluation-method)): a test can say a move is legal, but only many games can say it is good.
+The golden traces play the baseline AI, which is still the game's default, so they are unchanged. The strategic AI is checked by the properties above, and its playing strength by simulation, not by tests (`node tools/simulate.js`, see [Jack's AI](jack-ai.md#8-evaluation-method)): a test can say a move is legal, but only many games can say it is good.
 
 ## Test helpers
 

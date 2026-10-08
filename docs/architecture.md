@@ -70,7 +70,7 @@ The core (`board`, `rules`, `engine`, `random`) and the AI run without a page. T
 - **Rules vs engine.** Rules decide; the engine acts. Every rule is a pure function of the state, so the engine, the AI and the interface all ask the same question in the same place. This is the single source of truth: changing a rule means changing one function in `rules.js`.
 - **Engine vs AI.** The engine runs the phases and applies decisions, but Jack's choices come from `game.ai`, an object with six functions. The AI gets a **view** from `rules.jackView(state)`: what Jack would know at the table, plus questions he may ask (`walks()`, `specialMoves()`, `distanceToHideout()`, `threats()`, `endsNight()`). The engine checks every decision against the rules before applying it, so a new or experimental AI can't break the game silently.
 - **Engine vs interface.** The engine reports what happened as events (`murder`, `jackMoved`, `searchFinished`, ...) and never touches the page. The interface listens and draws. It gets the legal choices to show from the rules, and sends clicks to engine actions (`togglePatrol`, `movePoliceman`, `search`, ...). Each action checks the rules and returns `false` if it isn't allowed. So the page displays state; it doesn't decide what is legal.
-- **Public record vs deduction.** The engine writes down, as each night goes, what the police see at the table (`state.police[n].log`: crime scenes, the type of each of Jack's moves and where the policemen stood, search and arrest results, the escape). `rules.publicLog` hands out copies, through both Jack's view and the police view (`rules.policeView`). The deduction reads only that record, never the state, so anything it concludes is something the police could conclude. That is what lets Jack's AI reason about what the police believe without cheating (see [Jack's AI](jack-ai.md#information-allowed)).
+- **Public record vs deduction.** The engine writes down, as each night goes, what the police see at the table (`state.police[n].log`: crime scenes, the type of each of Jack's moves and where the policemen stood, search and arrest results, the escape). `rules.publicLog` hands out copies, through both Jack's view and the police view (`rules.policeView`). The deduction reads only that record, never the state, so anything it concludes is something the police could conclude. That is what lets Jack's AI reason about what the police believe without cheating (see [Jack's AI](jack-ai.md#4-information-allowed)).
 - **Case log wording.** The wording lives in the interface. The engine reports facts (`{ type: 'arrestFailed', mapid }`), and the interface writes "Arrest at 82: Jack is not there." A simulation or test can count events without any text.
 
 ### Why not ES modules or a bundler
@@ -180,7 +180,7 @@ A policeman moving, from click to screen:
 | `js/ai/jack.js` | The baseline Jack AI |
 | `js/ai/strategic-jack.js` | The strategic Jack AI |
 | `js/ai/police.js` | Computer police for simulations |
-| `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#evaluation-method)) |
+| `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)) |
 | `experiments/` | Recorded simulation results |
 | `js/ui/renderer.js` | The interface |
 | `js/main.js` | Start-up |

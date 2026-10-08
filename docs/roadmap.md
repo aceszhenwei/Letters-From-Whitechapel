@@ -11,11 +11,13 @@
 
 ## Gameplay
 
-- **Play as Jack** against computer police, or let two people play on one screen.
-- **A stronger Jack** (see [Jack's AI](jack-ai.md#ideas-for-a-stronger-jack)), and difficulty levels.
+- **Two people on one screen.**
+- **A Jack that hides his hideout across nights**, and other next steps for the strategic AI (see [Jack's AI](jack-ai.md#what-would-come-next)).
+- **Difficulty levels:** choose the baseline or the strategic Jack from the intro dialog (today: `index.html?jack=strategic`).
+- **Play as Jack** against the computer police in `js/ai/police.js`, which already plays from the police view.
 - **Undo** for the police's last click within a phase.
 - **Save and resume** a game in browser storage.
-- **Show the police's deductions:** highlight circles Jack could be on, given the clues and moves so far.
+- **Show the police's deductions:** highlight circles Jack could be on, given the clues and moves so far (`js/core/deduction.js` already works them out).
 
 ## Interface
 

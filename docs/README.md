@@ -16,7 +16,7 @@ npm install && npm test  # run the automated tests (Node.js 22 or later)
 | [Architecture](architecture.md) | The modules (board, rules, engine, Jack's AI, interface), why they are split that way, the state and phases, and where new behaviour goes |
 | [Game rules](game-rules.md) | The rules as implemented, where each lives in the code, and what is not implemented |
 | [Map data](map-data.md) | The board graph in `js/data/map.js`: positions, streets, numbers, stations, alleys, and how to edit it safely |
-| [Jack's AI](jack-ai.md) | How the computer plays Jack: hideout, targets, killing, walking, coaches and alleys |
+| [Jack's AI](jack-ai.md) | How the computer plays Jack: the baseline and the strategic AI, what each knows, how they were measured against each other, and the results |
 | [User interface](ui.md) | Layout, components, design tokens, the CSS class contract, accessibility and responsiveness |
 | [Testing](testing.md) | Running the tests, how they are organised, the test helpers, and writing new tests |
 | [Contributing](contributing.md) | Setting up, code conventions, and the pull request checklist |
