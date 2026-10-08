@@ -4,7 +4,7 @@
    To replace the strategy, provide another object with the same six functions (see docs/jack-ai.md). */
 var WC = WC || {};
 
-WC.jackAI = (function (board, random, _) {
+WC.createJackAI = function (board, random, _) {
 
 	var debug = {}; // The last decisions' working, for the browser console
 
@@ -194,4 +194,7 @@ WC.jackAI = (function (board, random, _) {
 		sortSevenSteps: sortSevenSteps,
 		debug: debug
 	};
-})(WC.board, WC.random, _);
+};
+
+// The AI the game uses. WC.createJackAI(WC.board, WC.random.create(source), _) makes one with its own random numbers
+WC.jackAI = WC.createJackAI(WC.board, WC.random, _);
