@@ -23,7 +23,7 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 	}, options || {});
 
 	var hideoutChoices = null; // Set when Jack chooses his hideout
-	var debug = {};
+	var debug = { valued: 0, projections: 0 }; // Work done for the last move (tools/sim/benchmark.js)
 
 	/* What the measurements say
 	   ------------------------- */
@@ -128,6 +128,7 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 	function value(move, context, belief) {
 		// The chance of getting through tonight, as far as this move can tell: surviving the police's next turn,
 		// times getting home in time from where it leaves him
+		debug.valued++;
 		var spare = context.remaining - move.moves - (options.path ? board.distance(move.mapid, context.hideout) : straightLineMoves(move.mapid, context.hideout));
 		var escape = chanceOfEscape(spare);
 		if (move.type == 'walk' && move.mapid == context.hideout) {
@@ -149,6 +150,8 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 	/* Choosing a move
 	   --------------- */
 	function chooseMove(view) {
+		debug.valued = 0;
+		debug.projections = 0;
 		var known = options.risk || options.hideout ? policeKnowledge(view) : null;
 		var policeNow = view.policeNow();
 		var tokens = view.tokens;
@@ -171,6 +174,7 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 			}
 			if (!beliefs[move.type]) {
 				beliefs[move.type] = { now: known.tonight.next(move.type, policeNow), next: {} };
+				debug.projections++;
 			}
 			return beliefs[move.type].now;
 		};
@@ -182,6 +186,7 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 			var memo = beliefs[move.type].next;
 			if (!memo[next.type]) {
 				memo[next.type] = first.next(next.type, policeNow);
+				debug.projections++;
 			}
 			return memo[next.type];
 		};
@@ -222,7 +227,12 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 		var top = ranked[0];
 		var score = function (option) { return option.ahead !== undefined ? option.ahead : option.now; };
 		var tied = _.filter(ranked, function (option) { return Math.abs(score(option) - score(top)) < 1e-9; });
+		if (_.some(tied, function (option) { return option.move.type == 'walk'; })) {
+			// When a walk does as well, walk: coaches and alleys are kept for later tonight (they don't carry over)
+			tied = _.filter(tied, function (option) { return option.move.type == 'walk'; });
+		}
 		var chosen = tied[random.int(0, tied.length)];
+		debug.policeCandidates = known && known.tonight ? known.tonight.size : 0;
 		debug.lastMove = _.map(ranked.slice(0, 8), function (o) { return { mapid: o.move.mapid, type: o.move.type, now: o.now, ahead: o.ahead }; });
 		return chosen.move.type == 'carriage' ? { mapid: chosen.move.mapid, type: 'carriage', via: chosen.move.via } : { mapid: chosen.move.mapid, type: chosen.move.type };
 	}
@@ -264,15 +274,33 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 		return baseline.placeWomen(view);
 	}
 
+	function patrolReach(view) {
+		// Where the patrols on the board could arrest in their first turn. Jack doesn't know which unrevealed patrols
+		// are real, so he assumes any of them could be
+		var tokens = _.pluck(_.reject(view.patrols(), function (patrol) { return patrol.revealed && !patrol.real; }), 'mapid');
+		return policeReach(tokens, 1);
+	}
+
+	function victimValue(view, w, reach) {
+		// A victim is valued like a move: the chance of getting home in time from the crime scene, times the chance
+		// of surviving the police's first turn. How sure can they be? On the double event, one of two crime scenes;
+		// otherwise (Jack moves first) one of the circles next to the crime scene
+		var moves = 20 - (6 - view.timeOfCrime) - (view.victims - 1);
+		var share = view.victims > 1 ? 1 / view.victims : 1 / Math.max(1, board.walk(w, []).length);
+		return chanceOfEscape(moves - board.distance(w, view.hideout)) * (1 - chanceOfArrest(share, !!reach[w]));
+	}
+
 	function wantsToWait(view) {
 		if (!options.hell) {
 			return baseline.wantsToWait(view);
 		}
-		// Wait (one more move tonight) only while the best victim still leaves fewer than 6 moves to spare: the
-		// measurements show the chance of getting home levels off at about 83% from 6 spare moves
+		// Wait while the best victim leaves fewer than 6 moves to spare: the chance of getting home levels off at 6.
+		// (Also waiting while the best victim is within reach of a patrol that might be fake made no difference:
+		// 97.0% either way over 400 development games)
+		var reach = patrolReach(view);
 		var moves = 20 - (6 - view.timeOfCrime);
-		var best = _.max(_.map(view.wretched, function (w) { return moves - board.distance(w, view.hideout); }));
-		return best < 6;
+		var best = _.max(view.wretched, function (w) { return victimValue(view, w, reach); });
+		return moves - board.distance(best, view.hideout) < 6;
 	}
 
 	function chooseVictims(view) {
@@ -282,13 +310,8 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 		// The last victim is where the hunt starts. Value each like a move: the chance of getting home in time, times
 		// the chance of surviving the first round. After his first move the police know he is on one of the circles
 		// next to the crime scene, so that is how sure they can be; real patrols he has revealed may be in reach
-		var moves = 20 - (6 - view.timeOfCrime) - (view.victims - 1);
-		var realPatrols = _.pluck(_.where(view.patrols(), { real: true }), 'mapid');
-		var reach = policeReach(realPatrols, 1);
-		var scored = _.sortBy(view.wretched, function (w) {
-			var share = 1 / Math.max(1, board.walk(w, []).length);
-			return -chanceOfEscape(moves - board.distance(w, view.hideout)) * (1 - chanceOfArrest(share, !!reach[w]));
-		});
+		var reach = patrolReach(view);
+		var scored = _.sortBy(view.wretched, function (w) { return -victimValue(view, w, reach); });
 		var last = scored[0];
 		var others = _.without(view.wretched, last);
 		var scenes = new Array();
@@ -302,7 +325,17 @@ WC.createStrategicJack = function (board, deduction, random, _, options) {
 	}
 
 	function choosePatrolToReveal(view, hidden) {
-		return baseline.choosePatrolToReveal(view, hidden);
+		if (!options.hell) {
+			return baseline.choosePatrolToReveal(view, hidden);
+		}
+		// Reveal the patrol that threatens the most Wretched: if it is fake, it leaves the board
+		var threat = function (mapid) {
+			var reach = policeReach([mapid], 1);
+			return _.filter(view.wretched, function (w) { return reach[w]; }).length;
+		};
+		var most = _.max(_.map(hidden, threat));
+		var candidates = _.filter(hidden, function (mapid) { return threat(mapid) == most; });
+		return candidates[random.int(0, candidates.length)];
 	}
 
 	return {

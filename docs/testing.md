@@ -39,8 +39,9 @@ If a core module touched the page, it would fail to load in the core loader. Tha
 | `test/unit/rules.test.js` | Page | One test for each rule in [Game rules](game-rules.md), named after its rulebook phase |
 | `test/unit/special-moves.test.js` | Core and page | Coach and alley options, when Jack uses them, and the bookkeeping when he does |
 | `test/unit/engine.test.js` | Core | 20 complete games without a page; illegal police actions refused; search or arrest; AI decisions checked; another AI plugged in; events |
-| `test/unit/jack-ai.test.js` | Core | The view hides patrol identities; decisions only read the view; reproducible with its own random source |
-| `test/unit/architecture.test.js` | Source | The module boundaries: the core never touches the page, only the engine changes the state, only the engine runs the AI |
+| `test/unit/jack-ai.test.js` | Core | The view hides patrol identities and the public record hides Jack's route; decisions only read the view; reproducible with its own random source |
+| `test/unit/strategic-jack.test.js` | Core | The strategic AI over six whole games against the deductive police, and in positions set up by hand: only legal moves, never a token he doesn't have, goes home when time is short, keeps in time, avoids a walk the police could reach, keeps tokens when a walk does as well, same seed same game; what it may know: it only reads the view, the police view and public record hold nothing secret, the deduction never rules out the truth, and the AI files never read the state |
+| `test/unit/architecture.test.js` | Source | The module boundaries: the core (including the deduction) never touches the page, only the engine changes the state (not the rules, deduction, AIs or interface), only the engine runs the AI |
 | `test/unit/ui.test.js` | Page | Pixel positions, visible numbers, streets, phase card, instructions, case log, Jack's status, game-over dialog |
 | `test/regression/bugs.test.js` | Page | One test for each bug that has been fixed |
 | `test/regression/ui-flows.test.js` | Page | Search, failed arrest, switching a patrol between real and fake, and Stay |
@@ -66,6 +67,10 @@ node test/fixtures/generate-golden-traces.js
 ```
 
 Because the default AI draws on `Math.random`, which jQuery's selector engine also uses, a seemingly harmless change in the interface (filtering elements with certain selectors) can shift the random numbers and fail the traces. See "Coupling deliberately kept" in [Architecture](architecture.md).
+
+### The strategic AI and the golden traces
+
+The golden traces play the baseline AI, which is still the game's default, so they are unchanged. The strategic AI is checked by the properties above, and its playing strength by simulation, not by tests (`node tools/simulate.js`, see [Jack's AI](jack-ai.md#evaluation-method)): a test can say a move is legal, but only many games can say it is good.
 
 ## Test helpers
 

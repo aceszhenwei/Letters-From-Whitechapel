@@ -103,6 +103,8 @@ function runGame(core, { jack, police, seed, maxActions = 20000, features = fals
 			decisions.push(Object.assign(pending, {
 				night: nights.length,
 				type: data.move.type,
+				mapid: data.move.mapid,
+				remaining: state.remainingMoves,
 				ms: timing,
 				distance: WC.board.distance(data.move.mapid, state.base),
 				slack: state.remainingMoves - WC.board.distance(data.move.mapid, state.base), // Moves to spare
@@ -161,6 +163,8 @@ function runGame(core, { jack, police, seed, maxActions = 20000, features = fals
 	return {
 		seed, jack, police,
 		result: state.over ? state.result.type : 'unfinished',
+		hideout: state.base,
+		crimeScenes: state.jack.map((night) => night.murder.slice()),
 		nights: nights.length,
 		endMove: state.jack.length ? _.last(state.jack).moves.length : 0,
 		nightDetails: nights,

@@ -197,4 +197,4 @@ WC.randomPolice = (function (_) {
 	return { turn: turn };
 })(_);
 
-WC.police = WC.createPolice(WC.board, WC.rules, WC.deduction, _);
+WC.policeAI = WC.createPolice(WC.board, WC.rules, WC.deduction, _);
