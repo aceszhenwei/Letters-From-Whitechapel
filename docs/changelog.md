@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased: a smarter Jack
+
+- **Strategic Jack** (`js/ai/strategic-jack.js`): values each move by the measured chance of surviving the police's next turn and of getting home in time, looks two moves ahead, and makes its Hell choices with the same estimates. It wins 97.2% of 5,000 games against a deductive police AI, where the baseline wins 25.0% (94.2% against 46.9% against random police). The baseline stays the default; `index.html?jack=strategic` plays the strategic AI. See [Jack's AI](jack-ai.md).
+- **Public record and deduction:** the engine records what the police see each night (`state.police[n].log`); `js/core/deduction.js` works out from it alone where Jack could be and where his hideout could be. Jack's view gains `publicLog()`, `pastLogs()` and `patrols()`; a new `rules.policeView` gives a computer police player only what the police know.
+- **Computer police** (`js/ai/police.js`): a deductive player and a random one, for simulations.
+- **Simulation tools:** `tools/simulate.js` (many seeded games, in parallel), and `tools/sim/` to compare runs (with McNemar's test), replay a game, diagnose losses, calibrate the estimates and benchmark decisions. Results are in `experiments/`.
+- **Tests:** properties of the strategic AI (legal moves, resources, urgency, avoiding danger, keeping tokens, determinism) and of what it may know. The golden traces are unchanged: the baseline plays exactly as before.
+
 ## Unreleased: modules for maintainability
 
 - **`js/script.js` split into modules** with one job each: `core/board.js` (map queries), `core/rules.js` (what is legal), `core/engine.js` (state, phases, effects, events), `ai/jack.js` (Jack's decisions) and `ui/renderer.js` (drawing and clicks). See [Architecture](architecture.md).

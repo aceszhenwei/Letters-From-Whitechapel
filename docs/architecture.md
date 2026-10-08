@@ -10,7 +10,9 @@ flowchart TD
     board["core/board.js<br/>questions about the map"]
     rules["core/rules.js<br/>what is legal; what Jack knows"]
     engine["core/engine.js<br/>state, phases, effects, events"]
-    ai["ai/jack.js<br/>Jack's decisions"]
+    ai["ai/jack.js, ai/strategic-jack.js<br/>Jack's decisions"]
+    deduction["core/deduction.js<br/>what public information implies"]
+    police["ai/police.js<br/>computer police (simulations)"]
     random["core/random.js<br/>biased random choices"]
     ui["ui/renderer.js<br/>draws the state, takes clicks"]
     main["main.js<br/>wires it together"]
@@ -19,6 +21,11 @@ flowchart TD
     board --> rules
     rules --> engine
     board --> ai
+    board --> deduction
+    deduction --> ai
+    deduction --> police
+    rules -- "police view" --> police
+    police -- "police actions" --> engine
     random --> ai
     engine -. "asks for decisions (game.ai)" .-> ai
     engine -- "events" --> ui
@@ -47,10 +54,13 @@ The same in plain text, reading down from what depends on nothing:
 | `core/board.js` | Map queries: walking between circles, police steps, adjacent circles, alleys, distances, straight-line distance | The map | Know about a game, a state, or a turn |
 | `core/rules.js` | Legality and derived facts about a state: patrol placement, Wretched moves, police destinations, Jack's legal moves, escaping, threats, and the **view** of what Jack knows | Board, a state passed in | Change the state |
 | `core/engine.js` | The state; the phases of a night; every change to the state (effects); police actions; events | Rules; the AI only through its six functions | Touch the page; decide anything for Jack |
-| `ai/jack.js` | Jack's six decisions | Board, random, the view it is given | Read the state directly, change it, or touch the page |
+| `core/deduction.js` | What can be worked out from a night's public record: where Jack could be (and how likely each circle is), where his route may have passed, where the hideout could be | Board, a public record passed in | Read the state |
+| `ai/jack.js` | The baseline AI: Jack's six decisions | Board, random, the view it is given | Read the state directly, change it, or touch the page |
+| `ai/strategic-jack.js` | The strategic AI: the same six decisions, valuing moves by the chance of surviving and getting home (see [Jack's AI](jack-ai.md)) | Board, deduction, random, the baseline (for decisions it leaves alone), the view | As `ai/jack.js` |
+| `ai/police.js` | Computer police players for simulations: deductive and random | Board, rules, deduction, the police view | Read the state; it acts only through engine actions |
 | `core/random.js` | Biased random choices (`int`, `safe`, `safeIndex`), with an injectable source | `Math.random` by default | |
 | `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
-| `main.js` | Creating the game with Jack's AI and attaching the interface; the intro dialog | Everything above | |
+| `main.js` | Creating the game with Jack's AI (the baseline, or the strategic AI with `?jack=strategic`) and attaching the interface; the intro dialog | Everything above | |
 
 The core (`board`, `rules`, `engine`, `random`) and the AI run without a page. The tests load them into a bare JavaScript context to prove it (`test/helpers/core.js`).
 
@@ -60,11 +70,12 @@ The core (`board`, `rules`, `engine`, `random`) and the AI run without a page. T
 - **Rules vs engine.** Rules decide; the engine acts. Every rule is a pure function of the state, so the engine, the AI and the interface all ask the same question in the same place. This is the single source of truth: changing a rule means changing one function in `rules.js`.
 - **Engine vs AI.** The engine runs the phases and applies decisions, but Jack's choices come from `game.ai`, an object with six functions. The AI gets a **view** from `rules.jackView(state)`: what Jack would know at the table, plus questions he may ask (`walks()`, `specialMoves()`, `distanceToHideout()`, `threats()`, `endsNight()`). The engine checks every decision against the rules before applying it, so a new or experimental AI can't break the game silently.
 - **Engine vs interface.** The engine reports what happened as events (`murder`, `jackMoved`, `searchFinished`, ...) and never touches the page. The interface listens and draws. It gets the legal choices to show from the rules, and sends clicks to engine actions (`togglePatrol`, `movePoliceman`, `search`, ...). Each action checks the rules and returns `false` if it isn't allowed. So the page displays state; it doesn't decide what is legal.
+- **Public record vs deduction.** The engine writes down, as each night goes, what the police see at the table (`state.police[n].log`: crime scenes, the type of each of Jack's moves and where the policemen stood, search and arrest results, the escape). `rules.publicLog` hands out copies, through both Jack's view and the police view (`rules.policeView`). The deduction reads only that record, never the state, so anything it concludes is something the police could conclude. That is what lets Jack's AI reason about what the police believe without cheating (see [Jack's AI](jack-ai.md#4-information-allowed)).
 - **Case log wording.** The wording lives in the interface. The engine reports facts (`{ type: 'arrestFailed', mapid }`), and the interface writes "Arrest at 82: Jack is not there." A simulation or test can count events without any text.
 
 ### Why not ES modules or a bundler
 
-The game is played by opening `index.html` from disk. Browsers refuse to load ES modules from `file://` pages, so modules would force either a local server or a build step to bundle them. Neither buys much for eight small files. Instead, each file is a plain script that adds one object to `WC` and takes its dependencies as arguments, for example `WC.rules = (function (board, _) { ... })(WC.board, _)`. The dependencies are explicit at the bottom of each file, and the load order in `index.html` matches the diagram.
+The game is played by opening `index.html` from disk. Browsers refuse to load ES modules from `file://` pages, so modules would force either a local server or a build step to bundle them. Neither buys much for a dozen small files. Instead, each file is a plain script that adds one object to `WC` and takes its dependencies as arguments, for example `WC.rules = (function (board, _) { ... })(WC.board, _)`. The dependencies are explicit at the bottom of each file, and the load order in `index.html` matches the diagram.
 
 ## The state
 
@@ -81,7 +92,7 @@ The engine owns one state object, `game.state`. Nothing else changes it (a test 
 | `jack[]`, `police[]` | One record per night (below) |
 | `turn` | Progress through the current police phase (who has moved or acted) |
 
-A night of Jack (`state.jack[n]`) has `route` (his sheet: every circle tonight), `moves` (`{ mapid, type, via }`), `murder` and `murderMove`, `trackPosition`, `carriages` and `alleys`. A night of police (`state.police[n]`) has `start` and `fake` (patrol tokens), `revealed`, `now` (policeman *i* is always index *i*), `route`, `search`, `arrest` and `clue`.
+A night of Jack (`state.jack[n]`) has `route` (his sheet: every circle tonight), `moves` (`{ mapid, type, via }`), `murder` and `murderMove`, `trackPosition`, `carriages` and `alleys`. A night of police (`state.police[n]`) has `start` and `fake` (patrol tokens), `revealed`, `now` (policeman *i* is always index *i*), `route`, `search`, `arrest` and `clue`, and `log`, the public record of the night (what the police have seen).
 
 Constants (tokens per night, women, victims, track length) are in `WC.rules.config`.
 
@@ -166,7 +177,11 @@ A policeman moving, from click to screen:
 | `css/style.css` | All styling (see [User interface](ui.md)) |
 | `js/data/` | Map and content data |
 | `js/core/` | Board, rules, engine, random: no page access |
-| `js/ai/jack.js` | Jack's AI |
+| `js/ai/jack.js` | The baseline Jack AI |
+| `js/ai/strategic-jack.js` | The strategic Jack AI |
+| `js/ai/police.js` | Computer police for simulations |
+| `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)) |
+| `experiments/` | Recorded simulation results |
 | `js/ui/renderer.js` | The interface |
 | `js/main.js` | Start-up |
 | `js/vendor/` | jQuery 1.11, Underscore 1.8.3 |
@@ -183,4 +198,5 @@ A policeman moving, from click to screen:
 | Show something new, or change wording | `ui/renderer.js` and `css/style.css` |
 | Add a police action | An action method in `core/engine.js` that checks a rule from `core/rules.js`; then a click in `ui/renderer.js` |
 | Change the map | `data/map.js` (see [Map data](map-data.md)) |
-| Play without a page (simulations, AI evaluation) | `WC.engine.create` and the police actions, as `test/helpers/headless.js` does |
+| Play without a page (simulations, AI evaluation) | `node tools/simulate.js`, or `WC.engine.create` and the police actions, as `tools/sim/run-game.js` and `test/helpers/headless.js` do |
+| Tell the police (or Jack's AI) something new that is public | Record it in the engine with `recordPublic`, and teach `core/deduction.js` to read it |

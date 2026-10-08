@@ -17,7 +17,7 @@ Everything about how the game works and how to change it is in [`docs/`](docs/RE
 - [Architecture](docs/architecture.md): files, data model and the phase state machine
 - [Game rules](docs/game-rules.md): the rules as implemented
 - [Map data](docs/map-data.md): the board graph and how alleys are worked out
-- [Jack's AI](docs/jack-ai.md): how the computer plays Jack
+- [Jack's AI](docs/jack-ai.md): how the computer plays Jack, and how the strategic AI was evaluated
 - [User interface](docs/ui.md): layout, components and design tokens
 - [Testing](docs/testing.md): running and writing tests (`npm install && npm test`)
 - [Contributing](docs/contributing.md), [Roadmap](docs/roadmap.md) and [Changelog](docs/changelog.md)

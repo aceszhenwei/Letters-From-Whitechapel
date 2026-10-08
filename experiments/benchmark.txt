@@ -1,0 +1,12 @@
+strategic Jack against the deductive police, seeds 1-100
+beam of 6 (as played): 2022 decisions
+  decision time (ms)           mean 27.4, median 20.7, p95 76.8, max 179.3
+  moves valued                 mean 225, median 238, p95 351, max 408
+  belief projections           mean 8, median 8, p95 12, max 12
+  police candidate circles     mean 26, median 17, p95 83, max 158
+no pruning: 1958 decisions
+  decision time (ms)           mean 28.9, median 21.7, p95 84.8, max 181.0
+  moves valued                 mean 995, median 910, p95 2277, max 3212
+  belief projections           mean 9, median 11, p95 12, max 12
+  police candidate circles     mean 27, median 17, p95 83, max 177
+  same choice as without pruning in 872 of 957 decisions compared (91.1%)

@@ -92,10 +92,15 @@ WC.board = (function (map, _) {
 		))
 	}
 
+	var withinTwo = {};
 	function crossingsWithinTwo(mapid) {
-		return _.union(_.flatten(_.map(crossingSteps(mapid), function (id) {
-			return crossingSteps(id);
-		})));
+		// The map never changes, so each answer is worked out once (and copied, so callers can't change it)
+		if (!withinTwo[mapid]) {
+			withinTwo[mapid] = _.union(_.flatten(_.map(crossingSteps(mapid), function (id) {
+				return crossingSteps(id);
+			})));
+		}
+		return withinTwo[mapid].slice();
 	}
 
 	function adjacentNumbers(crossing) {

@@ -1,0 +1,9 @@
+strategic-no-lookahead vs deductive police, seeds 1-1000
+  games 1000  Jack wins 954 (95.4%, 95% CI 93.9%-96.5%)
+  police wins 46: arrested 41, out of moves 3, trapped 2
+  nights escaped per game 3.94; lost games end on night 3.61, after move 6.9
+  moves to hideout 6.9 (shortest possible 5.7); distance to hideout per move 2.63
+  coaches 3.64, alleys 0.54 per game
+  moves with every option in reach of police 8.1%; moves onto such a circle 40.2%
+  police candidates for Jack's position 54.2; possible hideouts after the game 19.0
+  decision time 26.91 ms mean, 79.30 ms p95, 209.0 ms max; 235 s total

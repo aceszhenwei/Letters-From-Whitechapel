@@ -8,7 +8,7 @@ const read = (file) => fs.readFileSync(path.join(__dirname, '..', '..', file), '
 	.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, ''); // Code only, not comments
 
 test('the core (board, rules, engine) never touches the page', () => {
-	for (const file of ['js/core/board.js', 'js/core/rules.js', 'js/core/engine.js', 'js/core/random.js']) {
+	for (const file of ['js/core/board.js', 'js/core/rules.js', 'js/core/engine.js', 'js/core/random.js', 'js/core/deduction.js']) {
 		assert.ok(!/\$\(|jQuery|document\.|window\./.test(read(file)), file);
 	}
 });
@@ -25,7 +25,7 @@ test('the board knows nothing about a game', () => {
 });
 
 test('only the engine changes the game state', () => {
-	for (const file of ['js/core/rules.js', 'js/ai/jack.js', 'js/ui/renderer.js']) {
+	for (const file of ['js/core/rules.js', 'js/core/deduction.js', 'js/ai/jack.js', 'js/ai/strategic-jack.js', 'js/ai/police.js', 'js/ui/renderer.js']) {
 		const code = read(file);
 		assert.ok(!assigns.test(code), file + ': ' + (code.match(assigns) || [])[0]);
 		assert.ok(!changesList.test(code), file + ': ' + (code.match(changesList) || [])[0]);
