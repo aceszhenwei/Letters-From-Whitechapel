@@ -6,4 +6,4 @@ baseline vs deductive police, seeds 1-5000
   coaches 2.65, alleys 0.57 per game
   moves with every option in reach of police 14.3%; moves onto such a circle 43.2%
   police candidates for Jack's position 67.2; possible hideouts after the game 52.3
-  decision time 1.27 ms mean, 4.84 ms p95, 752.2 ms max; 465 s total
+  decision time 1.85 ms mean, 3.93 ms p95, 68.1 ms max; 675 s total
