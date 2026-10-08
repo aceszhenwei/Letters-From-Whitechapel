@@ -773,6 +773,81 @@ h2 {
     margin: 0 0 20px;
 }
 
+/* Jack's difficulty, in the setup dialog and the top bar */
+.difficulty {
+    margin: 0 0 20px;
+    padding: 0;
+    border: 0;
+}
+
+.difficulty legend {
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.difficulty-options {
+    display: grid;
+    gap: 8px;
+}
+
+.difficulty-option {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    align-items: baseline;
+    padding: 10px 12px;
+    border: 1px solid var(--paper-dim);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+}
+
+.difficulty-option:has(input:checked) {
+    border-color: var(--blood);
+    background: rgba(164, 22, 26, 0.07);
+}
+
+.difficulty-option:has(input:disabled) {
+    cursor: default;
+}
+
+.difficulty-option input {
+    grid-row: span 2;
+    accent-color: var(--blood);
+}
+
+.difficulty-label {
+    font-weight: 700;
+}
+
+.difficulty-description {
+    grid-column: 2;
+    font-size: 13px;
+    color: #5d4d3e;
+}
+
+.difficulty-note {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: var(--blood);
+}
+
+.difficulty-badge {
+    margin-left: auto;
+    margin-right: 16px;
+    padding: 4px 10px;
+    border: 1px solid var(--brass-dim);
+    border-radius: 999px;
+    color: var(--brass);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.difficulty-badge[hidden] {
+    display: none;
+}
+
 /* Smaller screens
    --------------- */
 @media (max-width: 1100px) {

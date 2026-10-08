@@ -60,7 +60,9 @@ The same in plain text, reading down from what depends on nothing:
 | `ai/police.js` | Computer police players for simulations: deductive and random | Board, rules, deduction, the police view | Read the state; it acts only through engine actions |
 | `core/random.js` | Biased random choices (`int`, `safe`, `safeIndex`), with an injectable source | `Math.random` by default | |
 | `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
-| `main.js` | Creating the game with Jack's AI (the baseline, or the strategic AI with `?jack=strategic`) and attaching the interface; the intro dialog | Everything above | |
+| `ai/difficulty.js` | The difficulty levels: which Jack AI each one plays, and where a choice comes from (address, dialog, saved, default) | The AI constructors | Play, or touch the page or the rules |
+| `ui/setup.js` | The setup dialog: Jack's difficulty and starting the game (sets `game.ai`) | Difficulty, the page | Change the rules |
+| `main.js` | Creating the game (Easy until the setup dialog applies a level) and attaching the interface; opening the setup dialog | Everything above | |
 
 The core (`board`, `rules`, `engine`, `random`) and the AI run without a page. The tests load them into a bare JavaScript context to prove it (`test/helpers/core.js`).
 
@@ -180,6 +182,7 @@ A policeman moving, from click to screen:
 | `js/ai/jack.js` | The baseline Jack AI |
 | `js/ai/strategic-jack.js` | The strategic Jack AI |
 | `js/ai/police.js` | Computer police for simulations |
+| `js/ai/difficulty.js`, `js/ui/setup.js` | Jack's difficulty levels and the setup dialog |
 | `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)) |
 | `experiments/` | Recorded simulation results |
 | `js/ui/renderer.js` | The interface |
@@ -193,6 +196,7 @@ A policeman moving, from click to screen:
 | You want to... | Change |
 |---|---|
 | Change a rule, or add one (for example an optional rule) | `core/rules.js` for what is legal; `core/engine.js` if it adds a phase or an effect; a test in `test/unit/rules.test.js` |
+| Add a difficulty level | An entry in `levels` in `ai/difficulty.js` (see [Jack's AI](jack-ai.md#difficulty-levels)) |
 | Change how Jack plays | `ai/jack.js`, or write a new object with the six decision functions and pass it to `WC.engine.create({ ai })` (see [Jack's AI](jack-ai.md)) |
 | Let Jack's AI know something new | Add it to `rules.jackView`, keeping to what Jack would know at the table |
 | Show something new, or change wording | `ui/renderer.js` and `css/style.css` |

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased: difficulty levels
+
+- **Jack's difficulty:** choose Easy (the baseline AI, the default) or Normal (the strategic AI) in the setup dialog. The level shows in the top bar and is remembered; `?difficulty=normal` (or the older `?jack=strategic`) fixes it for testing. Nothing else changes with the level. See [Jack's AI](jack-ai.md#difficulty-levels).
+
 ## Unreleased: a smarter Jack
 
 - **Strategic Jack** (`js/ai/strategic-jack.js`): values each move by the measured chance of surviving the police's next turn and of getting home in time, looks two moves ahead, and makes its Hell choices with the same estimates. It wins 97.2% of 5,000 games against a deductive police AI, where the baseline wins 25.0% (94.2% against 46.9% against random police). The baseline stays the default; `index.html?jack=strategic` plays the strategic AI. See [Jack's AI](jack-ai.md).

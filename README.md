@@ -8,6 +8,15 @@ A browser version of the board game *Letters from Whitechapel*. You lead the fiv
 
 Open `index.html` in a browser. There is nothing to install or build.
 
+Before the first night, choose how Jack plays:
+
+| Difficulty | Jack's AI |
+|---|---|
+| **Easy** (the default) | The baseline AI: simple rules of thumb |
+| **Normal** | The strategic AI: weighs the risk of arrest and the time left before every move |
+
+The labels name the two AIs; Normal is not a claim about how a typical human Jack plays. The choice is remembered for the next game, and it only changes how Jack decides: the rules and what Jack is allowed to know are the same. For testing, `index.html?difficulty=normal` (or `?jack=strategic`) fixes the level. See [Jack's AI](docs/jack-ai.md#difficulty-levels).
+
 The game follows the revised edition rulebook: four nights (including the double event), real and fake patrols, the Time of the Crime, Jack's coaches and alleys, and searching for clues or making an arrest. See [Game rules](docs/game-rules.md) for the details and what isn't implemented yet.
 
 ## Documentation

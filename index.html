@@ -21,6 +21,7 @@
             <div class="brand-subtitle">London, 1888 &middot; You are the police</div>
         </div>
     </div>
+    <div class="difficulty-badge" hidden></div>
     <div class="night-info" aria-live="polite">
         <div class="night-name">Night 1 of 4</div>
         <div class="night-date">31 August 1888</div>
@@ -131,6 +132,11 @@
             <li>Move your policemen up to two crossings and search nearby circles for clues.</li>
             <li>When you know where Jack is, make the arrest.</li>
         </ul>
+        <fieldset class="difficulty">
+            <legend>Jack's difficulty</legend>
+            <div class="difficulty-options"></div>
+            <p class="difficulty-note"></p>
+        </fieldset>
         <button type="button" class="button button-primary start-game">Begin the investigation</button>
     </div>
 </div>
@@ -153,8 +159,10 @@
 <script src="js/core/deduction.js"></script>
 <script src="js/ai/jack.js"></script>
 <script src="js/ai/strategic-jack.js"></script>
+<script src="js/ai/difficulty.js"></script>
 <script src="js/ai/police.js"></script>
 <script src="js/ui/renderer.js"></script>
+<script src="js/ui/setup.js"></script>
 <script src="js/main.js"></script>
 
 </body>
