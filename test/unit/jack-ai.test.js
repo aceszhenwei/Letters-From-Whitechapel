@@ -9,7 +9,8 @@ const { seededRandom } = require('../helpers/game');
 
 // What jackView offers (see js/core/rules.js and docs/jack-ai.md)
 const viewKeys = ['hideout', 'night', 'route', 'position', 'remainingMoves', 'timeOfCrime', 'tokens', 'targets', 'women',
-	'wretched', 'victims', 'debug', 'walks', 'specialMoves', 'canMove', 'endsNight', 'distanceToHideout', 'threats', 'policeNow'];
+	'wretched', 'victims', 'debug', 'walks', 'specialMoves', 'canMove', 'endsNight', 'distanceToHideout', 'threats', 'policeNow',
+	'publicLog', 'pastLogs', 'patrols'];
 
 // A game paused at Jack's first move, with the view he would get
 function atFirstMove(seed) {
@@ -28,6 +29,13 @@ test('the view tells Jack what he knows, and not which patrols are real', () => 
 	assert.deepStrictEqual(Object.keys(view).sort(), viewKeys.slice().sort());
 	const text = JSON.stringify(view);
 	assert.ok(!/"start"|"fake"|"revealed"/.test(text), 'no patrol identities');
+	// The patrols he sees: real or fake only once revealed
+	for (const patrol of view.patrols()) {
+		assert.strictEqual(patrol.real === undefined, !patrol.revealed);
+	}
+	// The public record: no coach stops, crime scenes in no particular order, no hidden route
+	const log = JSON.stringify(view.publicLog());
+	assert.ok(!/"via"|"route"|"base"/.test(log));
 });
 
 test('Jack\'s decisions only read the view, and never change the game', () => {

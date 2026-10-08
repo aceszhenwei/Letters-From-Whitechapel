@@ -1,0 +1,9 @@
+baseline vs deductive police, seeds 1-5000
+  games 5000  Jack wins 1248 (25.0%, 95% CI 23.8%-26.2%)
+  police wins 3752: arrested 2416, out of moves 1327, trapped 9
+  nights escaped per game 1.94; lost games end on night 2.25, after move 7.9
+  moves to hideout 10.3 (shortest possible 6.1); distance to hideout per move 3.79
+  coaches 2.65, alleys 0.57 per game
+  moves with every option in reach of police 14.3%; moves onto such a circle 43.2%
+  police candidates for Jack's position 67.2; possible hideouts after the game 52.3
+  decision time 1.27 ms mean, 4.84 ms p95, 752.2 ms max; 465 s total

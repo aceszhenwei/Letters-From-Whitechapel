@@ -1,0 +1,9 @@
+/home/user/Letters-From-Whitechapel/tools/sim/summarise.js:45
+		decisionMs: { mean: mean(decisions.map((d) => d.ms)), p95: percentile(decisions.map((d) => d.ms), 0.95), max: Math.max(0, ...decisions.map((d) => d.ms)) }
+		                                                                                                                   ^
+
+RangeError: Maximum call stack size exceeded
+    at summarise (/home/user/Letters-From-Whitechapel/tools/sim/summarise.js:45:118)
+    at /home/user/Letters-From-Whitechapel/tools/simulate.js:47:19
+
+Node.js v22.22.0

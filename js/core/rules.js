@@ -264,8 +264,30 @@ WC.rules = (function (board, _) {
 		return _.countBy(circles, function (id) { return id; });
 	}
 
-	/* What Jack knows
-	   --------------- */
+	/* What each side knows
+	   --------------------- */
+	function publicLog(state, night) {
+		// The public record of a night (see recordPublic in the engine), copied so no one can change it
+		var police = state.police[night];
+		return police && police.log ? JSON.parse(JSON.stringify(police.log)) : [];
+	}
+
+	function pastLogs(state) {
+		// The public records of the nights before this one
+		return _.map(_.range(state.police.length - 1), function (night) {
+			return publicLog(state, night);
+		});
+	}
+
+	function patrolKnowledge(state) {
+		// The patrol tokens on the board, as Jack knows them: real or fake only once he has revealed them
+		var night = policeNight(state);
+		return _.map(patrolTokens(state), function (mapid) {
+			var revealed = _.contains(night.revealed, mapid);
+			return { mapid: mapid, revealed: revealed, real: revealed ? !_.contains(night.fake, mapid) : undefined };
+		});
+	}
+
 	function jackView(state, options) {
 		// The questions Jack's AI may ask. It shows Jack only what he would know at the table:
 		// not which patrol tokens are real until he reveals them.
@@ -290,7 +312,35 @@ WC.rules = (function (board, _) {
 			endsNight: function (move) { return escapes(state, move); },
 			distanceToHideout: function (mapid) { return board.distance(mapid, state.base); },
 			threats: function () { return policeThreats(state); },
-			policeNow: function () { return policeNight(state).now.slice(); }
+			policeNow: function () { return policeNight(state).now.slice(); },
+			// Public information: what the police have seen, so Jack can estimate what they can work out
+			publicLog: function () { return night ? publicLog(state, state.police.length - 1) : []; },
+			pastLogs: function () { return pastLogs(state); },
+			patrols: function () { return state.police.length > 0 ? patrolKnowledge(state) : []; }
+		};
+	}
+
+	function policeView(state) {
+		// What the police know: everything on the table, but not Jack's sheet, position, hideout or coach stops.
+		// A computer police player gets only this (see js/ai/police.js).
+		var night = policeNight(state);
+		var jack = jackNight(state);
+		return {
+			phase: state.phase,
+			night: nightIndex(state),
+			timeOfCrime: state.timeOfCrime,
+			remainingMoves: state.remainingMoves,
+			jackTokens: jack ? { carriages: jack.carriages, alleys: jack.alleys } : null,
+			crimeScenes: state.crimeScenes.slice(),
+			women: _.sortBy(state.womenMarked.concat(state.womenUnmarked), _.identity), // Face down: which are marked is hidden
+			wretched: state.phase >= 3 ? state.womenMarked.slice() : [], // Revealed once the victims are chosen
+			police: night ? JSON.parse(JSON.stringify(_.omit(night, 'log'))) : null,
+			turn: JSON.parse(JSON.stringify(state.turn || {})),
+			publicLog: function () { return night ? publicLog(state, state.police.length - 1) : []; },
+			pastLogs: function () { return pastLogs(state); },
+			patrolPositions: function () { return patrolPositions(state); },
+			wretchedMoves: function (mapid) { return wretchedMoves(state, mapid); },
+			destinations: function (index) { return policeDestinations(state, index); }
 		};
 	}
 
@@ -329,6 +379,8 @@ WC.rules = (function (board, _) {
 		isLegalJackMove: isLegalJackMove,
 		escapes: escapes,
 		policeThreats: policeThreats,
-		jackView: jackView
+		publicLog: publicLog,
+		jackView: jackView,
+		policeView: policeView
 	};
 })(WC.board, _);

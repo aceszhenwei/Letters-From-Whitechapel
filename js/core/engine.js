@@ -53,8 +53,19 @@ WC.engine = (function (rules, _) {
 			route: new Array(), // Every crossing each policeman has stood on tonight
 			search: new Array(), // In Clues and suspicion: circles each policeman can still search
 			arrest: new Array(), // ... and arrest at
-			clue: new Array()
+			clue: new Array(),
+			log: new Array() // What the police can see tonight (see recordPublic)
 		};
+	}
+
+	function recordPublic(state, entry) {
+		// The public record of the night: everything the police see, and nothing they don't.
+		// { type: 'crime', scenes } (sorted: on the double event the police don't know their order),
+		// { type: 'move', move: 'walk' | 'alley' | 'carriage', police } (where the policemen stood),
+		// { type: 'search', mapid, clue }, { type: 'arrest', mapid } (a failed arrest), { type: 'escaped' }
+		var night = rules.policeNight(state);
+		night.log = night.log || new Array();
+		night.log.push(entry);
 	}
 
 	function create(options) {
@@ -212,6 +223,7 @@ WC.engine = (function (rules, _) {
 			game.moveJack(move);
 
 			if (rules.escapes(state, move)) {
+				recordPublic(state, { type: 'escaped' });
 				emit('jackEscaped');
 				if (state.jack.length >= config.nights) {
 					game.end('jackWins');
@@ -269,6 +281,7 @@ WC.engine = (function (rules, _) {
 			});
 			night.trackPosition = position + scenes.length - 1;
 			state.remainingMoves = config.trackLength - night.trackPosition;
+			recordPublic(state, { type: 'crime', scenes: _.sortBy(scenes, _.identity) });
 			emit('murder', { scenes: scenes.slice() });
 		};
 
@@ -293,6 +306,7 @@ WC.engine = (function (rules, _) {
 			night.moves.push(recorded);
 			night.trackPosition += rules.moveCost(move);
 			state.remainingMoves -= rules.moveCost(move);
+			recordPublic(state, { type: 'move', move: move.type, police: rules.policeNight(state).now.slice() });
 			emit('jackMoved', { move: recorded });
 		};
 
@@ -418,6 +432,7 @@ WC.engine = (function (rules, _) {
 				return false;
 			}
 			var missed = state.turn.missed[index] = state.turn.missed[index] || new Array();
+			recordPublic(state, { type: 'search', mapid: mapid, clue: _.contains(rules.jackNight(state).route, mapid) });
 			if (_.contains(rules.jackNight(state).route, mapid)) {
 				police.clue.push(mapid);
 				emit('searchFinished', { index: index, mapid: mapid, clue: true, missed: missed.slice() });
@@ -446,6 +461,7 @@ WC.engine = (function (rules, _) {
 				game.end('arrested', { mapid: mapid });
 				return 'arrested';
 			}
+			recordPublic(state, { type: 'arrest', mapid: mapid });
 			emit('arrestFailed', { index: index, mapid: mapid });
 			actionDone(index);
 			return 'missed';
