@@ -26,7 +26,6 @@ flowchart LR
 | `images/vintage-map.jpg` | The 1888 map shown faintly under the streets. |
 | `generate-svg-map.html` | A developer tool that prints the streets as SVG `<line>` markup from `map.js`. |
 | `svg/`, `construction/`, `images/whitechapel-numbers.jpg` | Design sources. Not loaded by the game. |
-| `user-interface.html`, `bootstrap/` | The original UI mock-up and Bootstrap 3. Not used by the game any more. |
 | `test/` | Automated tests (see [Testing](testing.md)). |
 
 ## Global objects
