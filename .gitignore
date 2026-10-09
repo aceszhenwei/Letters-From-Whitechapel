@@ -8,3 +8,4 @@ research/detective-inference/results/.*.R
 references/
 experiments/medium/*.json
 experiments/**/police-*.json
+research/detective-v2/results/**/v2-*.json
