@@ -61,6 +61,7 @@ The same in plain text, reading down from what depends on nothing:
 | `core/random.js` | Biased random choices (`int`, `safe`, `safeIndex`), with an injectable source | `Math.random` by default | |
 | `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
 | `ai/jack-v2.js` | Jack AI v2: the strategic AI plus early detours on every night but the last (see [Jack AI v2](jack-ai-v2.md)) | The strategic AI, the view | As `ai/jack.js` |
+| `ai/jack-waiting.js` | Strategic waiting: wraps any Jack AI with a choice between killing now and waiting, by measured escape chances (an option, played by no level; see [Strategic waiting](jack-waiting.md)) | The board, the base AI, the view | As `ai/jack.js` |
 | `ai/difficulty.js` | The difficulty levels: which Jack AI each one plays, and where a choice comes from (address, dialog, saved, default) | The AI constructors | Play, or touch the page or the rules |
 | `ai/containment.js` | Where a policeman stops a murder next to a likely hideout from ending the night at once: threats, blocking crossings and their value (see [Detective AI v3](detective-ai-v3.md)) | The board | Read the game state, or play |
 | `ai/police-levels.js` | Who leads the detectives: the player, or the original, v2 or v3 computer police (`WC.policeVariants`) | The police AI constructor | Play, or touch the page or the rules |

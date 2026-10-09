@@ -48,6 +48,7 @@ The studies behind the AIs, oldest first. They are kept as the evidence for the 
 | [Human strategy literature](human-strategy-literature.md) | What do experienced players do that the AIs don't? | Gap analysis; no AI changed. It motivated Detective AI v3 | [`research/human-strategy/`](../research/human-strategy/) |
 | [Detective AI v3](detective-ai-v3.md) | Can the police prepare for a Jack who kills next to his hideout? | Detective AI v3 (Hard police); its independent validation is proposed, not run | [`research/detective-v3/`](../research/detective-v3/) |
 | [Fake Wretched and fake patrols](deception-audit.md) | Do the AIs use the preparation phase's deception mechanics strategically? | No: both follow fixed rules, and against the current AIs perfect information about either is worth nothing measurable. Not included in Detective AI v4's core | [`research/deception-audit/`](../research/deception-audit/) |
+| [Strategic waiting](jack-waiting.md) | Why do Strategic Jack and Jack AI v2 never wait, and should they? | A fixed rule, right against the original police. A measured waiting policy gains against Detective AI v3 on two held-out sets (+8 and +4 points; the pre-registered test was not significant) and doesn't regress. Patrol information is still worthless. An option and a research opponent, not a level | [`research/jack-waiting/`](../research/jack-waiting/) |
 
 ## Project
 

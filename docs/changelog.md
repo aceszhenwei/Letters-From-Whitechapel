@@ -2,7 +2,20 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: documentation cleanup
+## Unreleased: strategic waiting
+
+- **Study:** [Strategic waiting](jack-waiting.md) explains why Strategic Jack and Jack AI v2 never wait (a fixed rule, which is right against the original police) and measures what waiting is worth.
+- **Policy:** strategic waiting (`js/ai/jack-waiting.js`, an option played by no level) waits only when its measured chance of escaping is higher than killing now, assuming the police move the victims where it hurts him most.
+- **Results:** wrapped around Jack AI v2, it beat Detective AI v3 more often on two held-out seed sets (66.0% → 74.0%, p = 0.009; 67.0% → 71.0%, p = 0.13, the pre-registered test, not significant), without regressing against the other police. Its gain comes from taking the last night's murder off the red circles v3 prepares.
+- **Patrol information:** revealed patrols still change no decision.
+- **Jack's view** gains `wretchedMoves(mapid)`: where the police could move a Wretched (public information).
+- **Tests:** `jack-waiting.test.js`, and a smoke step.
+
+## Fake Wretched and fake patrol audit ([aceszhenwei/Letters-From-Whitechapel#16](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/16))
+
+- **Study:** [Fake Wretched and fake patrols](deception-audit.md) audits how each AI uses the preparation phase's deception. Both mechanics follow fixed rules, and against the current AIs perfect information about either is worth nothing measurable. No AI changed.
+
+## Documentation cleanup ([aceszhenwei/Letters-From-Whitechapel#15](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/15))
 
 - **Documentation reorganised** without changing any code, rule, AI or result. New: an [AI overview](ai.md) (every AI, level, option and the evidence behind it), a research-report index in the [documentation index](README.md#research-reports), one sorted [seed table](testing.md#seeds), and an [archive](archive/README.md) for superseded plans. The [roadmap](roadmap.md) now separates what is implemented, known limitations, potential research (not approved) and other ideas. The root README points to the index instead of repeating it.
 
