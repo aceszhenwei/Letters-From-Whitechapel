@@ -248,25 +248,49 @@ WC.ui = (function ($, _, board, rules, content) {
 		draw.phaseText('hunting-the-monster', 'Move each policeman up to two crossings: click a policeman, then a highlighted crossing, or Stay. Policemen can pass each other but not share a crossing.');
 		var now = rules.policeNight(state()).now;
 		draw.progress('Policemen moved: 0 of ' + now.length);
+		var chosen = null; // The policeman whose choices are showing: { mapid, index }
+
+		function policeman(mapid, index) {
+			// A policeman still to move, who shows his choices when clicked
+			draw.createElement(mapid, 'police', 'label label-info selectable revealed token token-police police-' + index + ' token-police-' + mapid).click(function () {
+				choose(mapid, index);
+			}).appendTo('.map');
+		}
+
+		function putBack() {
+			// Clicking another policeman first takes the last one's choices away and puts him back, so he can still move
+			$('.token-move-police').remove();
+			if (chosen) {
+				policeman(chosen.mapid, chosen.index);
+				chosen = null;
+			}
+		}
+
+		function move(index, to) {
+			chosen = null; // policemanMoved draws him where he went
+			game.movePoliceman(index, to);
+		}
+
+		function choose(mapid, index) {
+			putBack();
+			chosen = { mapid: mapid, index: index };
+			$('.token-police-' + mapid).remove();
+			_.each(rules.policeDestinations(state(), index), function (to) {
+				draw.createElement(to, 'move here', 'label label-info selectable token token-move-police token-police-' + to).click(function () {
+					move(index, to);
+				}).appendTo('.map');
+			});
+			draw.createElement(mapid, 'Stay', 'label label-info selectable token token-move-police token-police-' + mapid).click(function () {
+				move(index, mapid);
+			}).appendTo('.map');
+		}
+
 		for (var a = 0; a < board.size; a++) {
 			var index = _.indexOf(now, a);
 			if (index !== -1) {
-				draw.createElement(a, 'police', 'label label-info selectable revealed token token-police police-' + index + ' token-police-' + a).appendTo('.map');
+				policeman(a, index);
 			}
 		}
-		$('.token-police').click(function () {
-			var mapid = $(this).data('mapid');
-			var index = _.indexOf(rules.policeNight(state()).now, mapid);
-			_.each(rules.policeDestinations(state(), index), function (to) {
-				draw.createElement(to, 'move here', 'label label-info selectable token token-move-police token-police-' + to).click(function () {
-					game.movePoliceman(index, to);
-				}).appendTo('.map');
-			});
-			$('.token-police-' + mapid).remove();
-			draw.createElement(mapid, 'Stay', 'label label-info selectable token token-move-police token-police-' + mapid).click(function () {
-				game.movePoliceman(index, mapid);
-			}).appendTo('.map');
-		});
 	};
 
 	turns[11] = function cluesAndSuspicion() {

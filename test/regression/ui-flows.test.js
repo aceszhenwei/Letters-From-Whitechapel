@@ -105,3 +105,30 @@ test('a policeman can be moved only to free crossings within two, or stay', () =
 	assert.deepStrictEqual(Array.from(police.route[index]), [crossing, crossing], 'staying is recorded as a move');
 	assert.strictEqual($('.phase-progress').text(), 'Policemen moved: 1 of 5');
 });
+
+test('choosing another policeman before moving the first puts the first back, so he can still move', () => {
+	// Reported bug: click policeman A, then policeman B, move B; A had vanished and the turn could not finish
+	const window = startGame({ seed: 4 });
+	assert.ok(advanceTo(window, 10, { seed: 4 }));
+	const $ = window.$;
+	const police = last(gameState(window).police);
+	const tokens = $('.token-police.selectable');
+	const a = tokens.eq(0).data('mapid');
+	const b = tokens.eq(1).data('mapid');
+	tokens.eq(0).click();
+	$('.token-police.selectable').filter(function () { return $(this).data('mapid') === b; }).click();
+	const stays = $('.token-move-police').filter(function () { return $(this).text() === 'Stay'; });
+	assert.strictEqual(stays.length, 1, 'only the policeman chosen last shows his choices');
+	assert.strictEqual(stays.data('mapid'), b);
+	assert.strictEqual($('.token-police.selectable').filter(function () { return $(this).data('mapid') === a; }).length, 1, 'the first policeman is back on the board');
+	// Move B somewhere else, then A can still be chosen and moved, and the turn goes on
+	const to = $('.token-move-police').filter(function () { return $(this).text() !== 'Stay'; }).first();
+	const destination = to.data('mapid');
+	to.click();
+	assert.strictEqual(police.now[police.route.findIndex((r) => r[0] === b)], destination);
+	const first = $('.token-police.selectable').filter(function () { return $(this).data('mapid') === a; });
+	assert.strictEqual(first.length, 1, 'the first policeman is still there after the other moved');
+	first.click();
+	$('.token-move-police').filter(function () { return $(this).text() === 'Stay'; }).click();
+	assert.strictEqual($('.phase-progress').text(), 'Policemen moved: 2 of 5');
+});
