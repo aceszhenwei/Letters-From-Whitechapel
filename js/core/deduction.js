@@ -336,9 +336,17 @@ WC.deduction = (function (board, _) {
 
 	/* Where the hideout could be
 	   -------------------------- */
-	function hideouts(pastLogs, choices) {
+	function hideouts(pastLogs, choices, options) {
 		// Each night Jack ended on his hideout, so it is where he could have been when he escaped, on every night.
-		// Returns { mapid: probability } over the possible hideouts.
+		// Returns { mapid: probability } over the possible hideouts. The set is exact; how it is weighted is a model
+		// (options.weighting, docs/detective-ai-v2.md):
+		//   'walk' (default): as if Jack wandered at random each night (the end-of-night distribution of track);
+		//   'uniform': every possible hideout equally likely;
+		//   'hybrid': each night, a hideout is likelier the less of a detour Jack's route would have been to reach it
+		//     (moves used beyond the walking distance from the crime scene), mixed with a uniform part so that a
+		//     detour is never ruled unlikely: weight (1 - w) + w * rho^detour, with options.w and options.rho.
+		options = options || {};
+		var weighting = options.weighting || 'walk';
 		var weights = {};
 		_.each(choices, function (mapid) {
 			weights[mapid] = 1;
@@ -351,8 +359,17 @@ WC.deduction = (function (board, _) {
 			if (!end) {
 				return;
 			}
+			var night = weighting == 'hybrid' ? readLog(log) : null;
+			var moves = night ? _.reduce(night.steps, function (n) { return n + 1; }, 0) : 0;
 			_.each(_.keys(weights), function (mapid) {
-				weights[mapid] *= end.current[mapid] || 0;
+				var possible = end.current[mapid] || 0;
+				if (weighting == 'walk' || !possible) {
+					weights[mapid] *= possible;
+				} else if (weighting == 'hybrid') {
+					var shortest = _.min(_.map(night.scenes, function (scene) { return board.distance(scene, Number(mapid)); }));
+					var detour = Math.max(0, moves - shortest);
+					weights[mapid] *= (1 - options.w) + options.w * Math.pow(options.rho, detour);
+				}
 			});
 		});
 		var sum = _.reduce(weights, function (total, w) { return total + w; }, 0);

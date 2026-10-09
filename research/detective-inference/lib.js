@@ -9,9 +9,16 @@ const { loadCore, seeded } = require('../../tools/sim/run-game');
 const core = loadCore();
 const { WC, _ } = core;
 
+// Extra Jack policies for research only (research/detective-v2/jacks.js registers a detour Jack): name -> (random) => AI
+const extraJacks = {};
+function registerJack(name, factory) {
+	extraJacks[name] = factory;
+}
+
 function makeJack(name, seed) {
 	const random = WC.random.create(seeded(seed * 7919 + 1));
 	if (name === 'baseline') return WC.createJackAI(WC.board, random, _);
+	if (extraJacks[name]) return extraJacks[name](random);
 	return WC.createStrategicJack(WC.board, WC.deduction, random, _, WC.strategicVariants[name]);
 }
 
@@ -135,4 +142,4 @@ function policeContext(state, item) {
 	return { remaining, hideouts: Object.keys(hideouts).map(Number), alleysLeft: WC.rules.config.alleys[item.night] - alleysUsed };
 }
 
-module.exports = { policeContext,  core, WC, _, play, publicPrefixes, enumerate, stepsIn, trueCircle, seeded };
+module.exports = { registerJack, policeContext,  core, WC, _, play, publicPrefixes, enumerate, stepsIn, trueCircle, seeded };
