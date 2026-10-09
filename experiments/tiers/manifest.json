@@ -80,5 +80,13 @@
   "seconds": 75.3,
   "finished": "2026-10-09T08:04:44.215Z",
   "node": "v22.22.0"
+ },
+ "medium-detective-v3": {
+  "tier": "medium",
+  "inputs": "5a1e4f6edd15a992",
+  "ok": true,
+  "seconds": 39.4,
+  "finished": "2026-10-09T11:02:46.348Z",
+  "node": "v22.22.0"
  }
 }

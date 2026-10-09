@@ -62,7 +62,8 @@ The same in plain text, reading down from what depends on nothing:
 | `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
 | `ai/jack-v2.js` | Jack AI v2: the strategic AI plus early detours on every night but the last (see [Jack AI v2](jack-ai-v2.md)) | The strategic AI, the view | As `ai/jack.js` |
 | `ai/difficulty.js` | The difficulty levels: which Jack AI each one plays, and where a choice comes from (address, dialog, saved, default) | The AI constructors | Play, or touch the page or the rules |
-| `ai/police-levels.js` | Who leads the detectives: the player, or the original or v2 computer police (`WC.policeVariants`) | The police AI constructor | Play, or touch the page or the rules |
+| `ai/containment.js` | Where a policeman stops a murder next to a likely hideout from ending the night at once: threats, blocking crossings and their value (see [Detective AI v3](detective-ai-v3.md)) | The board | Read the game state, or play |
+| `ai/police-levels.js` | Who leads the detectives: the player, or the original, v2 or v3 computer police (`WC.policeVariants`) | The police AI constructor | Play, or touch the page or the rules |
 | `ui/autopolice.js` | Plays a computer police through the engine's police actions, a pause apart, for the player to watch | The police AI, the police view, the engine | Change the rules, or see Jack's secrets |
 | `ui/setup.js` | The setup dialog: Jack's difficulty, who leads the detectives, and starting the game (sets `game.ai`; starts `autoPolice`) | Difficulty, police levels, the page | Change the rules |
 | `main.js` | Creating the game (Easy until the setup dialog applies a level) and attaching the interface; opening the setup dialog | Everything above | |
@@ -185,7 +186,7 @@ A policeman moving, from click to screen:
 | `js/ai/jack.js` | The baseline Jack AI |
 | `js/ai/strategic-jack.js` | The strategic Jack AI |
 | `js/ai/jack-v2.js` | Jack AI v2 (the Hard level) |
-| `js/ai/police.js` | Computer police for simulations |
+| `js/ai/police.js`, `js/ai/containment.js` | Computer police (the original, v2 and v3), and v3's containment model |
 | `js/ai/difficulty.js`, `js/ai/police-levels.js`, `js/ui/setup.js`, `js/ui/autopolice.js` | Jack's difficulty, who leads the detectives, the setup dialog, and computer police in the page |
 | `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)) |
 | `experiments/` | Recorded simulation results |

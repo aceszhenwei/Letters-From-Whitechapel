@@ -20,6 +20,7 @@ const scripts = [
 	'js/ai/jack-v2.js',
 	'js/ai/difficulty.js',
 	'js/ai/police-levels.js',
+	'js/ai/containment.js',
 	'js/ai/police.js'
 ];
 

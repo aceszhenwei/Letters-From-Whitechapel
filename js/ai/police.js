@@ -32,8 +32,35 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 		coordinate: false,
 		// Value standing on the crossings next to a likely hideout: Jack can only end the night by walking onto it,
 		// through one of them
-		cordon: false
+		cordon: false,
+		// Containment for the next night (Detective AI v3, docs/detective-ai-v3.md; js/ai/containment.js). How much a
+		// policeman values standing where he stops a walk from a possible next kill site straight onto a possible
+		// hideout, against standing next to Jack now. 0 is off
+		contain: 0,
+		// Which hideouts to defend: 'belief' (every possible one, by its weight) or 'top' (only the likeliest)
+		containHideouts: 'belief',
+		// Weight of the circles next to unused red circles as kill sites (a Wretched moved one step), against 1
+		containNeighbours: 0.5,
+		// How much the threat to nights before the last counts, against the last night's (where it decides the game)
+		containEarly: 0.5,
+		// Credit a policeman only for threats the policemen placed before him this turn leave open
+		containCoordinate: false,
+		// On nights 2-4, choose which patrol tokens are real by tonight's containment value (else the policemen's
+		// positions from the night before, as the original police do)
+		containPatrols: false,
+		// ... and only when a station closes at least this much more of the threat than the token it replaces
+		containSwap: 0.2,
+		// Move each Wretched where it threatens the possible hideouts least (else towards the real patrols)
+		containWretched: false,
+		// When containment counts: 'always'; 'ending': in proportion to how likely this turn is the night's last (Jack
+		// one walk from his hideout, by the police's own belief), since only then do these positions start the next
+		// night; 'concentrated': in proportion to how concentrated the hideout belief is
+		containTiming: 'always',
+		// How the threat closed is counted: 'share' (of all the threat) or 'absolute' (its probability weight)
+		containScale: 'share'
 	}, options || {});
+
+	var containment = options.contain > 0 || options.containPatrols || options.containWretched ? WC.containment : null;
 
 	var hideoutChoices = rules.hideoutChoices();
 
@@ -76,8 +103,28 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 		};
 		var ranked = _.sortBy(positions.all, function (crossing) { return -nearRed(crossing); });
 		var real = positions.required.length > 0 ? positions.required.slice() : ranked.slice(0, rules.config.police);
+		var extra = _.difference(ranked, real).slice(0, rules.config.fakePolice); // Original: the fakes go to the stations
+		if (options.containPatrols && positions.required.length > 0) {
+			// Containment: every crossing a policeman ended on gets a token, and `others` tokens go on free stations; any
+			// of them may be the real ones. Tonight's possible kill sites are the women on the board (and, if Jack
+			// waits, the circles next to them). A station's token is made real instead of a policeman's position only
+			// when it closes at least `containSwap` more of tonight's threat (as a share): the positions the policemen
+			// ended on were chosen for the hunt, and are kept unless containment clearly needs a station
+			var list = containment.threats(belief(view, false).hideouts, view.crimeScenes, { neighbourWeight: options.containNeighbours, sites: view.women });
+			var total = _.reduce(list, function (sum, t) { return sum + t.weight; }, 0);
+			var share = function (c, others) { return total > 0 ? containment.value(list, c, others) / total : 0; };
+			var stations = _.sortBy(_.difference(positions.all, positions.required), function (c) { return -(share(c, positions.required) + 1e-6 * nearRed(c)); });
+			extra = stations.slice(0, positions.others);
+			_.each(extra.slice(), function (station) {
+				var weakest = _.min(real, function (c) { return share(c, _.without(real, c)); });
+				if (share(station, _.without(real, weakest)) - share(weakest, _.without(real, weakest)) >= options.containSwap) {
+					real = _.without(real, weakest).concat([station]);
+					extra = _.without(extra, station).concat([weakest]);
+				}
+			});
+		}
 		_.each(real, function (crossing) { game.togglePatrol(crossing, 'real'); });
-		_.each(_.difference(ranked, real).slice(0, rules.config.fakePolice), function (crossing) { game.togglePatrol(crossing, 'fake'); });
+		_.each(extra, function (crossing) { game.togglePatrol(crossing, 'fake'); });
 	}
 
 	function moveWretched(game, view) {
@@ -94,6 +141,16 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 				return _.min(_.map(board.adjacentNumbers(crossing), function (id) { return board.distance(circle, id); }));
 			}));
 		};
+		if (options.containWretched) {
+			// Containment: where would a murder of this Wretched leave the least weight of hideouts one open walk away
+			// (the real patrols become policemen before Jack moves)? Ties go to the patrols as before
+			var homes = belief(view, false).hideouts;
+			var threat = function (circle) {
+				return containment.exposure(containment.threats(homes, view.crimeScenes, { neighbourWeight: 0, sites: [circle] }), view.police.start);
+			};
+			game.moveWretched(from, _.min(moves, function (circle) { return threat(circle) * 1000 + near(circle); }));
+			return;
+		}
 		game.moveWretched(from, _.min(moves, near));
 	}
 
@@ -128,6 +185,20 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 		return weights;
 	}
 
+	function endingChance(jack, homes) {
+		// How likely Jack is one walk from his hideout now, so that his next move may end the night: by the belief about
+		// where he is and the hideout weights (taken as independent)
+		var chance = 0;
+		_.each(jack, function (p, circle) {
+			if (p > 0) {
+				_.each(board.walk(Number(circle), []), function (next) {
+					chance += p * (homes[next] || 0);
+				});
+			}
+		});
+		return Math.min(1, chance);
+	}
+
 	function movePolice(game, view, random) {
 		// Each policeman in turn moves where he covers the most of Jack's likely position that no one else covers
 		// yet, plus some value for standing near Jack's likely hideouts (to cut off his way home)
@@ -140,6 +211,30 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 		var covered = {};
 		var guarded = {}; // With coordinate: for each hideout, how well the policemen placed so far guard it
 		var now = view.police.now;
+		// Containment for the next night: these positions may be where the night ends, and so where the next night's
+		// policemen start. Not on the last night: nothing comes after it
+		var threatList = null;
+		var nightWeight = 0;
+		var placed = new Array(); // Where the policemen moved so far this turn went
+		if (options.contain > 0 && view.night < rules.config.nights - 1) {
+			var defend = known.hideouts;
+			if (options.containHideouts == 'top') {
+				var top = _.max(_.keys(defend), function (h) { return defend[h]; });
+				defend = _.object([top], [1]);
+			}
+			threatList = containment.threats(defend, view.crimeScenes, { neighbourWeight: options.containNeighbours });
+			// 'share': as a share of all the threat, so its weight doesn't shrink when the hideout is uncertain;
+			// 'absolute': by the threat's own weight, so it fades when few likely hideouts are next to a kill site
+			var total = _.reduce(threatList, function (sum, t) { return sum + t.weight; }, 0);
+			nightWeight = total > 0 ? (view.night == rules.config.nights - 2 ? 1 : options.containEarly) / (options.containScale == 'absolute' ? 1 : total) : 0;
+			if (options.containTiming == 'ending') {
+				nightWeight *= endingChance(jack, known.hideouts);
+			}
+			if (options.containTiming == 'concentrated') {
+				// Only as far as the police know where the hideout is: the chance two draws from the belief agree
+				nightWeight *= _.reduce(known.hideouts, function (sum, p) { return sum + p * p; }, 0);
+			}
+		}
 		var guard = function (to, home) {
 			var near = _.min(_.map(board.adjacentNumbers(to), function (circle) { return board.distance(circle, Number(home)); }));
 			return 1 / (1 + near);
@@ -163,9 +258,11 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 					}
 					return sum + p * g;
 				}, 0);
-				return mass + options.blockWeight * block + random() * 1e-6; // The tiny random part breaks ties
+				var contain = threatList ? options.contain * nightWeight * containment.value(threatList, to, options.containCoordinate ? placed : []) : 0;
+				return mass + options.blockWeight * block + contain + random() * 1e-6; // The tiny random part breaks ties
 			};
 			var best = _.max(view.destinations(index).concat([now[index]]), score);
+			placed.push(best);
 			_.each(board.adjacentNumbers(best), function (circle) { covered[circle] = true; });
 			if (options.coordinate) {
 				_.each(homes, function (p, home) { guarded[home] = Math.max(guarded[home] || 0, guard(best, home)); });
@@ -270,3 +367,13 @@ WC.policeVariants = {
 	original: {},
 	v2: { hideoutWeighting: 'hybrid', hideoutW: 0.9, hideoutRho: 0.5, blockWeight: 1 }
 };
+
+/* Detective AI v3 (docs/detective-ai-v3.md): v2, plus containment for the decisive last night. On night 3 each policeman
+   also values standing where he could stop a murder next to a likely hideout ending the night on Jack's first move
+   (js/ai/containment.js), and on nights 2-4 a station's patrol token is made real instead of a policeman's when it
+   closes much more of tonight's threat. Tried and left out: containment on every night, defending only the likeliest
+   hideout, weighting containment by how likely the night is to end or by how concentrated the belief is, and moving the
+   Wretched by containment. */
+WC.policeVariants.v3 = _.extend({}, WC.policeVariants.v2, {
+	contain: 10, containEarly: 0, containScale: 'absolute', containCoordinate: true, containPatrols: true
+});

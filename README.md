@@ -18,7 +18,7 @@ Before the first night, choose how Jack plays:
 
 The labels name the AIs; they are not claims about how a typical human Jack plays. The choice is remembered for the next game, and it only changes how Jack decides: the rules and what Jack is allowed to know are the same. For testing, `index.html?difficulty=normal` (or `hard`, or the older `?jack=strategic`) fixes the level. See [Jack's AI](docs/jack-ai.md#difficulty-levels) and [Jack AI v2](docs/jack-ai-v2.md).
 
-You can also choose who leads the detectives: **you** (the default), or the computer police, whom you then watch hunt Jack. **Easy police** is the original detective AI; **Normal police** is Detective AI v2, which also guards the places Jack could be heading for. `index.html?police=normal` (or `easy`, `you`) fixes the choice for testing. See [Detective AI v2](docs/detective-ai-v2.md).
+You can also choose who leads the detectives: **you** (the default), or the computer police, whom you then watch hunt Jack. **Easy police** is the original detective AI; **Normal police** is Detective AI v2, which also guards the places Jack could be heading for; **Hard police** is Detective AI v3, which also prepares for Jack's last night before he strikes. `index.html?police=hard` (or `normal`, `easy`, `you`) fixes the choice for testing. See [Detective AI v2](docs/detective-ai-v2.md) and [Detective AI v3](docs/detective-ai-v3.md).
 
 The game follows the revised edition rulebook: four nights (including the double event), real and fake patrols, the Time of the Crime, Jack's coaches and alleys, and searching for clues or making an arrest. See [Game rules](docs/game-rules.md) for the details and what isn't implemented yet.
 
@@ -30,6 +30,7 @@ Everything about how the game works and how to change it is in [`docs/`](docs/RE
 - [Game rules](docs/game-rules.md): the rules as implemented
 - [Map data](docs/map-data.md): the board graph and how alleys are worked out
 - [Jack's AI](docs/jack-ai.md): how the computer plays Jack, and how the strategic AI was evaluated
+- [Detective AI v3](docs/detective-ai-v3.md): police that prepare for Jack's last night (Hard police), and how they were evaluated
 - [Human strategy literature](docs/human-strategy-literature.md): BoardGameGeek strategy compared with the AIs, and the gaps that matter
 - [Jack AI v2](docs/jack-ai-v2.md): why the strategic Jack loses to Detective AI v2, the improvements tried, and the one kept
 - [Detective AI v2](docs/detective-ai-v2.md): the stronger computer police, and how it was evaluated

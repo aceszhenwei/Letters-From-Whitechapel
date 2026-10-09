@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.join(__dirname, '..', '..');
 const scripts = [
 	'js/vendor/underscore-min.js', 'js/data/map.js', 'js/data/content.js', 'js/core/random.js', 'js/core/board.js',
-	'js/core/rules.js', 'js/core/engine.js', 'js/core/deduction.js', 'js/ai/jack.js', 'js/ai/strategic-jack.js', 'js/ai/difficulty.js', 'js/ai/police.js'
+	'js/core/rules.js', 'js/core/engine.js', 'js/core/deduction.js', 'js/ai/jack.js', 'js/ai/strategic-jack.js', 'js/ai/difficulty.js', 'js/ai/containment.js', 'js/ai/police.js'
 ];
 
 function seeded(seed) { // mulberry32

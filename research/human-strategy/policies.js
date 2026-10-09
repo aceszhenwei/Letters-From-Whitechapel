@@ -156,6 +156,8 @@ function coachFirst(random) {
 }
 
 module.exports = {
+	// Shared with research/detective-v3/jacks.js
+	helpers: { jackV2, withHideout, walkHomeOr, placeWomen },
 	'jack-v2@51': (random) => withHideout(WC.board.numbered().find((m) => WC.board.number(m) === 51), random),
 	'jack-v2@134': (random) => withHideout(WC.board.numbered().find((m) => WC.board.number(m) === 134), random),
 	'bgg-51': bgg51,
