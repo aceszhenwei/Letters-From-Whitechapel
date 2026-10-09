@@ -2,7 +2,7 @@
 // before anything expensive runs. Seeds 800001 and up are kept for this (tools/tiers/tiers.js).
 //   node tools/tiers/smoke.js
 const { loadCore, runGame } = require('../sim/run-game');
-const { WC, play, publicPrefixes, enumerate, registerJack } = require('../../research/detective-inference/lib');
+const { WC, _, play, publicPrefixes, enumerate, registerJack } = require('../../research/detective-inference/lib');
 const jackV2 = require('../../research/jack-v2/policies/jack-v2'); // Loads js/ai/jack-v2.js into the research core
 
 registerJack('jack-v2', jackV2.policies['jack-v2']);
@@ -89,6 +89,18 @@ timed('Detective AI v3 plays whole games against every Jack, and stops the hideo
 	}
 	const scheme = play({ jack: 'bgg-134', police: 'deductive', seed: seeds[0], policeOptions: WC.policeVariants.v3 });
 	check(scheme.result.type !== 'jackWins', 'Detective AI v3 no longer stops the hideout-134 scheme');
+});
+
+timed('Strategic waiting plays whole games against Detective AI v3, the same way twice', () => {
+	require('../../research/jack-waiting/jacks'); // Loads js/ai/jack-waiting.js into the research core
+	registerJack('jack-v2-waiting', (random) => WC.createWaitingJack(WC.board, jackV2.policies['jack-v2'](random), _, { table: 'jack-v2' }));
+	for (const seed of seeds.slice(0, 2)) {
+		const a = play({ jack: 'jack-v2-waiting', police: 'deductive', seed, policeOptions: WC.policeVariants.v3 });
+		const b = play({ jack: 'jack-v2-waiting', police: 'deductive', seed, policeOptions: WC.policeVariants.v3 });
+		check(a.over && results.has(a.result.type), `jack-v2-waiting, seed ${seed}: did not finish`);
+		const key = (s) => JSON.stringify([s.result, s.jack.map((n) => [n.murderMove, n.route])]);
+		check(key(a) === key(b), `jack-v2-waiting, seed ${seed}: played two different games`);
+	}
 });
 
 if (failures.length) {
