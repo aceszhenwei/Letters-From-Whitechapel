@@ -1,0 +1,3 @@
+4118 public records from 20 games (strategic Jack, seeds 700001-700020)
+  before the fix (5992649): 837 ms in all, 0.203 ms a record, 41.2 possible circles on average
+  after the fix: 1221 ms in all, 0.296 ms a record, 40.9 possible circles on average

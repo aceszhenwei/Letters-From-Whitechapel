@@ -7,15 +7,37 @@
    it is exactly what the police can see.
 
    Method: forward filtering over Jack's possible routes, step by step. Each state is a circle plus which of
-   the clue circles the route has passed (a small bit mask). Every observation is applied exactly when it
-   happened; the approximations (at most `maxClues` clues tracked, a coach's two stops treated as two free
-   steps, a uniform guess about which way Jack goes) only ever keep more places possible, never fewer, so the
-   true position is never ruled out. */
+   the clue circles the route has passed (a small bit mask). A coach is two free steps that may not end where they
+   started, so the state between its two stops also remembers where the coach set off. Every observation is
+   applied exactly when it happened; the approximations (at most `maxClues` clues tracked, a uniform guess about
+   which way Jack goes) only ever keep more places possible, never fewer, so the true position is never ruled out.
+
+   A state is one number: ((origin * 512) + circle) * 4096 + mask, where origin is 0 except halfway through a
+   coach. Map ids are below 512 and masks below 4096. */
 var WC = WC || {};
 
 WC.deduction = (function (board, _) {
 
 	var maxClues = 10; // Clues tracked exactly; older ones are ignored (keeping more places possible)
+
+	function circleOf(key) {
+		return Math.floor(key / 4096) % 512;
+	}
+
+	function originOf(key) {
+		return Math.floor(key / (4096 * 512));
+	}
+
+	function moveTargets(key, step) {
+		// Where a state can go in one step, and the state number for each (a coach's middle stop keeps its origin)
+		var mapid = circleOf(key);
+		var targets = successors(mapid, step);
+		if (step.kind == 'coach2') {
+			var origin = originOf(key);
+			targets = _.filter(targets, function (to) { return to != origin; }); // A coach can't end where it started
+		}
+		return { targets: targets, origin: step.kind == 'coach1' ? mapid : 0 };
+	}
 
 	/* Moves without police in the way, and lower bounds on moves to a hideout
 	   ----------------------------------------------------------------------- */
@@ -70,8 +92,8 @@ WC.deduction = (function (board, _) {
 			if (entry.type == 'crime') {
 				night.scenes = entry.scenes;
 			} else if (entry.type == 'move') {
-				if (entry.move == 'carriage') { // Two steps, past policemen
-					night.steps.push({ kind: 'free' }, { kind: 'free' });
+				if (entry.move == 'carriage') { // Two steps, past policemen, not ending where it started
+					night.steps.push({ kind: 'coach1' }, { kind: 'coach2' });
 					k += 2;
 				} else if (entry.move == 'alley') {
 					night.steps.push({ kind: 'alley' });
@@ -161,7 +183,7 @@ WC.deduction = (function (board, _) {
 			// Apply what is known about step k: failed searches and arrests, clue deadlines, time
 			var kept = new Map();
 			layer.forEach(function (weight, key) {
-				var mapid = Math.floor(key / 4096);
+				var mapid = circleOf(key);
 				var mask = key % 4096;
 				if (excluded(mapid, k) || !feasible(mapid, k)) {
 					return;
@@ -173,7 +195,7 @@ WC.deduction = (function (board, _) {
 					}
 				});
 				if (ok) {
-					kept.set(mapid * 4096 + mask, (kept.get(mapid * 4096 + mask) || 0) + weight);
+					kept.set(key, (kept.get(key) || 0) + weight);
 				}
 			});
 			return kept;
@@ -188,12 +210,11 @@ WC.deduction = (function (board, _) {
 		for (var k = 0; k < last; k++) {
 			var next = new Map();
 			layers[k].forEach(function (weight, key) {
-				var mapid = Math.floor(key / 4096);
 				var mask = key % 4096;
-				var targets = successors(mapid, steps[k]);
-				_.each(targets, function (to) {
-					var nextKey = to * 4096 + visit(mask, to, k + 1);
-					next.set(nextKey, (next.get(nextKey) || 0) + weight / targets.length);
+				var move = moveTargets(key, steps[k]);
+				_.each(move.targets, function (to) {
+					var nextKey = (move.origin * 512 + to) * 4096 + visit(mask, to, k + 1);
+					next.set(nextKey, (next.get(nextKey) || 0) + weight / move.targets.length);
 				});
 			});
 			layers.push(settle(next, k + 1));
@@ -212,21 +233,22 @@ WC.deduction = (function (board, _) {
 		function project(layer, remaining, move, police) {
 			// What the police would believe after one more move of this type, with the policemen where they are.
 			// Cheap: one step on from the last layer (all clue deadlines have passed, so the masks no longer matter)
-			var kinds = move == 'carriage' ? [{ kind: 'free' }, { kind: 'free' }] : (move == 'alley' ? [{ kind: 'alley' }] : [{ kind: 'walk', police: police }]);
+			var kinds = move == 'carriage' ? [{ kind: 'coach1' }, { kind: 'coach2' }] : (move == 'alley' ? [{ kind: 'alley' }] : [{ kind: 'walk', police: police }]);
 			var left = remaining === undefined ? undefined : remaining - kinds.length;
 			var currentLayer = layer;
 			_.each(kinds, function (step, index) {
 				var next = new Map();
 				currentLayer.forEach(function (weight, key) {
-					var targets = successors(Math.floor(key / 4096), step);
-					_.each(targets, function (to) {
-						next.set(to * 4096, (next.get(to * 4096) || 0) + weight / targets.length);
+					var move = moveTargets(key, step);
+					_.each(move.targets, function (to) {
+						var nextKey = (move.origin * 512 + to) * 4096;
+						next.set(nextKey, (next.get(nextKey) || 0) + weight / move.targets.length);
 					});
 				});
 				var stepsLeft = left === undefined ? undefined : left + (kinds.length - 1 - index);
 				if (bound && stepsLeft !== undefined) {
 					next.forEach(function (weight, key) {
-						var mapid = Math.floor(key / 4096);
+						var mapid = circleOf(key);
 						if (!_.has(bound, mapid) || bound[mapid] > stepsLeft) {
 							next.delete(key);
 						}
@@ -255,7 +277,7 @@ WC.deduction = (function (board, _) {
 				layer.forEach(function (weight, key) {
 					var b = beta.get(key) || 0;
 					if (b > 0) {
-						var mapid = Math.floor(key / 4096);
+						var mapid = circleOf(key);
 						byCircle[mapid] = (byCircle[mapid] || 0) + weight * b;
 						sum += weight * b;
 					}
@@ -271,12 +293,11 @@ WC.deduction = (function (board, _) {
 			for (var k = last - 1; k >= 0; k--) {
 				var previous = new Map();
 				layers[k].forEach(function (weight, key) {
-					var mapid = Math.floor(key / 4096);
 					var mask = key % 4096;
-					var targets = successors(mapid, steps[k]);
+					var move = moveTargets(key, steps[k]);
 					var total = 0;
-					_.each(targets, function (to) {
-						total += (beta.get(to * 4096 + visit(mask, to, k + 1)) || 0) / targets.length;
+					_.each(move.targets, function (to) {
+						total += (beta.get((move.origin * 512 + to) * 4096 + visit(mask, to, k + 1)) || 0) / move.targets.length;
 					});
 					if (total > 0) {
 						previous.set(key, total);
@@ -297,7 +318,7 @@ WC.deduction = (function (board, _) {
 		var totals = {};
 		var sum = 0;
 		layer.forEach(function (weight, key) {
-			var mapid = Math.floor(key / 4096);
+			var mapid = circleOf(key);
 			totals[mapid] = (totals[mapid] || 0) + weight;
 			sum += weight;
 		});

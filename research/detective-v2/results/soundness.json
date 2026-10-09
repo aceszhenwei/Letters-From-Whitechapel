@@ -1,0 +1,32 @@
+{
+ "games": 60,
+ "from": 700001,
+ "byJack": {
+  "baseline": {
+   "prefixes": 13383,
+   "truthLostPlain": 0,
+   "truthLostPruned": 0,
+   "enumerated": 9279,
+   "truthLostReference": 0,
+   "notSuperset": 0,
+   "exact": 9279,
+   "extraCircles": 0,
+   "extraByMove": {},
+   "pruneShrink": 10306,
+   "examples": []
+  },
+  "strategic": {
+   "prefixes": 12611,
+   "truthLostPlain": 0,
+   "truthLostPruned": 0,
+   "enumerated": 11740,
+   "truthLostReference": 0,
+   "notSuperset": 0,
+   "exact": 11740,
+   "extraCircles": 0,
+   "extraByMove": {},
+   "pruneShrink": 1722,
+   "examples": []
+  }
+ }
+}
