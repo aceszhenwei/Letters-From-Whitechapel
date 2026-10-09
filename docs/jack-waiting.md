@@ -33,7 +33,11 @@ Should Jack sometimes wait before he kills? The [deception audit](deception-audi
   Pooled, the 500 games give 57 against 29 (p = 0.003), but the pooled test was not pre-registered.
   - There is no regression: against the original police −1.0 points (95% interval −3.4 to +1.4), against v2 +3.0 (−2.3 to +8.3).
   - Strategic Jack with waiting: +1.7 points against v3 on the validation seeds (not significant).
-- **The mechanism:** the gain is on the last night, against v3 only. v3 prepares its policemen around the red circles left for night 4. A Jack who waits makes the police move his victims off those circles, so the murder happens outside the prepared defence: most last-night murders of the waiting Jack are off a red circle. Against v2, which prepares nothing, the gain disappears.
+- **The mechanism (corrected):** as first written, the gain was on the last night, because waiting moved the murder off the red circles v3 prepares. [Waiting against containment](waiting-containment.md) found that wrong:
+  - None of Jack AI v2's last-night murders is one walk from his hideout, so v3's containment never acts against him.
+  - Waiting on the last night alone, with nights 1–3 identical, changes nothing (−2.0 points, 95% CI −6.6 to +2.6, 250 paired games).
+  - On those new seeds the overall gain against v3 is 0.0 points. Pooled with the sets here it is +3.7 (+0.7 to +6.7), from sets that disagree.
+  - Where waiting helps, the cause is extra moves and where the police happen to move the victim.
 - **Patrol information is still worthless.** The reveals that come with waiting changed 0 of 319 decisions. A Jack blind to every reveal plays identical games. With the stations out of one police turn of every red circle, knowing which tokens are fake almost never changes which victim is safest.
 - **Recommendation:** keep the policy as an option, not a difficulty level. Its gain against v3 is consistent across two held-out seed sets but was not confirmed by the pre-registered test. Use it as an opponent for Detective AI v4: v3's containment can be side-stepped by waiting.
 
@@ -147,7 +151,7 @@ All comparisons are paired by seed: each seed is the same game setup with and wi
 | Jack v2 | original | 93.0% | 92.0% | 5 / 8 | Secondary: −1.0 point (−3.4 to +1.4), no regression beyond 5 points |
 | Strategic | v3 | 36.3% | 38.0% | 41 / 36 | +1.7 points, p = 0.65 |
 
-**Where the gain comes from** (validation seeds, Jack v2 against v3; nights escaped):
+**Night by night** (validation seeds, Jack v2 against v3; nights escaped). *Correction: this compares the last nights of different games. The waiting Jack had often waited on nights 2–3 too. A counterfactual with identical nights 1–3 shows no last-night effect ([Waiting against containment §3](waiting-containment.md#3-is-the-advantage-on-the-last-night)).*
 
 | Night | Without | With | Nights he waited |
 |---:|---:|---:|---:|
@@ -158,7 +162,7 @@ All comparisons are paired by seed: each seed is the same game setup with and wi
 
 On the focused seeds the last night went from 79% to 88%, with 128 of 169 last-night murders off a red circle. Against v2, last nights were 82% and 85% on the validation seeds, and 85% and 85% on the focused seeds: little or no gain.
 
-**Reading the results.** The policy improves Jack AI v2 against v3 on both held-out sets (+8.0 and +4.0 points). The pre-registered test alone did not reach significance, and the effect is probably nearer the smaller estimate. It never costs more than a few points against the other police. That supports an optional policy and a research opponent. It doesn't support a new difficulty level, or a claim that it is reliably stronger.
+**Reading the results.** The policy improved Jack AI v2 against v3 on both held-out sets here (+8.0 and +4.0 points). A third set of 250 new paired games found 0.0 ([Waiting against containment](waiting-containment.md)). The pre-registered test alone did not reach significance, and the effect is probably nearer the smaller estimate. It never costs more than a few points against the other police. That supports an optional policy and a research opponent. It doesn't support a new difficulty level, or a claim that it is reliably stronger.
 
 ## 7. The value of patrol information, reassessed
 
@@ -168,7 +172,7 @@ The audit found fake patrols worthless to Jacks who never wait. With waiting, Ja
 - **Victims and moves:** with every reveal hidden from all decisions (`-blind`), forced waits gave game-for-game identical results. The audit's oracle had already shown that knowing every fake changed no victim choice.
 - **Why:** no station is within one police turn of a red circle. On later nights the tokens stand where the policemen ended. After the police move a waited-for victim, it is either in reach of several tokens or of none, so removing one fake rarely changes anything.
 
-**Conclusion:** on this board, patrol information has no measurable strategic value for Jack, with or without waiting. The value of waiting is time, and taking the murder off the circles the police prepared, not information. The audit's caveat stands: the 7 stations are unverified, and more stations near the red circles would change this.
+**Conclusion:** on this board, patrol information has no measurable strategic value for Jack, with or without waiting. The value of waiting, where there is one, is time and where the victim ends up, not information. The audit's caveat stands: the 7 stations are unverified, and more stations near the red circles would change this.
 
 ## 8. Limitations
 
@@ -180,8 +184,8 @@ The audit found fake patrols worthless to Jacks who never wait. With waiting, Ja
 
 ## 9. Implications for Detective AI v4
 
-- **Containment must expect waiting.** v3 prepares the red circles left for night 4. A Jack who waits makes the police move his victims off them. v4's containment should treat the circles a Wretched could be moved to as kill sites in proportion to the chance Jack waits, or prepare positions that also cover them.
-- **The police choose where the Wretched go.** That is a real lever. v3's `containWretched` (moving the Wretched where they threaten the likely hideouts least) was left out after one scenario, against Jacks who never waited. Against a waiting Jack it should be re-evaluated.
+- *Corrected by [Waiting against containment](waiting-containment.md):* containment doesn't need to expect waiting against Jack AI v2, who never kills one walk from home.
+- **`containWretched`, re-tested against waiting Jacks:** it cuts first-move escapes after a wait but changes no win rate. It stays an option, off.
 - **Fake patrols remain a low priority.** Even with waiting, which token is fake doesn't change Jack's decisions on this board (section 7).
 - **New opponent:** `jack-v2-waiting` (research name; `WC.createWaitingJack` around Jack AI v2) should be in v4's evaluation as an adaptive opponent v3 has not seen.
 

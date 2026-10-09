@@ -2,7 +2,19 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: the detective's tools
+## Unreleased: waiting against containment
+
+- **Study:** [Waiting against containment](waiting-containment.md) tests why strategic waiting seemed to beat Detective AI v3 on the last night. It does not:
+  - Jack AI v2's last-night murders are never one walk from his hideout, so v3's containment never acts against him.
+  - Waiting on the last night alone, with nights 1–3 played identically, changes nothing (−2.0 points, 95% CI −6.6 to +2.6, 250 paired games).
+  - The overall gain from waiting is small and uncertain (0.0 on new seeds; +3.7 pooled).
+- **`containWretched`,** re-tested against Jacks who wait, cuts first-move escapes after a wait but changes no win rate, so it stays off.
+- **v3's waiting-aware threat model** has known inaccuracies (illegal neighbours, one step out, the police's choice ignored), but none costs a game in the data.
+- **Recommendation:** no new Detective AI version. PR #17's report is corrected.
+- **Tests:** `waiting-containment.test.js` (positions set up by hand).
+- **Scripts:** `research/waiting-containment/`.
+
+## The detective's tools ([aceszhenwei/Letters-From-Whitechapel#18](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/18))
 
 - **Undo a policeman's move:** in Hunting the monster, the chosen policeman is ringed and his crossings are ringed in his colour. **Undo last move** takes moves back, newest first, until the player chooses **Done**. Moves can't be undone after that, since searches can reveal clues.
 - **Night review:** when Jack reaches his hideout, the board stays as it was (policemen, crime scenes, clues, searches and failed arrests) until the player chooses **Begin the next night**. The **case files** show each night's log in order, can show any earlier night on the board read-only, and give walking distances from a crime scene or clue. All of it comes from `rules.nightRecord`, a frozen copy of the public record that never holds Jack's route or hideout.
@@ -15,7 +27,7 @@ Newest first. Each entry is one pull request; the reports it links hold the full
 
 - **Study:** [Strategic waiting](jack-waiting.md) explains why Strategic Jack and Jack AI v2 never wait (a fixed rule, which is right against the original police) and measures what waiting is worth.
 - **Policy:** strategic waiting (`js/ai/jack-waiting.js`, an option played by no level) waits only when its measured chance of escaping is higher than killing now, assuming the police move the victims where it hurts him most.
-- **Results:** wrapped around Jack AI v2, it beat Detective AI v3 more often on two held-out seed sets (66.0% → 74.0%, p = 0.009; 67.0% → 71.0%, p = 0.13, the pre-registered test, not significant), without regressing against the other police. Its gain comes from taking the last night's murder off the red circles v3 prepares.
+- **Results:** wrapped around Jack AI v2, it beat Detective AI v3 more often on two held-out seed sets (66.0% → 74.0%, p = 0.009; 67.0% → 71.0%, p = 0.13, the pre-registered test, not significant), without regressing against the other police. (The explanation given then, that the gain came from taking the last night's murder off the red circles v3 prepares, was withdrawn: see Waiting against containment above.)
 - **Patrol information:** revealed patrols still change no decision.
 - **Jack's view** gains `wretchedMoves(mapid)`: where the police could move a Wretched (public information).
 - **Tests:** `jack-waiting.test.js`, and a smoke step.
