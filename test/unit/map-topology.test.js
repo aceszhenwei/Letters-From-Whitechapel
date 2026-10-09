@@ -1,72 +1,75 @@
-// The board's topology follows whitechapelR's map, which this project treats as canonical (docs/map-data.md,
-// "Topology corrections"): every walking link and alley between numbered circles, and the 13 corrections.
+// The board's topology, as verified against the physical board (docs/map-data.md, "Verified against the board").
+// whitechapelR's map (test/fixtures/whitechapelR-map.json) differs from the board in 13 places; the board is right in
+// all of them. These tests pin each of those 13 connections, and check that nothing else has drifted.
 const test = require('node:test');
 const assert = require('node:assert');
 const { loadCore } = require('../helpers/core');
-const canonical = require('../fixtures/whitechapelR-map.json');
+const whitechapelR = require('../fixtures/whitechapelR-map.json');
 
 const { WC, map } = loadCore();
 const board = WC.board;
 const circles = Array.from(board.numbered());
 const byNumber = {};
 circles.forEach((id) => { byNumber[map[id].number] = id; });
+const walks = (a, b) => board.walk(byNumber[a], []).includes(byNumber[b]);
+const alley = (a, b) => board.alleys(byNumber[a]).includes(byNumber[b]);
 const key = (a, b) => `${Math.min(a, b)}-${Math.max(a, b)}`;
 const pairs = (neighbours) => {
 	const set = new Set();
 	for (const id of circles) for (const other of neighbours(id)) set.add(key(map[id].number, map[other].number));
 	return set;
 };
-const canonicalSet = (list) => new Set(list.map(([a, b]) => key(a, b)));
-const difference = (a, b) => [...a].filter((x) => !b.has(x)).sort();
 
-test('walking links between numbered circles are exactly whitechapelR\'s', () => {
-	const ours = pairs((id) => board.walk(id, []));
-	const theirs = canonicalSet(canonical.roads);
-	assert.deepStrictEqual(difference(ours, theirs), [], 'links whitechapelR doesn\'t have');
-	assert.deepStrictEqual(difference(theirs, ours), [], 'whitechapelR links missing here');
-	assert.strictEqual(ours.size, 767);
-});
+// The 13 connections checked on the physical board (printed numbers), and the crossings (map ids) each walk uses
+const boardHas = [
+	[16, 34, [50, 52]], [165, 189, [260, 252]], [169, 191, [284, 282]], [172, 183, [361, 345, 344, 324]],
+	[182, 184, [326, 330]], [182, 185, [326, 330, 331]], [182, 186, [326, 330, 331, 332]], [182, 193, [326, 330, 331, 332]],
+	[185, 192, [331, 330, 326]], [186, 192, [332, 331, 330, 326]]
+];
+const boardLacks = [[165, 186], [31, 36]];
+const boardLacksAlley = [[35, 39]];
 
-test('alleys are exactly whitechapelR\'s', () => {
-	const ours = pairs((id) => board.alleys(id));
-	const theirs = canonicalSet(canonical.alleys);
-	assert.deepStrictEqual(difference(ours, theirs), []);
-	assert.deepStrictEqual(difference(theirs, ours), []);
-	assert.strictEqual(ours.size, 452);
-});
+for (const [a, b, crossings] of boardHas) {
+	test(`the board joins ${a} and ${b} by a street (through crossings ${crossings.join(', ')})`, () => {
+		assert.ok(walks(a, b) && walks(b, a), 'both ways');
+		assert.ok(map[byNumber[a]].adjacentNumber.includes(byNumber[b]), 'in the hand-entered neighbours too');
+		// A policeman on any one of those crossings blocks it, as on the board
+		for (const crossing of crossings) {
+			assert.ok(!board.walk(byNumber[a], [crossing]).includes(byNumber[b]), `blocked at ${crossing}`);
+		}
+	});
+}
 
-test('each of the 13 corrections is in place, both ways', () => {
-	const walks = (a, b) => board.walk(byNumber[a], []).includes(byNumber[b]);
-	const alley = (a, b) => board.alleys(byNumber[a]).includes(byNumber[b]);
-	const { walks: w, alleys: al } = map.topologyCorrections;
-	assert.strictEqual(w.remove.length + w.add.length + al.add.length + al.remove.length, 13);
-	for (const [a, b] of w.remove) assert.ok(!walks(a, b) && !walks(b, a), `no walk ${a}-${b}`);
-	for (const [a, b] of w.add) assert.ok(walks(a, b) && walks(b, a), `walk ${a}-${b}`);
-	for (const [a, b] of al.add) assert.ok(alley(a, b) && alley(b, a), `alley ${a}-${b}`);
-	// The hand-entered list of walking neighbours agrees
-	for (const [a, b] of w.add) assert.ok(map[byNumber[a]].adjacentNumber.includes(byNumber[b]));
-	for (const [a, b] of w.remove) assert.ok(!map[byNumber[a]].adjacentNumber.includes(byNumber[b]));
-});
+for (const [a, b] of boardLacks) {
+	test(`the board has no street between ${a} and ${b}`, () => {
+		assert.ok(!walks(a, b) && !walks(b, a));
+		assert.ok(board.distance(byNumber[a], byNumber[b]) > 1);
+	});
+}
 
-test('policemen still block the links that pass their crossing, and can\'t block the added ones', () => {
-	// 182 still walks to 183's side through crossing 326 (map ids), but no longer to 184
-	const from = byNumber[182];
-	const blocked = board.walk(from, [326]);
-	assert.ok(!blocked.includes(byNumber[192]), 'a policeman on the way blocks a remaining link');
-	assert.ok(!board.walk(from, []).includes(byNumber[184]));
-	// An added link passes no crossing
-	const around = board.neighbours(byNumber[165]).filter((id) => !board.isNumbered(id));
-	assert.ok(board.walk(byNumber[165], around).includes(byNumber[186]));
-});
+for (const [a, b] of boardLacksAlley) {
+	test(`${a} and ${b} are not on the same block, so no alley joins them`, () => {
+		assert.ok(!alley(a, b) && !alley(b, a));
+	});
+}
 
-test('the streets themselves are unchanged: still a planar graph with 164 blocks', () => {
+test('the whole topology: 775 walking links, 451 alleys, 592 streets', () => {
+	assert.strictEqual(pairs((id) => board.walk(id, [])).size, 775);
+	assert.strictEqual(pairs((id) => board.alleys(id)).size, 451);
 	const streets = new Set();
 	for (let id = 0; id < map.length; id++) for (const other of map[id].adjacent) streets.add(key(id, other));
-	assert.strictEqual(map.length, 429);
 	assert.strictEqual(streets.size, 592);
+	assert.strictEqual(map.topologyCorrections, undefined, 'walking follows the streets, with no overrides');
 });
 
-test('distances use the corrected links', () => {
-	assert.strictEqual(board.distance(byNumber[165], byNumber[186]), 1);
-	assert.ok(board.distance(byNumber[182], byNumber[184]) > 1);
+test('whitechapelR\'s map differs from the board in exactly these 13 places, and nowhere else', () => {
+	const diff = (a, b) => [...a].filter((x) => !b.has(x)).sort();
+	const ourWalks = pairs((id) => board.walk(id, []));
+	const theirWalks = new Set(whitechapelR.roads.map(([a, b]) => key(a, b)));
+	assert.deepStrictEqual(diff(ourWalks, theirWalks), boardHas.map(([a, b]) => key(a, b)).sort());
+	assert.deepStrictEqual(diff(theirWalks, ourWalks), boardLacks.map(([a, b]) => key(a, b)).sort());
+	const ourAlleys = pairs((id) => board.alleys(id));
+	const theirAlleys = new Set(whitechapelR.alleys.map(([a, b]) => key(a, b)));
+	assert.deepStrictEqual(diff(ourAlleys, theirAlleys), []);
+	assert.deepStrictEqual(diff(theirAlleys, ourAlleys), boardLacksAlley.map(([a, b]) => key(a, b)).sort());
 });

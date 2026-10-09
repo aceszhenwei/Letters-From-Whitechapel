@@ -1,10 +1,10 @@
 strategic vs deductive {"blockWeight":1}, seeds 1-500
-  Jack wins 411/500 (82.2%); arrested 44, out of moves 45
-  clue phases 8895; with an opportunity (a policeman next to Jack's circle) 254 (2.9%); games with at least one: 31.8%
-  belief at those opportunities: mean share on his circle 0.030; his circle was the likeliest arrestable one 17.3%; best arrestable share >= 0.2 6.7%
-  opportunities converted into an arrest: 44 of 254 (17.3%)
-  belief overall: mean candidates 53.7, mean share on his circle 0.067, his circle ranked 35.1 on average
-  per game: searches 191.2, clues 2.5, failed arrests 0.99
-  hideout at the start of night 2 (498 games): candidates 80.5, P(true hideout) 0.006 (uniform over candidates would give 0.017), rank 60.9, entropy 5.11 bits
-  hideout at the start of night 3 (490 games): candidates 42.4, P(true hideout) 0.023 (uniform over candidates would give 0.041), rank 33.8, entropy 3.77 bits
-  hideout at the start of night 4 (459 games): candidates 31.1, P(true hideout) 0.030 (uniform over candidates would give 0.069), rank 26.0, entropy 2.93 bits
+  Jack wins 397/500 (79.4%); arrested 52, out of moves 51
+  clue phases 8940; with an opportunity (a policeman next to Jack's circle) 286 (3.2%); games with at least one: 34.0%
+  belief at those opportunities: mean share on his circle 0.033; his circle was the likeliest arrestable one 15.0%; best arrestable share >= 0.2 5.6%
+  opportunities converted into an arrest: 52 of 286 (18.2%)
+  belief overall: mean candidates 53.8, mean share on his circle 0.066, his circle ranked 35.3 on average
+  per game: searches 191.5, clues 2.8, failed arrests 0.95
+  hideout at the start of night 2 (498 games): candidates 75.6, P(true hideout) 0.010 (uniform over candidates would give 0.020), rank 56.9, entropy 5.04 bits
+  hideout at the start of night 3 (489 games): candidates 41.4, P(true hideout) 0.031 (uniform over candidates would give 0.048), rank 32.3, entropy 3.70 bits
+  hideout at the start of night 4 (445 games): candidates 30.8, P(true hideout) 0.035 (uniform over candidates would give 0.071), rank 25.4, entropy 2.90 bits

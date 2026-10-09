@@ -18,6 +18,40 @@ node --test --test-name-pattern="double event" "test/**/*.test.js"
 
 GitHub Actions runs `npm test` on every push to `master` and on every pull request (`.github/workflows/test.yml`).
 
+## Test tiers
+
+The simulations and research behind the AIs take up to a couple of hours in full, so testing is split into tiers. Use the cheapest tier that covers a change; the expensive ones are for algorithmic changes and research milestones.
+
+| Tier | Command | What it runs | When | Typical time (4 cores) |
+|---|---|---|---|---|
+| Fast | `npm test` (or `npm run test:unit`, `npm run test:regression`) | Unit and regression tests, including the golden traces | Every change; CI runs it | 1.7 min |
+| Smoke | `npm run test:smoke` | Small simulations: every Jack against every police (4 games each), seeded determinism, the deduction against the exhaustive reference, the improved police from the research harness | Any change to the AIs, rules, engine, map or research scripts; CI runs it too | 11 s |
+| Medium | `npm run eval:medium` | 500 games per Jack against the deductive police; the original against the improved police (300 games per Jack); a 10-game soundness check. Development seeds only. Results in `experiments/medium/` | Algorithmic changes to the AIs, the police or the deduction, before running the full tier | 4.5 min |
+| Full | `npm run research:full` (set `WHITECHAPELR_CLONE` for the whitechapelR comparisons) | The whole detective study (`research/detective-inference/run-all.sh`) and the four 5,000-game evaluations of [Jack's AI](jack-ai.md) | Research milestones, and before publishing or relying on new numbers | about 1 h 45 min: the study 52 min, the four evaluations about 50 min |
+
+`node tools/tiers/run-tier.js <tier>` runs any tier and prints each step's time. Every tier is defined in `tools/tiers/tiers.js`.
+
+**Not repeating expensive work.** Each medium and full step lists the files its results depend on: the game's code, the simulation tools, and for research steps the research scripts and fixtures. The runner keeps a fingerprint of those files and the command in `experiments/tiers/manifest.json`, together with how long the step took and when. If nothing a step depends on has changed and its outputs are still there, the step is skipped and its earlier results stand. Change one line of the police AI, and the research steps run again; change only the docs, and nothing does.
+
+- `--force` runs a step regardless.
+- `--dry-run` shows what would run.
+- `--record <seconds>` marks steps whose outputs were produced outside the runner (for example by calling `run-all.sh` directly) as done with today's inputs.
+
+The fast and smoke tiers are never skipped.
+
+**Seeds.** Every experiment uses fixed seeds, so it plays the same games on every run and every machine. The ranges are kept apart, so no experiment is tuned on another's games:
+
+| Seeds | Used for |
+|---|---|
+| 1–5,000 | Final evaluation of the Jack AIs, and the detective study's main runs |
+| 300001 on | Development (the medium tier) |
+| 600001–600500 | Fresh-seed validation in the detective study |
+| 700001–700060 | Deduction soundness checks |
+| 800001 on | Smoke tests |
+| 900001 on | Calibration of the strategic Jack |
+
+**Runtimes.** `experiments/tiers/manifest.json` records the last time of every step the runner ran. The table above gives typical times, measured on an otherwise idle 4-core machine. Update it when a tier's cost changes noticeably.
+
 ## Three ways in
 
 | Layer | Loader | Speed | Use it for |

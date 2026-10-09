@@ -2,57 +2,57 @@
  {
   "steps": 1,
   "circles": 8,
-  "deductionMs": 1.22,
+  "deductionMs": 1.26,
   "whitechapelRPaths": 8,
   "whitechapelRStepSeconds": 0.01
  },
  {
   "steps": 2,
   "circles": 17,
-  "deductionMs": 1.01,
+  "deductionMs": 0.36,
   "whitechapelRPaths": 70,
   "whitechapelRStepSeconds": 0
  },
  {
   "steps": 3,
   "circles": 28,
-  "deductionMs": 1.37,
+  "deductionMs": 0.33,
   "whitechapelRPaths": 610,
   "whitechapelRStepSeconds": 0
  },
  {
   "steps": 4,
   "circles": 45,
-  "deductionMs": 2.47,
+  "deductionMs": 0.55,
   "whitechapelRPaths": 5271,
-  "whitechapelRStepSeconds": 0.05
+  "whitechapelRStepSeconds": 0.04
  },
  {
   "steps": 5,
   "circles": 73,
-  "deductionMs": 0.69,
+  "deductionMs": 1.3,
   "whitechapelRPaths": 45336,
-  "whitechapelRStepSeconds": 0.44
+  "whitechapelRStepSeconds": 0.4
  },
  {
   "steps": 6,
-  "circles": 99,
-  "deductionMs": 3.06,
-  "whitechapelRPaths": 388921,
-  "whitechapelRStepSeconds": 3.37
+  "circles": 98,
+  "deductionMs": 1.9,
+  "whitechapelRPaths": 388937,
+  "whitechapelRStepSeconds": 3.16
  },
  {
   "steps": 7,
-  "circles": 127,
-  "deductionMs": 3.17,
-  "whitechapelRPaths": 3334609,
-  "whitechapelRStepSeconds": 31.94
+  "circles": 124,
+  "deductionMs": 4.05,
+  "whitechapelRPaths": 3335017,
+  "whitechapelRStepSeconds": 29.66
  },
  {
   "steps": 8,
   "circles": 148,
-  "deductionMs": 2.78,
-  "whitechapelRPaths": 28609218,
-  "whitechapelRStepSeconds": 344.12
+  "deductionMs": 1.48,
+  "whitechapelRPaths": 28616780,
+  "whitechapelRStepSeconds": 303.82
  }
 ]

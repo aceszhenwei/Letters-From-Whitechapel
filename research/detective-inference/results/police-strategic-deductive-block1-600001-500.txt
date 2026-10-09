@@ -1,0 +1,10 @@
+strategic vs deductive {"blockWeight":1}, seeds 600001-600500
+  Jack wins 378/500 (75.6%); arrested 57, out of moves 65
+  clue phases 9088; with an opportunity (a policeman next to Jack's circle) 346 (3.8%); games with at least one: 40.0%
+  belief at those opportunities: mean share on his circle 0.033; his circle was the likeliest arrestable one 17.1%; best arrestable share >= 0.2 5.5%
+  opportunities converted into an arrest: 57 of 346 (16.5%)
+  belief overall: mean candidates 54.0, mean share on his circle 0.065, his circle ranked 34.2 on average
+  per game: searches 195.0, clues 3.0, failed arrests 0.98
+  hideout at the start of night 2 (500 games): candidates 73.5, P(true hideout) 0.011 (uniform over candidates would give 0.022), rank 54.2, entropy 4.96 bits
+  hideout at the start of night 3 (488 games): candidates 39.6, P(true hideout) 0.031 (uniform over candidates would give 0.050), rank 31.4, entropy 3.67 bits
+  hideout at the start of night 4 (446 games): candidates 28.3, P(true hideout) 0.061 (uniform over candidates would give 0.084), rank 23.5, entropy 2.82 bits

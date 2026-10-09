@@ -1,0 +1,13 @@
+baseline Jack, 300 games: weight on the true hideout relative to a uniform guess, by detour (moves beyond the shortest walk; 4 = 4 or more)
+  detour 0: 46 nights, mean ratio 0.19, below uniform in 98%
+  detour 1: 80 nights, mean ratio 0.39, below uniform in 89%
+  detour 2: 85 nights, mean ratio 0.44, below uniform in 93%
+  detour 3: 68 nights, mean ratio 0.71, below uniform in 79%
+  detour 4: 298 nights, mean ratio 1.10, below uniform in 66%
+strategic Jack, 300 games: weight on the true hideout relative to a uniform guess, by detour (moves beyond the shortest walk; 4 = 4 or more)
+  detour 0: 511 nights, mean ratio 0.13, below uniform in 98%
+  detour 1: 369 nights, mean ratio 0.22, below uniform in 96%
+  detour 2: 190 nights, mean ratio 0.41, below uniform in 89%
+  detour 3: 41 nights, mean ratio 1.05, below uniform in 63%
+  detour 4: 30 nights, mean ratio 1.24, below uniform in 53%
+  detour -1: 54 nights, mean ratio 0.22, below uniform in 100%

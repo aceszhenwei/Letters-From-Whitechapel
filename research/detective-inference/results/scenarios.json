@@ -17,7 +17,6 @@
   ],
   "reference": [
    38,
-   46,
    47,
    49,
    54,
@@ -82,11 +81,10 @@
    338,
    351
   ],
-  "referenceRoutes": 387,
+  "referenceRoutes": 386,
   "routesToTruth": 22,
   "ours": [
    38,
-   46,
    47,
    49,
    54,
@@ -151,11 +149,10 @@
    338,
    351
   ],
-  "oursMs": 0.596253,
+  "oursMs": 0.455476,
   "oursTruthProbability": 0.05944957348018574,
   "whitechapelR": [
    38,
-   46,
    47,
    49,
    54,
@@ -220,8 +217,8 @@
    338,
    351
   ],
-  "whitechapelRPaths": 387,
-  "rSeconds": 0.0371
+  "whitechapelRPaths": 386,
+  "rSeconds": 0.0601
  },
  {
   "name": "2. Coach",
@@ -336,7 +333,7 @@
    267,
    269
   ],
-  "oursMs": 0.299513,
+  "oursMs": 0.594392,
   "oursTruthProbability": 0.07553061224489799,
   "whitechapelR": [
    3,
@@ -387,7 +384,7 @@
    269
   ],
   "whitechapelRPaths": 266,
-  "rSeconds": 0.0431
+  "rSeconds": 0.0448
  },
  {
   "name": "3. Alley",
@@ -427,7 +424,7 @@
    46,
    47
   ],
-  "oursMs": 0.181693,
+  "oursMs": 0.233594,
   "oursTruthProbability": 0.1111111111111111,
   "whitechapelR": [
    14,
@@ -441,7 +438,7 @@
    47
   ],
   "whitechapelRPaths": 13,
-  "rSeconds": 0.0363
+  "rSeconds": 0.0385
  },
  {
   "name": "4. Search, nothing found",
@@ -590,7 +587,7 @@
    301,
    303
   ],
-  "oursMs": 0.498206,
+  "oursMs": 1.305539,
   "oursTruthProbability": 0.04514957012785994,
   "whitechapelR": [
    3,
@@ -657,7 +654,7 @@
    303
   ],
   "whitechapelRPaths": 330,
-  "rSeconds": 0.0531
+  "rSeconds": 0.0477
  },
  {
   "name": "5. Clue",
@@ -804,7 +801,7 @@
    338,
    428
   ],
-  "oursMs": 0.892838,
+  "oursMs": 0.677663,
   "oursTruthProbability": 0.1831237945426952,
   "whitechapelR": [
    101,
@@ -869,7 +866,7 @@
    428
   ],
   "whitechapelRPaths": 1652,
-  "rSeconds": 0.1254
+  "rSeconds": 0.1782
  },
  {
   "name": "6. Blocked walks and a failed arrest",
@@ -889,22 +886,27 @@
    "arrest 341: failed"
   ],
   "reference": [
-   253,
-   256,
-   259,
-   261,
-   263,
-   279,
+   179,
+   281,
+   283,
+   285,
+   287,
+   288,
+   290,
    293,
    295,
    297,
    298,
+   301,
+   303,
+   306,
    310,
    311,
    316,
    317,
    319,
    322,
+   323,
    325,
    327,
    329,
@@ -927,25 +929,30 @@
    377,
    379
   ],
-  "referenceRoutes": 389,
-  "routesToTruth": 26,
+  "referenceRoutes": 575,
+  "routesToTruth": 29,
   "ours": [
-   253,
-   256,
-   259,
-   261,
-   263,
-   279,
+   179,
+   281,
+   283,
+   285,
+   287,
+   288,
+   290,
    293,
    295,
    297,
    298,
+   301,
+   303,
+   306,
    310,
    311,
    316,
    317,
    319,
    322,
+   323,
    325,
    327,
    329,
@@ -968,25 +975,30 @@
    377,
    379
   ],
-  "oursMs": 0.422882,
-  "oursTruthProbability": 0.08004526439094738,
+  "oursMs": 0.577331,
+  "oursTruthProbability": 0.06672885835842206,
   "whitechapelR": [
-   253,
-   256,
-   259,
-   261,
-   263,
-   279,
+   179,
+   281,
+   283,
+   285,
+   287,
+   288,
+   290,
    293,
    295,
    297,
    298,
+   301,
+   303,
+   306,
    310,
    311,
    316,
    317,
    319,
    322,
+   323,
    325,
    327,
    329,
@@ -1009,8 +1021,8 @@
    377,
    379
   ],
-  "whitechapelRPaths": 389,
-  "rSeconds": 0.9463
+  "whitechapelRPaths": 575,
+  "rSeconds": 1.6792
  },
  {
   "name": "7. Double event",
@@ -1106,7 +1118,7 @@
    338,
    351
   ],
-  "referenceRoutes": 1195,
+  "referenceRoutes": 1205,
   "routesToTruth": 24,
   "ours": [
    3,
@@ -1186,8 +1198,8 @@
    338,
    351
   ],
-  "oursMs": 0.756615,
-  "oursTruthProbability": 0.02171935482947388,
+  "oursMs": 0.890367,
+  "oursTruthProbability": 0.021907925628163728,
   "whitechapelR": [
    3,
    6,
@@ -1266,57 +1278,43 @@
    338,
    351
   ],
-  "whitechapelRPaths": 1195,
-  "rSeconds": 0.0462
+  "whitechapelRPaths": 1205,
+  "rSeconds": 0.0493
  },
  {
   "name": "8. Strategic Jack across nights",
   "description": "Strategic Jack's escaped nights in seed 52 (deductive police): where could the hideout be?",
-  "truth": 196,
+  "truth": 194,
   "ours": [
-   49,
-   54,
-   64,
-   79,
-   82,
-   86,
-   90,
-   92,
+   96,
    101,
-   103,
-   142,
-   156,
-   176,
-   179,
-   184,
-   187,
+   189,
    192,
+   194,
    196,
    200,
-   309
+   267,
+   269,
+   273,
+   275,
+   301,
+   303
   ],
-  "oursTruthProbability": 0.0000036896985011857107,
+  "oursTruthProbability": 0.15469723162292223,
   "reference": [
-   49,
-   54,
-   64,
-   79,
-   82,
-   86,
-   90,
-   92,
+   96,
    101,
-   103,
-   142,
-   156,
-   176,
-   179,
-   184,
-   187,
+   189,
    192,
+   194,
    196,
    200,
-   309
+   267,
+   269,
+   273,
+   275,
+   301,
+   303
   ],
   "whitechapelR": "did not finish in 10 minutes"
  }

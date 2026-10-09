@@ -1,8 +1,8 @@
 numbered circles: 195
-walking connections: ours 767, whitechapelR 767, shared 767
+walking connections: ours 775, whitechapelR 767, shared 765
+  only ours (10): 16-34 165-189 169-191 172-183 182-184 182-185 182-186 182-193 185-192 186-192
+  only whitechapelR (2): 165-186 31-36
+alleys: ours 451, whitechapelR 452, shared 451
   only ours (0): 
-  only whitechapelR (0): 
-alleys: ours 452, whitechapelR 452, shared 452
-  only ours (0): 
-  only whitechapelR (0): 
+  only whitechapelR (1): 35-39
   of whitechapelR-only alleys, also walking connections here: 0

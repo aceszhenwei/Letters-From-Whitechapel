@@ -66,10 +66,7 @@ WC.board = (function (map, _) {
 		}
 
 		nextStep(map[from].adjacent, []); // Go
-		// The canonical topology (map.topologyCorrections): links the streets make but the canonical map doesn't, and
-		// links it has that no street draws. An added link passes no crossing, so policemen can't block it
-		var corrected = _.difference(adjacentNumbers, map[from].walkRemove || []);
-		return _.without(_.union(corrected, map[from].walkAdd || []), from);
+		return _.without(adjacentNumbers, from);
 	}
 
 	function crossingSteps(mapid) {

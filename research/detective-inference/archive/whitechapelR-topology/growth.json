@@ -1,0 +1,58 @@
+[
+ {
+  "steps": 1,
+  "circles": 8,
+  "deductionMs": 1.22,
+  "whitechapelRPaths": 8,
+  "whitechapelRStepSeconds": 0.01
+ },
+ {
+  "steps": 2,
+  "circles": 17,
+  "deductionMs": 1.01,
+  "whitechapelRPaths": 70,
+  "whitechapelRStepSeconds": 0
+ },
+ {
+  "steps": 3,
+  "circles": 28,
+  "deductionMs": 1.37,
+  "whitechapelRPaths": 610,
+  "whitechapelRStepSeconds": 0
+ },
+ {
+  "steps": 4,
+  "circles": 45,
+  "deductionMs": 2.47,
+  "whitechapelRPaths": 5271,
+  "whitechapelRStepSeconds": 0.05
+ },
+ {
+  "steps": 5,
+  "circles": 73,
+  "deductionMs": 0.69,
+  "whitechapelRPaths": 45336,
+  "whitechapelRStepSeconds": 0.44
+ },
+ {
+  "steps": 6,
+  "circles": 99,
+  "deductionMs": 3.06,
+  "whitechapelRPaths": 388921,
+  "whitechapelRStepSeconds": 3.37
+ },
+ {
+  "steps": 7,
+  "circles": 127,
+  "deductionMs": 3.17,
+  "whitechapelRPaths": 3334609,
+  "whitechapelRStepSeconds": 31.94
+ },
+ {
+  "steps": 8,
+  "circles": 148,
+  "deductionMs": 2.78,
+  "whitechapelRPaths": 28609218,
+  "whitechapelRStepSeconds": 344.12
+ }
+]
