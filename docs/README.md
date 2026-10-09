@@ -1,6 +1,6 @@
 # Letters From Whitechapel: documentation
 
-A browser version of the board game *Letters from Whitechapel* (revised edition). You play the five police detectives; the computer plays Jack the Ripper. It is a static site: plain JavaScript with jQuery and Underscore, with no build step. The rules, the game engine and Jack's AI run without the page, so they can be tested and simulated in Node.
+A browser version of the board game *Letters from Whitechapel* (revised edition). You play the five police detectives, or watch the computer police; the computer plays Jack the Ripper. It is a static site: plain JavaScript with jQuery and Underscore, with no build step. The rules, the game engine and the AIs run without the page, so they can be tested and simulated in Node.
 
 ## Quick start
 
@@ -9,24 +9,52 @@ open index.html          # or serve the folder with any static web server
 npm install && npm test  # run the automated tests (Node.js 22 or later)
 ```
 
-## Documents
+## Where to start
+
+| I want to… | Read |
+|---|---|
+| Know the rules as this game plays them | [Game rules](game-rules.md) |
+| Find my way around the code | [Architecture](architecture.md) |
+| Know which AIs exist, which level plays each, and how they are configured | [AI overview](ai.md) |
+| Run the tests or reproduce an experiment | [Testing](testing.md) |
+| Make a change | [Contributing](contributing.md) |
+| Know why an AI is the way it is | [Research reports](#research-reports), below |
+
+## Reference
+
+The current description of the game and the code. Each topic has one page; the others link to it.
 
 | Document | What it covers |
 |---|---|
-| [Architecture](architecture.md) | The modules (board, rules, engine, Jack's AI, interface), why they are split that way, the state and phases, and where new behaviour goes |
-| [Game rules](game-rules.md) | The rules as implemented, where each lives in the code, and what is not implemented |
-| [Map data](map-data.md) | The board graph in `js/data/map.js`: positions, streets, numbers, stations, alleys, and how to edit it safely |
-| [Jack's AI](jack-ai.md) | How the computer plays Jack: the baseline and the strategic AI, what each knows, how they were measured against each other, and the results |
-| [Detective inference](detective-inference-study.md) | A study of the computer police: their deduction against whitechapelR and an exhaustive check, why they lose to the strategic Jack, and what to improve next |
-| [Detective AI v2](detective-ai-v2.md) | The stronger computer police: what changed, how it was tuned and evaluated, results, robustness and limits |
-| [Detective AI v3](detective-ai-v3.md) | The Hard computer police: containment for the decisive last night, the game's legal decision points, why v2 lost to short-return Jacks, the candidates compared and ablated, and the recommendation |
-| [Human strategy literature](human-strategy-literature.md) | What experienced players say on BoardGameGeek, compared with the AIs: what the AIs already do, what our research rediscovered, what is missing, which forum tactics hold up on the board and in play, and what to research next |
-| [Jack AI v2](jack-ai-v2.md) | Why the strategic Jack loses to Detective AI v2, the improvements tested against each other, the one kept (the Hard level), and the validation still to run |
+| [Architecture](architecture.md) | The modules (board, rules, engine, AIs, interface), why they are split that way, the state and phases, and where new behaviour goes |
+| [Game rules](game-rules.md) | The rules as implemented, where each lives in the code, what is not implemented, and known differences from the physical game |
+| [Map data](map-data.md) | The board graph in `js/data/map.js`: positions, streets, numbers, stations, alleys, its verification against the physical board, and how to edit it safely |
+| [AI overview](ai.md) | Every Jack and police AI, the difficulty levels, their options, and the evidence behind each |
+| [Jack's AI](jack-ai.md) | The interface every Jack AI implements, what Jack may know, the difficulty levels, and the baseline and strategic Jacks with their evaluation |
 | [User interface](ui.md) | Layout, components, design tokens, the CSS class contract, accessibility and responsiveness |
-| [Testing](testing.md) | Running the tests, how they are organised, the test helpers, and writing new tests |
+| [Testing](testing.md) | Running the tests, the test tiers, seeds and reproducibility, the test helpers, and writing new tests |
 | [Contributing](contributing.md) | Setting up, code conventions, and the pull request checklist |
-| [Roadmap](roadmap.md) | Known limitations and ideas for future work |
-| [Changelog](changelog.md) | What changed, release by release |
+
+## Research reports
+
+The studies behind the AIs, oldest first. They are kept as the evidence for the current AIs: their methods, seeds, negative results and limitations stand as written, and a later study builds on, rather than replaces, an earlier one. Each names its scripts and the commands that reproduce it; [Testing](testing.md#seeds) lists every seed range.
+
+| Report | Question | Outcome | Scripts and results |
+|---|---|---|---|
+| [Jack's AI](jack-ai.md) (sections 1–10) | Can Jack plan by measured risk instead of rules of thumb? | Strategic Jack (Normal) | `tools/sim/`, [`experiments/`](../experiments/) |
+| [Detective inference](detective-inference-study.md) | Why do the computer police lose to Strategic Jack? Is their deduction right? (compared with whitechapelR) | The deduction is sound; the police misuse it. Its recommendations led to Detective AI v2 | [`research/detective-inference/`](../research/detective-inference/) |
+| [Detective AI v2](detective-ai-v2.md) | Can the police use what they know about the hideout? | Detective AI v2 (Normal police) and the coach deduction fix | [`research/detective-v2/`](../research/detective-v2/) |
+| [Jack AI v2](jack-ai-v2.md) | Why does Strategic Jack lose to Detective AI v2, and what fixes it? | Jack AI v2 (Hard); its independent validation is proposed, not run | [`research/jack-v2/`](../research/jack-v2/) |
+| [Human strategy literature](human-strategy-literature.md) | What do experienced players do that the AIs don't? | Gap analysis; no AI changed. It motivated Detective AI v3 | [`research/human-strategy/`](../research/human-strategy/) |
+| [Detective AI v3](detective-ai-v3.md) | Can the police prepare for a Jack who kills next to his hideout? | Detective AI v3 (Hard police); its independent validation is proposed, not run | [`research/detective-v3/`](../research/detective-v3/) |
+
+## Project
+
+| Document | What it covers |
+|---|---|
+| [Roadmap](roadmap.md) | What is implemented, known limitations, potential research (not approved) and other ideas |
+| [Changelog](changelog.md) | What changed, pull request by pull request |
+| [Archive](archive/README.md) | Superseded plans and earlier rounds of results, kept for the record |
 
 ## Glossary
 

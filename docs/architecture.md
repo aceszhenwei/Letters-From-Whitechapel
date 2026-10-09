@@ -57,7 +57,7 @@ The same in plain text, reading down from what depends on nothing:
 | `core/deduction.js` | What can be worked out from a night's public record: where Jack could be (and how likely each circle is), where his route may have passed, where the hideout could be | Board, a public record passed in | Read the state |
 | `ai/jack.js` | The baseline AI: Jack's six decisions | Board, random, the view it is given | Read the state directly, change it, or touch the page |
 | `ai/strategic-jack.js` | The strategic AI: the same six decisions, valuing moves by the chance of surviving and getting home (see [Jack's AI](jack-ai.md)) | Board, deduction, random, the baseline (for decisions it leaves alone), the view | As `ai/jack.js` |
-| `ai/police.js` | Computer police players for simulations: deductive and random | Board, rules, deduction, the police view | Read the state; it acts only through engine actions |
+| `ai/police.js` | Computer police players: deductive (the Easy, Normal and Hard police levels, and simulations) and random (simulations) | Board, rules, deduction, the police view | Read the state; it acts only through engine actions |
 | `core/random.js` | Biased random choices (`int`, `safe`, `safeIndex`), with an injectable source | `Math.random` by default | |
 | `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
 | `ai/jack-v2.js` | Jack AI v2: the strategic AI plus early detours on every night but the last (see [Jack AI v2](jack-ai-v2.md)) | The strategic AI, the view | As `ai/jack.js` |

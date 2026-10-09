@@ -41,27 +41,29 @@ The fast and smoke tiers are never skipped.
 
 The Jack v2 study's own scripts (`research/jack-v2/run.js`) also keep every game they play, fingerprinted by the files it depends on, so an interrupted run resumes and an unchanged game is never played twice. Its independent validation (`research/jack-v2/validate.sh`) is in no tier: it runs only by hand, once approved (see [Jack AI v2](jack-ai-v2.md#9-independent-validation-proposed-not-run)).
 
-**Seeds.** Every experiment uses fixed seeds, so it plays the same games on every run and every machine. The ranges are kept apart, so no experiment is tuned on another's games:
+**Runtimes.** `experiments/tiers/manifest.json` records the last time of every step the runner ran. The table above gives typical times, measured on an otherwise idle 4-core machine. Update it when a tier's cost changes noticeably.
+
+## Seeds
+
+Every experiment uses fixed seeds, so it plays the same games on every run and every machine. The ranges are kept apart, so no experiment is tuned on another's games. This table is the reference for every range in use or reserved; check it before choosing seeds for a new experiment.
 
 | Seeds | Used for |
 |---|---|
 | 1–5,000 | Final evaluation of the Jack AIs, and the detective study's main runs |
 | 300001 on | Development (the medium tier) |
-| 600001–600500 | Fresh-seed validation in the detective study |
-| 700001–700060 | Deduction soundness checks |
-| 800001 on | Smoke tests |
-| 900001 on | Calibration of the strategic Jack |
-| 650001–650500 | Fresh-seed validation of Detective AI v2 |
 | 410001–410100 | Jack v2 study: screening |
 | 420001–420200 | Jack v2 study: controlled comparison and ablation |
-| 760001–761000 | Jack v2 study: reserved for its independent validation |
 | 440001–440100 | Human strategy study: experiments |
 | 450001–450030 | Detective v3 study: screening |
 | 460001–460100 | Detective v3 study: comparison and ablation |
 | 470001–470100 | Detective v3 study: confirmation |
 | 480001–480500 | Detective v3 study: reserved for its independent validation |
-
-**Runtimes.** `experiments/tiers/manifest.json` records the last time of every step the runner ran. The table above gives typical times, measured on an otherwise idle 4-core machine. Update it when a tier's cost changes noticeably.
+| 600001–600500 | Fresh-seed validation in the detective study |
+| 650001–650500 | Fresh-seed validation of Detective AI v2 |
+| 700001–700060 | Deduction soundness checks |
+| 760001–761000 | Jack v2 study: reserved for its independent validation |
+| 800001 on | Smoke tests |
+| 900001 on | Calibration of the strategic Jack |
 
 ## Three ways in
 
@@ -78,6 +80,7 @@ If a core module touched the page, it would fail to load in the core loader. Tha
 | File | Layer | Covers |
 |---|---|---|
 | `test/unit/map.test.js` | Page | Map data: two-way connections, numbers 1 to 195, planarity, alleys, stations and red circles |
+| `test/unit/map-topology.test.js` | Core | The 13 connections verified against the physical board, the totals of walking links, alleys and streets, and the differences from whitechapelR's map ([Map data](map-data.md#verified-against-the-board)) |
 | `test/unit/random.test.js` | Core | `int`, `safe` and `safeIndex` stay in range and are biased the right way |
 | `test/unit/movement.test.js` | Core | Police and Jack movement, arrestable and searchable circles, distances |
 | `test/unit/rules-api.test.js` | Core | Track labels, patrol placement, coach routes, escapes, and that no rule changes the state |
