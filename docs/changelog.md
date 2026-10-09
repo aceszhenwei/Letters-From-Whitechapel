@@ -1,9 +1,14 @@
 # Changelog
 
+## Unreleased: the verified board
+
+- **The map follows the physical board again.** The board was checked at the 13 places where this map and whitechapelR's differ, and agrees with this map in all of them. The whitechapelR topology overrides (`map.topologyCorrections`) are removed, and the three golden traces re-recorded for them (seeds 5, 7, 9) are back to their original recordings. `test/unit/map-topology.test.js` now pins the 13 board-verified connections. See [Map data](map-data.md#verified-against-the-board).
+- **Detective study re-run on the verified board**, with the improved police's components measured separately, and compared with the earlier runs. See [Detective inference](detective-inference-study.md).
+
 ## Unreleased: difficulty levels and a study of the detectives
 
 - **Jack's difficulty:** choose Easy (the baseline AI, the default) or Normal (the strategic AI) in the setup dialog. The level shows in the top bar and is remembered; `?difficulty=normal` (or the older `?jack=strategic`) fixes it for testing. Nothing else changes with the level. See [Jack's AI](jack-ai.md#difficulty-levels).
-- **Map topology follows whitechapelR's.** Its map is canonical: 10 walking links removed, 2 added and 1 alley added (`map.topologyCorrections`; the drawn streets are unchanged). `test/unit/map-topology.test.js` checks every link. Three golden traces (seeds 5, 7, 9) were re-recorded, because the baseline Jack walks the corrected links. Earlier simulation results are labelled as using the previous map. See [Map data](map-data.md#topology-corrections).
+- **Map topology followed whitechapelR's** (since reverted: see above). Its map was treated as canonical: 10 walking links removed, 2 added and 1 alley added (`map.topologyCorrections`; the drawn streets are unchanged). `test/unit/map-topology.test.js` checks every link. Three golden traces (seeds 5, 7, 9) were re-recorded, because the baseline Jack walks the corrected links. Earlier simulation results are labelled as using the previous map. See [Map data](map-data.md#topology-corrections).
 - **Study:** [Detective inference](detective-inference-study.md) compares the police's deduction with [whitechapelR](https://github.com/bmewing/whitechapelR), checks it against an exhaustive reference, and finds why the computer police lose to the strategic Jack. Scripts and results are in `research/detective-inference/`.
 
 ## Unreleased: a smarter Jack

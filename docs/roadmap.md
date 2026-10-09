@@ -7,7 +7,6 @@
 
 ## Board data
 
-- Check the 13 connections where this map and whitechapelR's differ (listed in the [detective study](detective-inference-study.md#3-whitechapelr-what-it-does)) against a printed board.
 - Check the yellow-bordered crossings (`station`) against a printed board. The data has 7, exactly the number of patrol tokens, which leaves no choice of where to place them on the first night.
 
 ## Gameplay
