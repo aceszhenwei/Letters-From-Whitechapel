@@ -72,5 +72,13 @@
   "seconds": 182,
   "finished": "2026-10-09T06:56:37.253Z",
   "node": "v22.22.0"
+ },
+ "medium-jack-v2": {
+  "tier": "medium",
+  "inputs": "0afb163a0e518526",
+  "ok": true,
+  "seconds": 75.3,
+  "finished": "2026-10-09T08:04:44.215Z",
+  "node": "v22.22.0"
  }
 }

@@ -25,9 +25,9 @@ The simulations and research behind the AIs take up to a couple of hours in full
 | Tier | Command | What it runs | When | Typical time (4 cores) |
 |---|---|---|---|---|
 | Fast | `npm test` (or `npm run test:unit`, `npm run test:regression`) | Unit and regression tests, including the golden traces | Every change; CI runs it | 1.7 min |
-| Smoke | `npm run test:smoke` | Small simulations: every Jack against every police (4 games each), seeded determinism, the deduction against the exhaustive reference, the improved police from the research harness | Any change to the AIs, rules, engine, map or research scripts; CI runs it too | 11 s |
-| Medium | `npm run eval:medium` | 500 games per Jack against the deductive police; the original against the study's improved police and against Detective AI v2 (300 games per Jack); a 10-game soundness check. Development seeds only. Results in `experiments/medium/` | Algorithmic changes to the AIs, the police or the deduction, before running the full tier | 10.5 min |
-| Full | `npm run research:full` (set `WHITECHAPELR_CLONE` for the whitechapelR comparisons) | The [Detective AI v2](detective-ai-v2.md) evaluation (`research/detective-v2/run-evaluation.sh`), the whole detective study (`research/detective-inference/run-all.sh`) and the four 5,000-game evaluations of [Jack's AI](jack-ai.md) | Research milestones, and before publishing or relying on new numbers | about 2 h 50 min: the v2 evaluation 63 min, the study 52 min, the four Jack evaluations about 50 min |
+| Smoke | `npm run test:smoke` | Small simulations: every Jack against every police (4 games each), seeded determinism, the deduction against the exhaustive reference, the improved police from the research harness, Jack AI v2 against both police (each game twice) | Any change to the AIs, rules, engine, map or research scripts; CI runs it too | 30 s (Jack v2's part 7 s) |
+| Medium | `npm run eval:medium` | 500 games per Jack against the deductive police; the original against the study's improved police and against Detective AI v2 (300 games per Jack); Strategic, Detour and [Jack AI v2](jack-ai-v2.md) against Detective AI v2 (100 games each); a 10-game soundness check. Development seeds only. Results in `experiments/medium/` | Algorithmic changes to the AIs, the police or the deduction, before running the full tier | 12 min |
+| Full | `npm run research:full` (set `WHITECHAPELR_CLONE` for the whitechapelR comparisons) | The [Jack AI v2](jack-ai-v2.md) study's screening, comparison and ablation (`research/jack-v2/`), the [Detective AI v2](detective-ai-v2.md) evaluation (`research/detective-v2/run-evaluation.sh`), the whole detective study (`research/detective-inference/run-all.sh`) and the four 5,000-game evaluations of [Jack's AI](jack-ai.md) | Research milestones, and before publishing or relying on new numbers. Never routine | about 3 h 15 min: the Jack v2 study 25 min, the v2 evaluation 63 min, the study 52 min, the four Jack evaluations about 50 min |
 
 `node tools/tiers/run-tier.js <tier>` runs any tier and prints each step's time. Every tier is defined in `tools/tiers/tiers.js`.
 
@@ -39,6 +39,8 @@ The simulations and research behind the AIs take up to a couple of hours in full
 
 The fast and smoke tiers are never skipped.
 
+The Jack v2 study's own scripts (`research/jack-v2/run.js`) also keep every game they play, fingerprinted by the files it depends on, so an interrupted run resumes and an unchanged game is never played twice. Its independent validation (`research/jack-v2/validate.sh`) is in no tier: it runs only by hand, once approved (see [Jack AI v2](jack-ai-v2.md#9-independent-validation-proposed-not-run)).
+
 **Seeds.** Every experiment uses fixed seeds, so it plays the same games on every run and every machine. The ranges are kept apart, so no experiment is tuned on another's games:
 
 | Seeds | Used for |
@@ -49,6 +51,10 @@ The fast and smoke tiers are never skipped.
 | 700001–700060 | Deduction soundness checks |
 | 800001 on | Smoke tests |
 | 900001 on | Calibration of the strategic Jack |
+| 650001–650500 | Fresh-seed validation of Detective AI v2 |
+| 410001–410100 | Jack v2 study: screening |
+| 420001–420200 | Jack v2 study: controlled comparison and ablation |
+| 760001–761000 | Jack v2 study: reserved for its independent validation |
 
 **Runtimes.** `experiments/tiers/manifest.json` records the last time of every step the runner ran. The table above gives typical times, measured on an otherwise idle 4-core machine. Update it when a tier's cost changes noticeably.
 
@@ -75,9 +81,10 @@ If a core module touched the page, it would fail to load in the core loader. Tha
 | `test/unit/engine.test.js` | Core | 20 complete games without a page; illegal police actions refused; search or arrest; AI decisions checked; another AI plugged in; events |
 | `test/unit/jack-ai.test.js` | Core | The view hides patrol identities and the public record hides Jack's route; decisions only read the view; reproducible with its own random source |
 | `test/unit/strategic-jack.test.js` | Core | The strategic AI over six whole games against the deductive police, and in positions set up by hand: only legal moves, never a token he doesn't have, goes home when time is short, keeps in time, avoids a walk the police could reach, keeps tokens when a walk does as well, same seed same game; what it may know: it only reads the view, the police view and public record hold nothing secret, the deduction never rules out the truth, and the AI files never read the state |
+| `test/unit/jack-v2.test.js` | Core | Jack AI v2 over whole games against Detective AI v2 and the original police, and in positions set up by hand: legal walks and special movements; detours only away from home, in a night's first moves, never on the last night, always keeping 6 moves to spare; no detour when time is short or policemen block every walk; the same seed plays the same game; a planner failure still gives a legal move; it only reads Jack's view and never changes the state |
 | `test/unit/deduction.test.js` | Core | The deduction against an exhaustive list of legal routes: a coach never ends where it started (in `track` and the projection), its stop counts as visited, random records with coaches, walks, alleys and searches match exactly, and real games never lose Jack's circle |
 | `test/unit/police-levels.test.js` | Core and page | Who leads the detectives: the player by default, Easy is the original police, Normal is Detective AI v2; the address, dialog and saved choice; a computer police plays a whole page game by itself, independently of Jack's difficulty |
-| `test/unit/difficulty.test.js` | Core and page | Easy is the baseline AI (the same object), Normal the strategic AI; the default is Easy; the order address > dialog > saved > default; whole games at each level with legal moves and only the view read; the rules and police view are the same at both levels; the setup dialog lists, pre-selects, applies, remembers and shows the level, and an address fixes it; the chosen AI makes every move of a whole page game |
+| `test/unit/difficulty.test.js` | Core and page | Easy is the baseline AI (the same object), Normal the strategic AI, Hard Jack AI v2; the default is Easy; the order address > dialog > saved > default; whole games at each level with legal moves and only the view read; the rules and police view are the same at both levels; the setup dialog lists, pre-selects, applies, remembers and shows the level, and an address fixes it; the chosen AI makes every move of a whole page game |
 | `test/unit/architecture.test.js` | Source | The module boundaries: the core (including the deduction) never touches the page, only the engine changes the state (not the rules, deduction, AIs or interface), only the engine runs the AI |
 | `test/unit/ui.test.js` | Page | Pixel positions, visible numbers, streets, phase card, instructions, case log, Jack's status, game-over dialog |
 | `test/regression/bugs.test.js` | Page | One test for each bug that has been fixed |

@@ -76,19 +76,20 @@ The player chooses which AI plays Jack in the setup dialog. `js/ai/difficulty.js
 |---|---|---|
 | Easy (default) | Baseline Jack | `WC.jackAI`: the very object the game has always used, so recorded games replay exactly |
 | Normal | Strategic Jack | `WC.createStrategicJack(WC.board, WC.deduction, WC.random, _)` |
+| Hard | Jack AI v2 | `WC.createJackV2(WC.board, WC.deduction, WC.random, _)`: the strategic Jack plus early detours (see [Jack AI v2](jack-ai-v2.md)) |
 
 The page creates the game with Easy; when the player starts it, `js/ui/setup.js` sets `game.ai` to the chosen level's AI, before Jack's first decision (the hideout). Both AIs get the same view and are checked by the same rules, so a level changes only how Jack decides.
 
 **Where the choice comes from**, strongest first (`WC.difficulty.resolve`):
 
-1. The address: `index.html?difficulty=easy` or `?difficulty=normal`. The older `?jack=baseline` and `?jack=strategic` mean the same. The dialog then shows the level and doesn't let it change, and the choice isn't saved.
+1. The address: `index.html?difficulty=easy`, `?difficulty=normal` or `?difficulty=hard`. The older `?jack=baseline` and `?jack=strategic` mean the same. The dialog then shows the level and doesn't let it change, and the choice isn't saved.
 2. The level selected in the dialog when the game starts.
 3. The level saved from the last game (in the browser's local storage), which pre-selects the dialog.
 4. Easy.
 
 Unknown levels are ignored. Only Jack has a difficulty: the player is always the police, so there is no human-Jack game for it to affect.
 
-**Adding a level** (for example Hard): add an entry to `levels` in `js/ai/difficulty.js` with an `id`, `label`, `ai`, `description` and a `create(WC)` that returns an object with the six decision functions. The dialog lists the levels from there, so the page needs no change.
+**Adding a level**: add an entry to `levels` in `js/ai/difficulty.js` with an `id`, `label`, `ai`, `description` and a `create(WC)` that returns an object with the six decision functions. The dialog lists the levels from there, so the page needs no change.
 
 ## 1. The baseline AI
 
@@ -337,6 +338,8 @@ Each replays exactly with `node tools/sim/replay.js <seed> <jack>`. On the same 
 - **Placing women is the baseline's.**
 
 ### What would come next
+
+[Jack AI v2](jack-ai-v2.md) took up the first of these against Detective AI v2: hiding the hideout across nights turned out to matter far more than anything else, and the simplest way that worked was walking away from home first.
 
 1. **Value the hideout across nights.** Add the cost of what a route reveals about the hideout (the expected number of hideouts left after the night) to the value of each route, with the trade-off measured, like the other estimates, from how often night-4 arrests follow from few hideout candidates. Choosing routes that approach from different sides on different nights would attack the main remaining loss directly.
 2. **Simulate the police's next move instead of their reach.** The deductive police are cheap to run; sampling their response to each candidate move would replace "in reach" with "would they come here", and catch rings closing.

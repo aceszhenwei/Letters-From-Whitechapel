@@ -12,10 +12,10 @@
 ## Gameplay
 
 - **Two people on one screen.**
-- **A Jack that hides his hideout across nights**, and other next steps for the strategic AI (see [Jack's AI](jack-ai.md#what-would-come-next)).
+- **Validate Jack AI v2 on unseen seeds** (proposed, waiting for approval: [Jack AI v2](jack-ai-v2.md#9-independent-validation-proposed-not-run)).
+- **A smarter deception for Jack:** detours that vary in when and where they happen, and escape estimates recalibrated against blocking police (see [Jack AI v2](jack-ai-v2.md#10-limitations-and-future-work)).
 - **Advanced coordinated containment:** police that plan cordons from time-dependent reachability, beyond [Detective AI v2](detective-ai-v2.md)'s blocking.
-- **Deceptive Jack:** a Jack that detours, doubles back and hides his hideout, aimed at v2's hideout model.
-- **Hard difficulty:** a third Jack level, once there is an AI to justify it (see [Detective inference](detective-inference-study.md#10-recommendations) for what the police need first).
+- **Police that see through Jack AI v2's detours**, for example by weighting hideouts by the route after an early detour.
 - **Play as Jack** against the computer police in `js/ai/police.js`, which already plays from the police view.
 - **Undo** for the police's last click within a phase.
 - **Save and resume** a game in browser storage.

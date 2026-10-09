@@ -2,7 +2,10 @@
 // before anything expensive runs. Seeds 800001 and up are kept for this (tools/tiers/tiers.js).
 //   node tools/tiers/smoke.js
 const { loadCore, runGame } = require('../sim/run-game');
-const { WC, play, publicPrefixes, enumerate } = require('../../research/detective-inference/lib');
+const { WC, play, publicPrefixes, enumerate, registerJack } = require('../../research/detective-inference/lib');
+const jackV2 = require('../../research/jack-v2/policies/jack-v2'); // Loads js/ai/jack-v2.js into the research core
+
+registerJack('jack-v2', jackV2.policies['jack-v2']);
 
 const results = new Set(['jackWins', 'arrested', 'outOfMoves', 'trapped']);
 const failures = [];
@@ -59,6 +62,18 @@ timed('Detective AI v2 and the study\'s improved police play whole games', () =>
 				const state = play({ jack, police: 'deductive', seed, policeOptions });
 				check(state.over && results.has(state.result.type), `${jack}, ${label} police, seed ${seed}: did not finish`);
 			}
+		}
+	}
+});
+
+timed('Jack AI v2 plays whole games against both police, the same way twice', () => {
+	for (const policeOptions of [WC.policeVariants.v2, WC.policeVariants.original]) {
+		for (const seed of seeds.slice(0, 2)) {
+			const a = play({ jack: 'jack-v2', police: 'deductive', seed, policeOptions });
+			const b = play({ jack: 'jack-v2', police: 'deductive', seed, policeOptions });
+			check(a.over && results.has(a.result.type), `jack-v2, seed ${seed}: did not finish`);
+			const key = (s) => JSON.stringify([s.result, s.jack.map((n) => n.route)]);
+			check(key(a) === key(b), `jack-v2, seed ${seed}: played two different games`);
 		}
 	}
 });

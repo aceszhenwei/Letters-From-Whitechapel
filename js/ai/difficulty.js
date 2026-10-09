@@ -1,10 +1,10 @@
 /* Difficulty: which of the existing Jack AIs plays, chosen by the player before a game.
    Each level names an AI that already exists and makes it through that AI's own constructor; nothing here plays.
-   To add a level (say Hard), add an entry to `levels` with a `create` that returns an object with the six decision
-   functions (see docs/jack-ai.md).
+   To add a level, add an entry to `levels` with a `create` that returns an object with the six decision functions
+   (see docs/jack-ai.md).
 
    Where the choice comes from, strongest first:
-   1. the address: index.html?difficulty=easy|normal (for testing; ?jack=baseline|strategic is kept as an alias);
+   1. the address: index.html?difficulty=easy|normal|hard (for testing; ?jack=baseline|strategic is kept as an alias);
    2. the choice in the setup dialog when the game starts;
    3. the choice saved from the last game (it pre-selects the dialog);
    4. the default, Easy (the AI the game has always used). */
@@ -26,6 +26,13 @@ WC.difficulty = (function (_) {
 			ai: 'Strategic Jack',
 			description: 'Jack weighs the risk of arrest and the time left before every move.',
 			create: function (WC) { return WC.createStrategicJack(WC.board, WC.deduction, WC.random, _); }
+		},
+		{
+			id: 'hard',
+			label: 'Hard',
+			ai: 'Jack AI v2',
+			description: 'Jack also hides the way to his hideout, so the police find it hard to guess where he lives.',
+			create: function (WC) { return WC.createJackV2(WC.board, WC.deduction, WC.random, _); }
 		}
 	];
 	var defaultLevel = 'easy';

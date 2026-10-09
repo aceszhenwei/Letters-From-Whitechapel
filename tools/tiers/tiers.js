@@ -9,6 +9,8 @@
 //   700001-700060  deduction soundness checks
 //   800001-...     smoke tests
 //   900001-...     calibration of the strategic Jack
+//   410001-410100  Jack v2 study: screening; 420001-420200: controlled comparison and ablation
+//   760001-761000  Jack v2 study: reserved for its independent validation (docs/jack-ai-v2.md)
 const code = ['js', 'tools/sim', 'tools/simulate.js', 'package.json'];
 const research = code.concat(['research/detective-inference/lib.js', 'research/detective-inference/results-dir.js', 'research/detective-inference/police-diagnostics.js',
 	'research/detective-inference/soundness.js', 'research/detective-inference/summarise.js',
@@ -18,6 +20,7 @@ const research = code.concat(['research/detective-inference/lib.js', 'research/d
 	'research/detective-inference/fixtures']);
 const v2 = research.concat(['research/detective-v2/jacks.js', 'research/detective-v2/configs.js', 'research/detective-v2/evaluate.js',
 	'research/detective-v2/compare.js', 'research/detective-v2/run-evaluation.sh']);
+const jackV2 = v2.concat(['research/jack-v2']);
 const medium = 'experiments/medium';
 const diagnostics = (args) => `node research/detective-inference/police-diagnostics.js ${args}`;
 const simulate = (jack, police, games, from, out) =>
@@ -51,12 +54,19 @@ module.exports = {
 					.map((a) => `node research/detective-v2/evaluate.js ${a} 300 300001`).join(' && '),
 				env: { RESEARCH_RESULTS: `${medium}/v2` }, inputs: v2, outputs: [`${medium}/v2/v2-baseline-v2-300001-300.txt`]
 			},
+			{
+				// Jack AI v2 against its parts, 100 games each against Detective AI v2, on development seeds
+				name: 'medium-jack-v2',
+				command: `node research/jack-v2/summary.js v2 100 300001 strategic,detour,jack-v2 detour > ${medium}/jack-v2/summary.md`,
+				env: { JACK_V2_RESULTS: `${medium}/jack-v2` }, inputs: jackV2, outputs: [`${medium}/jack-v2/summary.md`]
+			},
 			{ name: 'medium-soundness', command: `node research/detective-inference/soundness.js 10 700001 > ${medium}/research/soundness.txt`, env: { RESEARCH_RESULTS: `${medium}/research` }, inputs: research, outputs: [`${medium}/research/soundness.txt`] }
 		]
 	},
 	full: {
 		description: 'Full research validation: the Detective AI v2 evaluation, the detective study (run-all.sh) and the Jack AI 5,000-game evaluations. Research milestones, and before publishing results',
 		steps: [
+			{ name: 'full-jack-v2', command: 'bash research/jack-v2/screen.sh && bash research/jack-v2/compare.sh && bash research/jack-v2/ablation.sh', inputs: jackV2, outputs: ['research/jack-v2/results/ablation.md'] },
 			{ name: 'full-v2', command: 'bash research/detective-v2/run-evaluation.sh', inputs: v2, outputs: ['research/detective-v2/results/evaluation/comparison.md'] },
 			{ name: 'full-research', command: 'bash research/detective-inference/run-all.sh "$WHITECHAPELR_CLONE"', inputs: research, outputs: ['research/detective-inference/results/paired-comparisons.md'] },
 			...[['baseline', 'deductive'], ['strategic', 'deductive'], ['baseline', 'random'], ['strategic', 'random']].map(([jack, police]) => ({
