@@ -43,7 +43,7 @@ Proposals made by the reports. **None is approved or scheduled**; each would nee
 | Coordinated containment: cordons from time-dependent reachability, policemen assigned to approaches | [Detective AI v2 §9](detective-ai-v2.md#9-limitations-and-future-work) | Idea |
 | Recalibrating Jack's escape and arrest estimates against blocking police | [Jack AI v2 §10](jack-ai-v2.md#10-limitations-and-future-work) | Idea |
 | Cross-night victim and hideout planning for Jack, evaluated only against containing police | [Human strategy literature §10](human-strategy-literature.md#10-prioritised-recommendations) | Idea |
-| Strategic waiting as a difficulty level, after a larger validation; a version that tells the police apart or values hiding the hideout across nights | [Strategic waiting §8](jack-waiting.md#8-limitations) | Idea |
+| Strategic waiting as a difficulty level, after a larger validation (its gain against v3 is now in doubt: [Waiting against containment](waiting-containment.md)); a version that tells the police apart or values hiding the hideout across nights | [Strategic waiting §8](jack-waiting.md#8-limitations) | Idea |
 | Reading the BoardGameGeek threads not yet collected | [Human strategy literature §10](human-strategy-literature.md#10-prioritised-recommendations) | Waiting for the threads |
 
 ## Other ideas (not scheduled)
