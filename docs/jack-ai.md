@@ -1,6 +1,6 @@
 # Jack's AI
 
-There are two AIs for Jack: the **baseline** (`js/ai/jack.js`, the game's default) and the **strategic AI** (`js/ai/strategic-jack.js`), which wins 97.2% of games against a deductive computer police player where the baseline wins 25.0%. This page describes the interface they share, both strategies, how they were compared, and what the strategic AI still does badly.
+There are two AIs for Jack: the **baseline** (`js/ai/jack.js`, played at Easy, the default) and the **strategic AI** (`js/ai/strategic-jack.js`, played at Normal), which wins 97.2% of games against a deductive computer police player where the baseline wins 25.0%. This page describes the interface they share, both strategies, how they were compared, and what the strategic AI still does badly.
 
 | Section | |
 |---|---|
@@ -68,6 +68,28 @@ var strategic = WC.createStrategicJack(WC.board, WC.deduction, WC.random.create(
 
 Nothing outside `js/ai/` needs to change, unless the new strategy needs to know something the view doesn't offer. In that case, add it to `rules.jackView`, keeping to what Jack would know.
 
+## Difficulty levels
+
+The player chooses which AI plays Jack in the setup dialog. `js/ai/difficulty.js` maps each level to an AI that already exists; it doesn't play itself.
+
+| Level | AI | Made by |
+|---|---|---|
+| Easy (default) | Baseline Jack | `WC.jackAI`: the very object the game has always used, so recorded games replay exactly |
+| Normal | Strategic Jack | `WC.createStrategicJack(WC.board, WC.deduction, WC.random, _)` |
+
+The page creates the game with Easy; when the player starts it, `js/ui/setup.js` sets `game.ai` to the chosen level's AI, before Jack's first decision (the hideout). Both AIs get the same view and are checked by the same rules, so a level changes only how Jack decides.
+
+**Where the choice comes from**, strongest first (`WC.difficulty.resolve`):
+
+1. The address: `index.html?difficulty=easy` or `?difficulty=normal`. The older `?jack=baseline` and `?jack=strategic` mean the same. The dialog then shows the level and doesn't let it change, and the choice isn't saved.
+2. The level selected in the dialog when the game starts.
+3. The level saved from the last game (in the browser's local storage), which pre-selects the dialog.
+4. Easy.
+
+Unknown levels are ignored. Only Jack has a difficulty: the player is always the police, so there is no human-Jack game for it to affect.
+
+**Adding a level** (for example Hard): add an entry to `levels` in `js/ai/difficulty.js` with an `id`, `label`, `ai`, `description` and a `create(WC)` that returns an object with the six decision functions. The dialog lists the levels from there, so the page needs no change.
+
 ## 1. The baseline AI
 
 The current AI (`WC.jackAI`, made by `WC.createJackAI`) uses simple heuristics and biased randomness. `random.safeIndex(percentage, length)` picks from a sorted list, favouring the start: the higher the percentage, the more strongly.
@@ -120,7 +142,7 @@ Against the deductive police over 5,000 games it loses 75.0%: 48.3% arrested and
 
 ## 3. The strategic AI: design
 
-`js/ai/strategic-jack.js` makes `WC.createStrategicJack(board, deduction, random, _, options)`, an object with the same six decision functions as the baseline. The engine can't tell them apart, so they are interchangeable: `WC.engine.create({ ai })`, `node tools/simulate.js --jack strategic|baseline`, or `index.html?jack=strategic` in the browser.
+`js/ai/strategic-jack.js` makes `WC.createStrategicJack(board, deduction, random, _, options)`, an object with the same six decision functions as the baseline. The engine can't tell them apart, so they are interchangeable: `WC.engine.create({ ai })`, `node tools/simulate.js --jack strategic|baseline`, or Normal difficulty in the browser.
 
 **What it optimises for.** The chance of getting through the night: of surviving the police's next turn, and of getting home before the move track runs out. It values each move as
 
@@ -217,6 +239,8 @@ It does **not** model the police's *policy*. It assumes they arrest when they ar
 Without the beam, time is barely higher (28.9 ms mean): the cost is dominated by the deduction, not by valuing moves, so the beam saves states rather than time. The worst decisions come late in a night when the police consider many circles. The baseline takes 1.9 ms per decision. Both are far below what a player would notice; in the 5,000-game runs the maxima (up to 750 ms) came from four games running at once on a busy machine.
 
 ## 8. Evaluation method
+
+> **Map note.** Every number in sections 2, 6, 7 and 9 (and the calibration tables in section 3) was measured on the **previous map**, before the topology corrections that made whitechapelR's map canonical ([Map data](map-data.md#topology-corrections)). Those corrections change 12 walking links and 1 alley, so re-running the commands below on today's map gives slightly different games. The results are kept as recorded, in `experiments/` (see `experiments/README.md`).
 
 **Opponents.** A fair test needs an opponent that hunts, so `js/ai/police.js` adds a computer police player that sees only the police view (never Jack's route or hideout). The **deductive police** place patrols near red circles, keep the Wretched near real patrols, move each policeman to cover the most of Jack's likely position, arrest when one circle holds at least 20% of the belief, and otherwise search where his route most likely passed. Its two settings were chosen by trying alternatives against the baseline (comments in the code). The **random police** make random legal choices, like a careless player. The main results are against the deductive police; the random police check that the strategic AI isn't tuned to one opponent.
 

@@ -25,7 +25,7 @@ test('the board knows nothing about a game', () => {
 });
 
 test('only the engine changes the game state', () => {
-	for (const file of ['js/core/rules.js', 'js/core/deduction.js', 'js/ai/jack.js', 'js/ai/strategic-jack.js', 'js/ai/police.js', 'js/ui/renderer.js']) {
+	for (const file of ['js/core/rules.js', 'js/core/deduction.js', 'js/ai/jack.js', 'js/ai/strategic-jack.js', 'js/ai/police.js', 'js/ai/difficulty.js', 'js/ui/renderer.js', 'js/ui/setup.js']) {
 		const code = read(file);
 		assert.ok(!assigns.test(code), file + ': ' + (code.match(assigns) || [])[0]);
 		assert.ok(!changesList.test(code), file + ': ' + (code.match(changesList) || [])[0]);

@@ -1,0 +1,6 @@
+baseline: 14098 prefixes from 60 games; true circle ruled out: 0 (plain), 3 (with time and hideout pruning)
+  compared with the exhaustive reference on 9652 short prefixes: reference lost the truth 0, deduction not a superset 0, identical 9395, with extra circles 257 (437 circles), by moves so far {"carriage+walk":190,"alley+carriage+walk":31,"carriage":36}
+  pruning removed 1.4 circles per prefix on average
+strategic: 12092 prefixes from 60 games; true circle ruled out: 0 (plain), 1 (with time and hideout pruning)
+  compared with the exhaustive reference on 11362 short prefixes: reference lost the truth 0, deduction not a superset 0, identical 9781, with extra circles 1581 (2941 circles), by moves so far {"carriage":948,"carriage+walk":440,"alley+carriage+walk":117,"alley+carriage":76}
+  pruning removed 0.1 circles per prefix on average
