@@ -173,6 +173,8 @@ test('Hunting 1: Jack escapes by walking onto his hideout, ending the night', ()
 	setupNight(window, { base, from, remaining: 5 });
 	window.game.ai = Object.assign({}, window.WC.jackAI, { chooseMove: () => ({ mapid: base, type: 'walk' }) });
 	window.game.enter(9);
+	assert.strictEqual(window.game.state.phase, 12, 'the night is over, and the police can look it over');
+	assert.ok(window.game.beginNextNight());
 	assert.strictEqual(window.game.state.jack.length, 2, 'the next night began');
 	assert.strictEqual(window.game.state.over, false);
 });
@@ -195,6 +197,8 @@ test('Hunting 1: Jack escapes on his last move if it reaches his hideout', () =>
 	window.game.ai = Object.assign({}, window.WC.jackAI, { chooseMove: () => ({ mapid: base, type: 'walk' }) });
 	window.game.enter(9);
 	assert.strictEqual(window.game.state.over, false);
+	assert.strictEqual(window.game.state.phase, 12);
+	window.game.beginNextNight();
 	assert.strictEqual(window.game.state.jack.length, 2);
 });
 

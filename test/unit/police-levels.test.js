@@ -69,7 +69,11 @@ for (const level of ['easy', 'normal', 'hard']) {
 		assert.match($('.brand-subtitle').text(), /watching the police/);
 		assert.match($('.difficulty-badge').text(), new RegExp(`Jack: Normal · ${level[0].toUpperCase() + level.slice(1)} police`));
 		assert.ok(window.game.ai.options && window.game.ai.options.beam, 'Jack is still the strategic AI');
-		await until(() => window.game.state.over);
+		// The computer plays every police action; the person watching only starts each new night
+		await until(() => {
+			if (window.game.state.phase === 12) $('.state.the-night-is-over .begin-next-night').click();
+			return window.game.state.over;
+		});
 		assert.ok(['jackWins', 'arrested', 'outOfMoves', 'trapped'].includes(window.game.state.result.type));
 		assert.strictEqual(store['whitechapel.police'], level);
 		assert.deepStrictEqual(window.errors, []);

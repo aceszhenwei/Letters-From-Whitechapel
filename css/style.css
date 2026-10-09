@@ -379,27 +379,89 @@ h2 {
     transform: translate(-50%, 70%);
 }
 
-/* Wretched and women */
+/* Women and Wretched: a ring around the circle, so its number stays readable, with a badge above it */
 .map .token-wretched, .map .token-woman {
-    width: 18px;
-    height: 18px;
-    line-height: 16px;
-    background: #fffaf0;
-    border: 2px solid var(--blood);
-    color: var(--blood);
+    width: 27px;
+    height: 27px;
+    background: transparent;
+    border: 3px solid var(--blood);
+    box-shadow: 0 0 0 2px #fffaf0, 0 0 8px 2px rgba(164, 22, 26, 0.55);
+    z-index: 3;
 }
 
 .map .token-wretched:before, .map .token-woman:before {
     content: "\f182"; /* woman */
+    position: absolute;
+    top: -12px;
+    right: -9px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    border-radius: 50%;
+    font-size: 10px;
+    text-align: center;
+    background: var(--blood);
+    color: #fff;
+    box-shadow: 0 0 0 1.5px #fffaf0;
 }
 
+/* Face down: every woman looks the same, since only Jack knows which are marked */
 .map .token-woman {
-    border-color: #6b5b4b;
-    color: #6b5b4b;
+    border-color: #4b2a5e;
+    box-shadow: 0 0 0 2px #fffaf0, 0 0 8px 2px rgba(75, 42, 94, 0.55);
+}
+
+.map .token-woman:before {
+    background: #4b2a5e;
 }
 
 .map .token-wretched.selectable {
-    animation: pulse 1.6s ease-in-out infinite;
+    animation: pulse-wretched 1.6s ease-in-out infinite;
+    pointer-events: auto;
+}
+
+.map .token-wretched.selected {
+    border-color: var(--brass);
+    box-shadow: 0 0 0 2px #fffaf0, 0 0 0 5px var(--blood), 0 0 12px 4px rgba(201, 162, 39, 0.8);
+    animation: none;
+}
+
+@keyframes pulse-wretched {
+    0%, 100% { box-shadow: 0 0 0 2px #fffaf0, 0 0 4px 1px rgba(164, 22, 26, 0.5); }
+    50% { box-shadow: 0 0 0 2px #fffaf0, 0 0 14px 6px rgba(164, 22, 26, 0.75); }
+}
+
+/* "Highlight": everything but the women or Wretched fades back */
+.board.highlighting .map .vintage-map, .board.highlighting .map .streets,
+.board.highlighting .map .location, .board.highlighting .map .location-number:not(.location-murder) {
+    opacity: 0.35;
+}
+
+.board.highlighting .map .token-woman, .board.highlighting .map .token-wretched {
+    width: 33px;
+    height: 33px;
+    border-width: 4px;
+}
+
+/* The policeman chosen in Hunting the monster, and the crossings he can go to (ringed in his colour) */
+.map .token-police.selected {
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--brass), 0 0 12px 4px rgba(201, 162, 39, 0.8) !important;
+    animation: none;
+    z-index: 6;
+}
+
+.map .token-move-police.for-police-0 { border-color: var(--police-blue); background: rgba(47, 95, 179, 0.3); }
+.map .token-move-police.for-police-1 { border-color: var(--police-yellow); background: rgba(217, 165, 32, 0.3); }
+.map .token-move-police.for-police-2 { border-color: var(--police-brown); background: rgba(122, 75, 38, 0.3); }
+.map .token-move-police.for-police-3 { border-color: var(--police-red); background: rgba(179, 38, 44, 0.3); }
+.map .token-move-police.for-police-4 { border-color: var(--police-green); background: rgba(46, 125, 79, 0.3); }
+
+.map .token-move-police:hover, .map .token-move-police:focus {
+    transform: translate(-50%, -50%) scale(1.35);
+}
+
+.map .token-move-police[title^="Stay"]:hover {
+    transform: translate(-50%, 70%) scale(1.1);
 }
 
 /* Search and arrest */
@@ -446,6 +508,89 @@ h2 {
     content: "\f0e3";
 }
 
+/* Reviewing a night: the game's own pieces are hidden, and the night's record is drawn instead
+   ------------------------------------------------------------------------------------------- */
+.board.reviewing .map .token:not(.review), .board.reviewing .map .crime-scene {
+    visibility: hidden;
+}
+
+.board.reviewing {
+    box-shadow: inset 0 0 0 3px var(--brass);
+}
+
+.map .review-crime {
+    width: 25px;
+    height: 25px;
+    background: rgba(214, 40, 40, 0.45);
+    border: 2px solid var(--blood-bright);
+    z-index: 2;
+}
+
+.map .review-crime.review-earlier {
+    background: rgba(214, 40, 40, 0.18);
+    border-style: dashed;
+}
+
+.map .review-clue {
+    width: 23px;
+    height: 23px;
+    background: rgba(242, 201, 76, 0.55);
+    border: 2px solid var(--clue);
+    z-index: 2;
+}
+
+.map .review-clickable {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.map .review-clickable:hover, .map .review-clickable:focus {
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.7);
+}
+
+.map .review-searched {
+    width: 21px;
+    height: 21px;
+    border: 2px dashed #6b5216;
+    background: transparent;
+    z-index: 2;
+}
+
+.map .review-arrest {
+    width: 21px;
+    height: 21px;
+    border: 2px solid var(--blood);
+    background: transparent;
+    z-index: 2;
+}
+
+.map .review-arrest:before {
+    content: "\f00d"; /* cross */
+    position: absolute;
+    top: -11px;
+    right: -9px;
+    font-size: 10px;
+    color: var(--blood);
+}
+
+/* Walking distances: a small tag beside each circle, so its number stays readable */
+.map .review-distance {
+    width: auto;
+    height: auto;
+    min-width: 13px;
+    padding: 0 3px;
+    border-radius: 6px;
+    font: 700 9px/13px var(--font-body);
+    color: #fff;
+    background: #2b2119;
+    transform: translate(35%, -110%);
+    z-index: 4;
+}
+
+.map .review-distance-1, .map .review-distance-2 { background: #7a1316; }
+.map .review-distance-3, .map .review-distance-4 { background: #8c5a12; }
+.map .review-distance-5, .map .review-distance-6 { background: #4b5a2a; }
+
 /* Clue and crime scene markers (transparent discs, like the physical ones) */
 .map .token-clue {
     width: 23px;
@@ -471,7 +616,7 @@ h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .map .token-police.selectable, .map .token-wretched.selectable {
+    .map .token-police.selectable, .map .token-wretched.selectable, .map .token-wretched.selected {
         animation: none;
     }
 }
@@ -569,7 +714,8 @@ h2 {
 .legend-station { width: 10px; height: 10px; border-radius: 0; background: #3b2a1e; outline: 2px solid var(--brass); }
 .legend-patrol { background: #111; color: #fff; border: 2px solid #fff; font-size: 10px; }
 .legend-police { background: var(--police-blue); border: 2px solid #fff; }
-.legend-wretched { background: #fffaf0; border: 2px solid var(--blood); }
+.legend-wretched { background: transparent; border: 3px solid var(--blood); box-shadow: 0 0 0 1px #fffaf0; }
+.legend-woman { background: transparent; border: 3px solid #4b2a5e; box-shadow: 0 0 0 1px #fffaf0; }
 .legend-crime { background: rgba(214, 40, 40, 0.45); border: 2px solid var(--blood-bright); }
 .legend-clue { background: rgba(242, 201, 76, 0.55); border: 2px solid var(--clue); }
 
@@ -723,6 +869,109 @@ h2 {
 .button-primary {
     background: var(--blood);
     color: #fff;
+}
+
+.button-secondary {
+    background: transparent;
+    color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--brass-dim);
+}
+
+.button-secondary:hover, .button-secondary:focus {
+    color: var(--paper);
+    box-shadow: inset 0 0 0 1px var(--brass);
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+}
+
+.button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.button[hidden] {
+    display: none;
+}
+
+.dialog .button-secondary {
+    color: var(--text-on-paper);
+    margin-left: 8px;
+}
+
+.phase-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 10px;
+}
+
+.phase-actions .button, .highlight-pieces {
+    padding: 7px 12px;
+    font-size: 14px;
+}
+
+.highlight-pieces {
+    margin-top: 6px;
+}
+
+.highlight-pieces[aria-pressed="true"] {
+    background: rgba(201, 162, 39, 0.18);
+}
+
+/* Case files: the review of nights that are over */
+.review-nights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.review-night.active {
+    background: var(--brass);
+    color: var(--ink);
+}
+
+.review-intro, .review-distance-note {
+    color: var(--text-dim);
+    font-size: 13px;
+}
+
+.review-body h3 {
+    margin: 4px 0 8px;
+    font-size: 18px;
+    color: var(--paper);
+}
+
+.review-log {
+    margin: 0 0 10px;
+    padding: 0;
+    list-style: none;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.review-log .event {
+    grid-template-columns: 1fr;
+}
+
+.review-log .event:before {
+    content: none;
+}
+
+.kind-search { border-left-color: #6b5216; }
+.kind-arrest { border-left-color: var(--blood); }
+
+.review-tool label {
+    font-size: 14px;
+}
+
+.review-tool select {
+    font: inherit;
+    margin: 0 4px;
+}
+
+.computer-police .board .review-clickable {
+    pointer-events: auto;
 }
 
 .button-primary:hover, .button-primary:focus {

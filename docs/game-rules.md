@@ -41,6 +41,8 @@ Jack wins by killing five victims over four nights and reaching his hideout ever
 
 After a night, clue markers are removed. Policemen and crime scenes stay.
 
+**Interface steps, not rules.** When a person leads the police, the page adds two pauses the rulebook leaves to the table: Hunting the monster ends when the player chooses Done (until then a move can be undone), and after each night the game waits until the player begins the next (`game.settings`, see [Architecture](architecture.md#phases)). Neither changes what is legal or what the police know.
+
 ## The move track
 
 The track has 20 spaces: V, IV, III, II, I, then 1 to 15. The Time of the Crime token starts on I and moves left each time Jack waits. When Jack kills, his pawn starts on that space and moves right one space per move (two for a coach). So killing on I gives him 15 moves, and killing on V gives him 19. In the code, `trackPosition` counts spaces from the left (V is 1, I is 5, 15 is 20).

@@ -44,6 +44,25 @@ WC.ui = (function ($, _, board, rules, content) {
 			var classes = 'label label-info crime-scene token-murder token-murder-' + mapid;
 			draw.createElement(mapid, '', classes).appendTo('.map');
 		},
+		pieces: function () {
+			// The women and the Wretched, from what the police can see (rules.policeView): before the victims are chosen,
+			// women face down, all alike (which are marked is Jack's secret); from then until the alarm, the Wretched.
+			// Each is a ring around its circle, so the printed number stays readable, with a small badge
+			$('.map .token-woman, .map .token-wretched').remove();
+			var view = rules.policeView(state());
+			var phase = state().phase;
+			var pieces = phase <= 2 ? view.women : phase <= 7 ? view.wretched : [];
+			var kind = phase <= 2 ? 'woman' : 'wretched';
+			_.each(pieces, function (mapid) {
+				var title = kind == 'woman' ? 'A woman, face down, on ' + board.number(mapid) + ' (marked or not: only Jack knows)' : 'A Wretched on ' + board.number(mapid);
+				draw.createElement(mapid, '', 'label token token-' + kind + ' token-' + kind + '-' + mapid).attr('title', title).appendTo('.map');
+			});
+			$('button.highlight-pieces').prop('hidden', pieces.length == 0).text(kind == 'woman' ? 'Highlight the women' : 'Highlight the Wretched');
+			if (pieces.length == 0) {
+				$('.board').removeClass('highlighting');
+				$('button.highlight-pieces').attr('aria-pressed', 'false');
+			}
+		},
 		clue: function (mapid) {
 			var classes = 'label label-info token token-clue token-clue-' + mapid;
 			draw.createElement(mapid, '', classes).prependTo('.map');
@@ -193,12 +212,6 @@ WC.ui = (function ($, _, board, rules, content) {
 		}
 		draw.phaseText('patrolling-the-streets', text);
 		patrolProgress();
-		var women = state().womenMarked.concat(state().womenUnmarked);
-		for (var a = 0; a < board.size; a++) {
-			if (_.contains(women, a)) {
-				draw.createElement(a, '', 'label label-info token token-woman token-woman-' + a).appendTo('.map');
-			}
-		}
 		_.each(positions.all, function (a) {
 			var required = _.contains(positions.required, a) ? ' required' : '';
 			draw.createElement(a, 'Real', 'label label-info selectable token token-police marked token-police-' + a + required).appendTo('.map');
@@ -225,13 +238,16 @@ WC.ui = (function ($, _, board, rules, content) {
 		var turn = state().turn;
 		wretchedProgress(0, turn.total);
 		_.each(state().womenMarked, function (a, index) {
-			var selectable = _.contains(turn.pending, index) ? ' selectable' : '';
-			draw.createElement(a, 'wretched', 'label label-info token token-wretched token-wretched-' + a + selectable).appendTo('.map');
+			if (_.contains(turn.pending, index)) {
+				$('.map .token-wretched-' + a).addClass('selectable').attr('title', 'A Wretched on ' + board.number(a) + ': click to move it');
+			}
 		});
-		$('.token-wretched.selectable').click(function () {
+		$('.map .token-wretched.selectable').click(function () {
 			var from = $(this).data('mapid');
 			var moves = rules.wretchedMoves(state(), from);
 			$('.token-move-wretched').remove();
+			$('.map .token-wretched.selected').removeClass('selected');
+			$(this).addClass('selected');
 			if (moves.length == 0) {
 				game.keepWretched(from); // Blocked by another Wretched that moved, so it stays
 				return;
@@ -244,26 +260,45 @@ WC.ui = (function ($, _, board, rules, content) {
 		});
 	};
 
+	var policeNames = ['blue', 'yellow', 'brown', 'red', 'green'];
+
+	function moveControls() {
+		// Undo the last move (while Hunting the monster lasts), and, once every policeman has moved, finish
+		var all = state().turn.moved && state().turn.moved.length >= rules.policeNight(state()).now.length;
+		var controls = $('.state.hunting-the-monster .phase-actions');
+		if (controls.length == 0) {
+			controls = $('<div class="phase-actions"></div>').appendTo('.state.hunting-the-monster');
+			$('<button type="button" class="button button-secondary undo-move"></button>').text('Undo last move').click(function () {
+				game.undoPoliceMove();
+			}).appendTo(controls);
+			$('<button type="button" class="button button-primary finish-moves"></button>').text('Done: on to Clues and suspicion').click(function () {
+				game.finishPoliceMoves();
+			}).appendTo(controls);
+		}
+		controls.find('.undo-move').prop('disabled', !game.canUndoPoliceMove());
+		controls.find('.finish-moves').prop('hidden', !game.settings.confirmPoliceMoves).prop('disabled', !all);
+	}
+
 	turns[10] = function huntingTheMonster() {
-		draw.phaseText('hunting-the-monster', 'Move each policeman up to two crossings: click a policeman, then a highlighted crossing, or Stay. Policemen can pass each other but not share a crossing.');
-		var now = rules.policeNight(state()).now;
-		draw.progress('Policemen moved: 0 of ' + now.length);
+		draw.phaseText('hunting-the-monster', 'Move each policeman up to two crossings: click a policeman, then one of the crossings ringed in his colour, or Stay. Policemen can pass each other but not share a crossing.' +
+			(game.settings.confirmPoliceMoves ? ' A move can be undone until you choose Done.' : ''));
+		var police = rules.policeNight(state());
+		draw.progress('Policemen moved: ' + state().turn.moved.length + ' of ' + police.now.length);
 		var chosen = null; // The policeman whose choices are showing: { mapid, index }
 
 		function policeman(mapid, index) {
 			// A policeman still to move, who shows his choices when clicked
-			draw.createElement(mapid, 'police', 'label label-info selectable revealed token token-police police-' + index + ' token-police-' + mapid).click(function () {
-				choose(mapid, index);
-			}).appendTo('.map');
+			draw.createElement(mapid, 'police', 'label label-info selectable revealed token token-police police-' + index + ' token-police-' + mapid)
+				.attr('title', 'The ' + policeNames[index] + ' policeman on a crossing: click to choose where he goes').click(function () {
+					choose(mapid, index);
+				}).appendTo('.map');
 		}
 
 		function putBack() {
-			// Clicking another policeman first takes the last one's choices away and puts him back, so he can still move
+			// Choosing another policeman first takes the last one's choices away, so he can still move
 			$('.token-move-police').remove();
-			if (chosen) {
-				policeman(chosen.mapid, chosen.index);
-				chosen = null;
-			}
+			$('.map .token-police.selected').removeClass('selected');
+			chosen = null;
 		}
 
 		function move(index, to) {
@@ -274,23 +309,31 @@ WC.ui = (function ($, _, board, rules, content) {
 		function choose(mapid, index) {
 			putBack();
 			chosen = { mapid: mapid, index: index };
-			$('.token-police-' + mapid).remove();
+			$('.map .token-police-' + mapid).addClass('selected');
 			_.each(rules.policeDestinations(state(), index), function (to) {
-				draw.createElement(to, 'move here', 'label label-info selectable token token-move-police token-police-' + to).click(function () {
-					move(index, to);
-				}).appendTo('.map');
+				draw.createElement(to, 'move here', 'label label-info selectable token token-move-police for-police-' + index + ' token-police-' + to)
+					.attr('title', 'Move the ' + policeNames[index] + ' policeman here').click(function () {
+						move(index, to);
+					}).appendTo('.map');
 			});
-			draw.createElement(mapid, 'Stay', 'label label-info selectable token token-move-police token-police-' + mapid).click(function () {
-				move(index, mapid);
-			}).appendTo('.map');
+			draw.createElement(mapid, 'Stay', 'label label-info selectable token token-move-police token-police-' + mapid)
+				.attr('title', 'Stay: the ' + policeNames[index] + ' policeman keeps his crossing').click(function () {
+					move(index, mapid);
+				}).appendTo('.map');
 		}
 
+		turns[10].policeman = policeman;
 		for (var a = 0; a < board.size; a++) {
-			var index = _.indexOf(now, a);
+			var index = _.indexOf(police.now, a);
 			if (index !== -1) {
-				policeman(a, index);
+				if (_.contains(state().turn.moved, index)) {
+					draw.createElement(a, 'policeman', 'label label-info revealed token token-police-' + a + ' token-police police-' + index).attr('title', 'The ' + policeNames[index] + ' policeman (moved)').appendTo('.map');
+				} else {
+					policeman(a, index);
+				}
 			}
 		}
+		moveControls();
 	};
 
 	turns[11] = function cluesAndSuspicion() {
@@ -360,6 +403,7 @@ WC.ui = (function ($, _, board, rules, content) {
 			// The last phase's choices and pieces. A filter function, not a selector: jQuery's selector engine
 			// draws on Math.random, which Jack's AI also uses
 			$('.map .token').filter(function () { return !$(this).hasClass('token-clue'); }).remove();
+			draw.pieces();
 			if (data.phase == 4) {
 				draw.phaseText('blood-on-the-streets', 'Jack chooses between killing or waiting.');
 			}
@@ -396,11 +440,11 @@ WC.ui = (function ($, _, board, rules, content) {
 		wretchedMoved: function (data) {
 			$('.token-move-wretched').remove();
 			$('.token-wretched-' + data.from).remove();
-			draw.createElement(data.to, 'wretched', 'label label-info token token-wretched token-wretched-' + data.to).appendTo('.map');
+			draw.createElement(data.to, '', 'label token token-wretched token-wretched-' + data.to).attr('title', 'A Wretched on ' + number(data.to) + ' (moved)').appendTo('.map');
 			wretchedProgress(data.moved, data.total);
 		},
 		wretchedStays: function (data) {
-			$('.token-wretched-' + data.mapid).removeClass('selectable').unbind('click');
+			$('.token-wretched-' + data.mapid).removeClass('selectable selected').unbind('click');
 			wretchedProgress(data.moved, data.total);
 		},
 		patrolRevealed: function (data) {
@@ -444,8 +488,19 @@ WC.ui = (function ($, _, board, rules, content) {
 		},
 		policemanMoved: function (data) {
 			$('.token-move-police').remove();
-			draw.createElement(data.to, 'policeman', 'label label-info token token-police-' + data.to + ' token-police police-' + data.index).appendTo('.map');
-			draw.progress('Policemen moved: ' + data.moved + ' of ' + data.total);
+			$('.map .token-police-' + data.from + '.police-' + data.index).remove();
+			draw.createElement(data.to, 'policeman', 'label label-info revealed token token-police-' + data.to + ' token-police police-' + data.index).attr('title', 'The ' + policeNames[data.index] + ' policeman (moved)').appendTo('.map');
+			draw.progress('Policemen moved: ' + data.moved + ' of ' + data.total + (data.moved == data.total && game.settings.confirmPoliceMoves ? '. Undo a move, or choose Done' : ''));
+			moveControls();
+		},
+		policeMoveUndone: function (data) {
+			// The policeman goes back to his crossing, and can be moved again
+			$('.token-move-police').remove();
+			$('.map .token-police.selected').removeClass('selected');
+			$('.map .token-police-' + data.from + '.police-' + data.index).remove();
+			turns[10].policeman(data.to, data.index);
+			draw.progress('Policemen moved: ' + data.moved + ' of ' + data.total + ' (the ' + policeNames[data.index] + ' policeman\'s move was undone)');
+			moveControls();
 		},
 		searchMissed: function (data) {
 			$('.token-search-' + data.mapid).remove();
@@ -486,6 +541,12 @@ WC.ui = (function ($, _, board, rules, content) {
 			if (events[type]) {
 				events[type](data);
 			}
+		});
+		$('button.highlight-pieces').click(function () {
+			// Make the women or the Wretched stand out from everything else on the board, or stop
+			var on = !$('.board').hasClass('highlighting');
+			$('.board').toggleClass('highlighting', on);
+			$(this).attr('aria-pressed', on ? 'true' : 'false');
 		});
 	}
 

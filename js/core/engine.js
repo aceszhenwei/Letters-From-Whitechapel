@@ -8,7 +8,14 @@
      Hell:    0 Prepare the scene, 1 The targets are identified, 2 Patrolling the streets (police),
               3 The victims are chosen, 4 Blood on the streets, 5 Suspense grows (police), 6 Ready to kill,
               (7 A corpse on the sidewalk is part of the murder), 8 Alarm whistles
-     Hunting: 9 Escape in the night, 10 Hunting the monster (police), 11 Clues and suspicion (police) */
+     Hunting: 9 Escape in the night, 10 Hunting the monster (police), 11 Clues and suspicion (police),
+              12 The night is over (only with game.settings.reviewNights: waits for beginNextNight)
+
+   game.settings, which the interface sets and simulations leave off, change only when the engine waits for the player:
+     confirmPoliceMoves  Hunting the monster ends when the police call finishPoliceMoves, not as soon as the last
+                         policeman has moved, so a move can be undone (undoPoliceMove) until then
+     reviewNights        After Jack escapes on nights 1-3, the engine waits in phase 12 until beginNextNight, so the
+                         police can look over the night before the board is cleared */
 var WC = WC || {};
 
 WC.engine = (function (rules, _) {
@@ -74,7 +81,8 @@ WC.engine = (function (rules, _) {
 		var game = {
 			state: createState(),
 			ai: options.ai, // Jack's decisions: replace it to change his strategy
-			debug: !!options.debug
+			debug: !!options.debug,
+			settings: { confirmPoliceMoves: !!options.confirmPoliceMoves, reviewNights: !!options.reviewNights }
 		};
 
 		function emit(type, data) {
@@ -227,6 +235,8 @@ WC.engine = (function (rules, _) {
 				emit('jackEscaped');
 				if (state.jack.length >= config.nights) {
 					game.end('jackWins');
+				} else if (game.settings.reviewNights) {
+					game.enter(12); // The night is over: wait until the police are ready for the next
 				} else {
 					game.enter(0); // Start a new night
 				}
@@ -240,8 +250,13 @@ WC.engine = (function (rules, _) {
 		};
 
 		phases[10] = function huntingTheMonster() {
-			game.state.turn = { moved: [] };
-			emit('policeTurn', { phase: 10 }); // Waits for movePoliceman
+			// history: each move this phase, { index, from }, newest last, so moves can be undone in reverse order
+			game.state.turn = { moved: [], history: [] };
+			emit('policeTurn', { phase: 10 }); // Waits for movePoliceman (and, with confirmPoliceMoves, finishPoliceMoves)
+		};
+
+		phases[12] = function theNightIsOver() {
+			emit('nightOver', { night: game.state.jack.length - 1 }); // Waits for beginNextNight
 		};
 
 		phases[11] = function cluesAndSuspicion() {
@@ -393,10 +408,58 @@ WC.engine = (function (rules, _) {
 			police.route[index].push(to);
 			police.now[index] = to;
 			state.turn.moved.push(index);
+			state.turn.history.push({ index: index, from: from });
 			emit('policemanMoved', { index: index, from: from, to: to, moved: state.turn.moved.length, total: police.now.length });
 			if (state.turn.moved.length >= police.now.length) {
-				game.enter(11);
+				if (game.settings.confirmPoliceMoves) {
+					emit('policeMovesReady'); // Waits for finishPoliceMoves, or an undo
+				} else {
+					game.enter(11);
+				}
 			}
+			return true;
+		};
+
+		game.canUndoPoliceMove = function () {
+			// Only within Hunting the monster: moving reveals nothing, so taking a move back gains nothing. Once the phase
+			// ends (searches and arrests can reveal clues), the moves stand
+			var state = game.state;
+			return state.phase == 10 && !state.over && !!state.turn.history && state.turn.history.length > 0;
+		};
+
+		game.undoPoliceMove = function () {
+			// Take back the last policeman's move this phase: he returns to his crossing and may move again. Moves are
+			// undone newest first, so the crossing he left is always free again
+			if (!game.canUndoPoliceMove()) {
+				return false;
+			}
+			var state = game.state;
+			var police = rules.policeNight(state);
+			var last = state.turn.history.pop();
+			var to = police.now[last.index];
+			police.route[last.index].pop();
+			police.now[last.index] = last.from;
+			state.turn.moved = _.without(state.turn.moved, last.index);
+			emit('policeMoveUndone', { index: last.index, from: to, to: last.from, moved: state.turn.moved.length, total: police.now.length });
+			return true;
+		};
+
+		game.finishPoliceMoves = function () {
+			// With confirmPoliceMoves: every policeman has moved, and the police are done with Hunting the monster
+			var state = game.state;
+			if (state.phase != 10 || state.over || state.turn.moved.length < rules.policeNight(state).now.length) {
+				return false;
+			}
+			game.enter(11);
+			return true;
+		};
+
+		game.beginNextNight = function () {
+			// With reviewNights: the police have looked over the night, and the next one begins
+			if (game.state.phase != 12 || game.state.over) {
+				return false;
+			}
+			game.enter(0);
 			return true;
 		};
 

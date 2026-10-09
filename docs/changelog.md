@@ -2,7 +2,16 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: strategic waiting
+## Unreleased: the detective's tools
+
+- **Undo a policeman's move:** in Hunting the monster, the chosen policeman is ringed and his crossings are ringed in his colour. **Undo last move** takes moves back, newest first, until the player chooses **Done**. Moves can't be undone after that, since searches can reveal clues.
+- **Night review:** when Jack reaches his hideout, the board stays as it was (policemen, crime scenes, clues, searches and failed arrests) until the player chooses **Begin the next night**. The **case files** show each night's log in order, can show any earlier night on the board read-only, and give walking distances from a crime scene or clue. All of it comes from `rules.nightRecord`, a frozen copy of the public record that never holds Jack's route or hideout.
+- **Women and Wretched:** drawn as rings around their circles with a badge, so the numbers stay readable. Women are all alike (face down); the Wretched being moved is ringed. **Highlight** fades the rest of the map.
+- **Engine:** two settings, `confirmPoliceMoves` and `reviewNights` (phase 12, The night is over), and the actions `undoPoliceMove`, `finishPoliceMoves` and `beginNextNight`. They are off by default, so simulations and the computer police play as before; the page turns them on. The golden traces are unchanged.
+- **Fix:** a policeman who has moved shows his shield, not a face-down patrol's question mark.
+- **Tests:** `police-undo.test.js`, `night-review-ui.test.js`. Screenshots: `tools/screenshots/capture.js`, `docs/images/night-review/`.
+
+## Strategic waiting ([aceszhenwei/Letters-From-Whitechapel#17](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/17))
 
 - **Study:** [Strategic waiting](jack-waiting.md) explains why Strategic Jack and Jack AI v2 never wait (a fixed rule, which is right against the original police) and measures what waiting is worth.
 - **Policy:** strategic waiting (`js/ai/jack-waiting.js`, an option played by no level) waits only when its measured chance of escaping is higher than killing now, assuming the police move the victims where it hurts him most.

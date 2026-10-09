@@ -15,11 +15,44 @@ The page aims to feel like the board game on a table: a parchment board in a dar
 ├───────────────────────────────────────────┤ Jack the Ripper   │
 │ Move track  V IV III II I 1 … 15          │  coaches, alleys, │
 ├───────────────────────────────────────────┤  moves, victims   │
-│ Legend                                    │ Case log          │
+│ Legend                                    │ Case files        │
+│                                           │ Case log          │
 └───────────────────────────────────────────┴──────────────────┘
 ```
 
+The case files card appears once a night is over (see [The detective's tools](#the-detectives-tools)).
+
 Below 1100 pixels wide the page becomes one column, in this order: the phase card (what to do now), the board, the move track, Jack and the case log, then the legend. Below 600 pixels the move track wraps onto two rows and the list of phases is hidden. The board always scales to the width available (`WC.ui.draw.fit`), so there is no horizontal scrolling.
+
+## The detective's tools
+
+Three tools help a player keep track of the investigation. None changes the rules or shows anything the police wouldn't see at the table.
+
+| Before | After |
+|---|---|
+| ![The women, face down, look like ordinary circles and cover the red circles' numbers](images/night-review/before-women.jpg) | ![Each woman is a ring around her red circle, with a badge, so the number stays readable](images/night-review/after-women.jpg) |
+| ![Right after Jack escapes, the board has already moved on to the next night's patrols](images/night-review/before-escape.jpg) | ![The night is over: the board keeps the policemen, searches and crime scene, and waits for the player](images/night-review/after-review.jpg) |
+
+**Seeing the women and the Wretched.**
+- Each woman, and later each Wretched, is a ring around its red circle, with a small badge above it, so the circle's number stays readable.
+- Women are face down, so they all look the same (deep purple): which ones are marked is Jack's secret. The Wretched are blood red.
+- From Patrolling the streets to the alarm, **Highlight the women** (or **the Wretched**) fades the rest of the map back ([screenshot](images/night-review/after-women-highlight.jpg)).
+- In Suspense grows, the Wretched being moved is ringed in brass.
+
+**Undoing a policeman's move.**
+- In Hunting the monster, clicking a policeman rings him in brass and rings his possible crossings in his own colour ([screenshot](images/night-review/after-hunting.jpg)).
+- **Undo last move** takes back the most recent move: the policeman returns to his crossing and can move again. Repeating it undoes the moves before, newest first ([screenshot](images/night-review/after-undone.jpg)).
+- Once everyone has moved, **Done: on to Clues and suspicion** ends the phase. Moves can't be undone after that: searches and arrests reveal information, so the board can't be wound back past them.
+
+**Reviewing a night.**
+- When Jack reaches his hideout, the game stops at **The night is over**. The board keeps the night's policemen, crime scenes, clues, searches without a clue (dashed rings) and failed arrests (crossed rings).
+- The **case files** card shows the night's log in order: the murder and the Time of the Crime, where the policemen started and moved, each of Jack's moves by its move-track number (and coaches and alleys), every search and arrest, and his escape ([screenshot](images/night-review/after-review-card.jpg)).
+- Clicking a crime scene or clue on the board shows the walking distance from it to the circles around, on an empty board, up to a number of moves you choose. Policemen, coaches and alleys are ignored, so these are a help for reconstructing his route, not proof ([screenshot](images/night-review/after-distances.jpg)).
+- **Begin the next night** goes on.
+- During later nights, and after the game, the night buttons show any earlier night on the board, read-only, as the police saw it then ([screenshot](images/night-review/after-history.jpg)). Then **Back to the current night**. At the end of the game, **Review the case** in the ending dialog opens the case files.
+- The log and the board are drawn from `rules.nightRecord`: a frozen copy of the night's public record, kept when the night ends. It never holds Jack's route, position or hideout.
+
+On a phone the same tools appear in one column ([screenshot](images/night-review/after-mobile.jpg)). Screenshots are made with `tools/screenshots/capture.js`.
 
 ## How the interface works
 
@@ -27,7 +60,9 @@ The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't
 
 - **It listens to the engine's events** (`game.on`) and draws what changed. For example, `murder` draws the crime scene markers, moves the track and writes the case log entry. `policeTurn` draws the police's choices for that phase.
 - **It shows only legal choices, taken from the rules.** These include `rules.patrolPositions`, `rules.wretchedMoves`, `rules.policeDestinations`, and each policeman's `search` and `arrest` lists.
-- **It sends clicks to the engine's police actions:** `togglePatrol`, `moveWretched`, `keepWretched`, `movePoliceman`, `chooseAction`, `search` and `arrest`. The engine checks the rules again and reports what happened.
+- **It sends clicks to the engine's police actions:** `togglePatrol`, `moveWretched`, `keepWretched`, `movePoliceman`, `undoPoliceMove`, `finishPoliceMoves`, `chooseAction`, `search`, `arrest` and `beginNextNight`. The engine checks the rules again and reports what happened.
+- **It turns on two engine settings** (`js/main.js`): `confirmPoliceMoves`, so Hunting the monster waits for Done and a move can be undone, and `reviewNights`, so the game waits after each night. While the computer police play, `confirmPoliceMoves` is off (`js/ui/setup.js`), and the watching player only begins each night.
+- **The night review** is `js/ui/review.js` (`WC.ui.review`). It keeps each night's `rules.nightRecord` when the night ends, and draws it on the board and in the case files card, without calling the engine (except `beginNextNight`).
 - **It owns all the wording:** instructions, progress lines, case log entries and the endings.
 
 ## Components
@@ -45,6 +80,9 @@ The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't
 | Dialogs | `.overlay.intro`, `.overlay.ending` (shown with the `open` class) | Start-up code in `main.js`, the `gameOver` event | |
 | Who leads the detectives | `.police-options`, `.police-note`; while the computer leads them, `body.computer-police` (the board takes no clicks) and the subtitle says the player is watching | `WC.ui.setup` and `WC.ui.autoPolice(game, police, { delay })` in `js/ui/autopolice.js` | Start button; then the engine's `policeTurn` and `phase` events |
 | Jack's difficulty | `.difficulty-options` (one radio button per level), `.difficulty-note`, and `.difficulty-badge` in the top bar | `WC.ui.setup(game, { search, storage })` in `js/ui/setup.js` | Start button |
+| Women and Wretched | `.token-woman`, `.token-wretched`; `button.highlight-pieces` toggles `.board.highlighting` | `pieces` | Every `phase`; `wretchedMoved` |
+| Undo and Done | `.state.hunting-the-monster .undo-move`, `.finish-moves` | `moveControls` | `policeTurn` (10), `policemanMoved`, `policeMoveUndone` |
+| Case files | `.review-card`: `.review-nights` (one `.review-night` button per night), `.review-body` (`.review-log`, `.review-radius`, `.begin-next-night` or `.close-review`); `.board.reviewing` while a night is shown | `WC.ui.review` | `nightOver`, `gameOver`, `.review-case` in the ending dialog |
 
 ## Tokens on the board
 
@@ -57,18 +95,22 @@ The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't
 | "Real" / "Fake" pills | `token-police marked` / `unmarked` (`selected`, `required`) | Choosing patrols |
 | Black disc with "?" | `token-police` | Face-down patrol |
 | Coloured disc with a shield | `token-police police-N`, `token-pawn police-N` | Policeman N (blue, yellow, brown, red, green) |
-| White disc with a woman | `token-woman`, `token-wretched` | Woman token or Wretched |
-| Green ring | `token-move-police`, `token-move-wretched` | Where a piece can move |
+| Purple ring with a badge | `token-woman` | A woman, face down (marked or not: only Jack knows) |
+| Red ring with a badge | `token-wretched` (`selectable`, `selected`) | A Wretched |
+| Ring in a policeman's colour | `token-move-police for-police-N` | Where policeman N can move |
+| Green ring | `token-move-wretched` | Where a Wretched can move |
+| Brass ring around a policeman | `token-police selected` | The policeman whose crossings are showing |
 | "Search" / "Arrest" pills | `token-search-adjacent`, `token-arrest-adjacent` | A policeman's choice of action |
 | Disc with a magnifier or gavel | `token-search`, `token-arrest` | A circle to search or arrest at |
 | Translucent yellow disc | `token-clue` | Clue marker |
 | Translucent red disc | `token-murder crime-scene` | Crime scene marker |
+| Review markers (only while a night is shown) | `review` with `review-crime` (`review-earlier`), `review-clue`, `review-searched`, `review-arrest`, `review-police`, `review-distance-N` | A night's crime scenes, clues, searches without a clue, failed arrests, where the policemen ended, and walking distances |
 
 Pieces that can be clicked have the `selectable` class, which gives them a pointer, a hover ring and (for pieces still to move) a gentle pulse.
 
 ## The class contract
 
-The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
+The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, `highlight-pieces`, `highlighting`, `undo-move`, `finish-moves`, `for-police-N`, `review`, `reviewing`, `review-night`, `review-log`, `begin-next-night`, `close-review`, `review-case`, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
 
 Two of these behave in a way that matters:
 
