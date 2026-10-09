@@ -58,6 +58,7 @@ Every experiment uses fixed seeds, so it plays the same games on every run and e
 | 460001–460100 | Detective v3 study: comparison and ablation |
 | 470001–470100 | Detective v3 study: confirmation |
 | 480001–480500 | Detective v3 study: reserved for its independent validation |
+| 490001–490100 | Fake Wretched and fake patrol audit ([Deception audit](deception-audit.md)) |
 | 600001–600500 | Fresh-seed validation in the detective study |
 | 650001–650500 | Fresh-seed validation of Detective AI v2 |
 | 700001–700060 | Deduction soundness checks |
