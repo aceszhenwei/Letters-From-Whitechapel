@@ -1,6 +1,8 @@
 // Police configurations compared in docs/detective-ai-v2.md: options for WC.createPolice (js/ai/police.js).
 // 'original' is the original deductive police; the others switch on parts of Detective AI v2 one at a time.
 // The hybrid's parameters come from research/detective-v2/hideout-models.js (fitted on calibration seeds).
+// 'v2' is the final policy, as the game plays it (WC.policeVariants.v2 in js/ai/police.js).
+const { WC } = require('../detective-inference/lib');
 const hybrid = { hideoutWeighting: 'hybrid', hideoutW: 0.9, hideoutRho: 0.5 };
 const uniform = { hideoutWeighting: 'uniform' };
 
@@ -24,5 +26,8 @@ module.exports = {
 	'hybrid+block2': { ...hybrid, blockWeight: 2 },
 	'hybrid+block+arrest0.15': { ...hybrid, blockWeight: 1, arrestAt: 0.15 },
 	'hybrid+block+arrest0.1': { ...hybrid, blockWeight: 1, arrestAt: 0.1 },
-	'hybrid+block+cordon': { ...hybrid, blockWeight: 1, cordon: true }
+	'hybrid+block+cordon': { ...hybrid, blockWeight: 1, cordon: true },
+	// The final evaluation
+	'hybrid+block+coordinate': { ...hybrid, blockWeight: 1, coordinate: true },
+	v2: WC.policeVariants.v2
 };

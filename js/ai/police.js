@@ -260,3 +260,13 @@ WC.randomPolice = (function (_) {
 })(_);
 
 WC.policeAI = WC.createPolice(WC.board, WC.rules, WC.deduction, _);
+
+/* Police configurations for WC.createPolice (docs/detective-ai-v2.md). The original police use the defaults.
+   Detective AI v2 weights the possible hideouts by how direct Jack's routes would have been to reach them (with a
+   uniform floor, fitted on calibration seeds over three Jacks), stands between Jack and those hideouts, and arrests
+   at 15% instead of 20%. Coordination, the cordon and live hideouts were tried and left out: they did not help
+   against every Jack. */
+WC.policeVariants = {
+	original: {},
+	v2: { hideoutWeighting: 'hybrid', hideoutW: 0.9, hideoutRho: 0.5, blockWeight: 1, arrestAt: 0.15 }
+};
