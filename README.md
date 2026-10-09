@@ -17,6 +17,8 @@ Before the first night, choose how Jack plays:
 
 The labels name the two AIs; Normal is not a claim about how a typical human Jack plays. The choice is remembered for the next game, and it only changes how Jack decides: the rules and what Jack is allowed to know are the same. For testing, `index.html?difficulty=normal` (or `?jack=strategic`) fixes the level. See [Jack's AI](docs/jack-ai.md#difficulty-levels).
 
+You can also choose who leads the detectives: **you** (the default), or the computer police, whom you then watch hunt Jack. **Easy police** is the original detective AI; **Normal police** is Detective AI v2, which also guards the places Jack could be heading for. `index.html?police=normal` (or `easy`, `you`) fixes the choice for testing. See [Detective AI v2](docs/detective-ai-v2.md).
+
 The game follows the revised edition rulebook: four nights (including the double event), real and fake patrols, the Time of the Crime, Jack's coaches and alleys, and searching for clues or making an arrest. See [Game rules](docs/game-rules.md) for the details and what isn't implemented yet.
 
 ## Documentation
@@ -27,6 +29,7 @@ Everything about how the game works and how to change it is in [`docs/`](docs/RE
 - [Game rules](docs/game-rules.md): the rules as implemented
 - [Map data](docs/map-data.md): the board graph and how alleys are worked out
 - [Jack's AI](docs/jack-ai.md): how the computer plays Jack, and how the strategic AI was evaluated
+- [Detective AI v2](docs/detective-ai-v2.md): the stronger computer police, and how it was evaluated
 - [User interface](docs/ui.md): layout, components and design tokens
 - [Testing](docs/testing.md): running and writing tests (`npm install && npm test`)
 - [Contributing](docs/contributing.md), [Roadmap](docs/roadmap.md) and [Changelog](docs/changelog.md)

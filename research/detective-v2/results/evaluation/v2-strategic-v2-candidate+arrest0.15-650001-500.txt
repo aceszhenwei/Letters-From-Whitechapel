@@ -1,0 +1,6 @@
+strategic Jack vs police "v2" {"hideoutWeighting":"hybrid","hideoutW":0.9,"hideoutRho":0.5,"blockWeight":1,"arrestAt":0.15}, seeds 650001-650500
+  Jack wins 160/500 (32.0%, 95% CI 28.1%-36.2%); police win by arrest 157, Jack out of moves 180 (with a policeman next to his hideout 170), trapped 3
+  police wins by night: 1 / 35 / 138 / 166
+  per game: clues 4.08, searches 216.3, arrest attempts 2.62 (successful 12.0%)
+  from night 2: share of the possible hideouts with a policeman next to them 33.9%; turns with one next to the true hideout 55.8%
+  84 s

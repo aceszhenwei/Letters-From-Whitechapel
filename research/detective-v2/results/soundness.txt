@@ -1,0 +1,6 @@
+baseline: 13383 prefixes from 60 games; true circle ruled out: 0 (plain), 0 (with time and hideout pruning)
+  compared with the exhaustive reference on 9279 short prefixes: reference lost the truth 0, deduction not a superset 0, identical 9279, with extra circles 0 (0 circles), by moves so far {}
+  pruning removed 0.8 circles per prefix on average
+strategic: 12611 prefixes from 60 games; true circle ruled out: 0 (plain), 0 (with time and hideout pruning)
+  compared with the exhaustive reference on 11740 short prefixes: reference lost the truth 0, deduction not a superset 0, identical 11740, with extra circles 0 (0 circles), by moves so far {}
+  pruning removed 0.1 circles per prefix on average

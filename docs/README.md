@@ -18,6 +18,7 @@ npm install && npm test  # run the automated tests (Node.js 22 or later)
 | [Map data](map-data.md) | The board graph in `js/data/map.js`: positions, streets, numbers, stations, alleys, and how to edit it safely |
 | [Jack's AI](jack-ai.md) | How the computer plays Jack: the baseline and the strategic AI, what each knows, how they were measured against each other, and the results |
 | [Detective inference](detective-inference-study.md) | A study of the computer police: their deduction against whitechapelR and an exhaustive check, why they lose to the strategic Jack, and what to improve next |
+| [Detective AI v2](detective-ai-v2.md) | The stronger computer police: what changed, how it was tuned and evaluated, results, robustness and limits |
 | [User interface](ui.md) | Layout, components, design tokens, the CSS class contract, accessibility and responsiveness |
 | [Testing](testing.md) | Running the tests, how they are organised, the test helpers, and writing new tests |
 | [Contributing](contributing.md) | Setting up, code conventions, and the pull request checklist |

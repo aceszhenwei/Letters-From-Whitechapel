@@ -16,6 +16,8 @@ const research = code.concat(['research/detective-inference/lib.js', 'research/d
 	'research/detective-inference/scenarios.js', 'research/detective-inference/growth.js',
 	'research/detective-inference/compare-maps.js', 'research/detective-inference/run-all.sh',
 	'research/detective-inference/fixtures']);
+const v2 = research.concat(['research/detective-v2/jacks.js', 'research/detective-v2/configs.js', 'research/detective-v2/evaluate.js',
+	'research/detective-v2/compare.js', 'research/detective-v2/run-evaluation.sh']);
 const medium = 'experiments/medium';
 const diagnostics = (args) => `node research/detective-inference/police-diagnostics.js ${args}`;
 const simulate = (jack, police, games, from, out) =>
@@ -31,7 +33,7 @@ module.exports = {
 		steps: [{ name: 'smoke', command: 'node tools/tiers/smoke.js', cache: false }]
 	},
 	medium: {
-		description: 'Medium-scale evaluations on development seeds: 500 games per Jack, the original against the improved police, a soundness sample. Algorithmic changes to the AIs, the police or the deduction',
+		description: 'Medium-scale evaluations on development seeds: 500 games per Jack, the original against the improved police and Detective AI v2, a soundness sample. Algorithmic changes to the AIs, the police or the deduction',
 		steps: [
 			{ name: 'medium-strategic', command: simulate('strategic', 'deductive', 500, 300001, `${medium}/strategic-deductive`), inputs: code, outputs: [`${medium}/strategic-deductive.txt`] },
 			{ name: 'medium-baseline', command: simulate('baseline', 'deductive', 500, 300001, `${medium}/baseline-deductive`), inputs: code, outputs: [`${medium}/baseline-deductive.txt`] },
@@ -43,12 +45,19 @@ module.exports = {
 				].map(diagnostics).join(' && ') + ' && node research/detective-inference/summarise.js',
 				env: { RESEARCH_RESULTS: `${medium}/research` }, inputs: research, outputs: [`${medium}/research/paired-comparisons.md`]
 			},
+			{
+				name: 'medium-v2',
+				command: ['strategic original', 'strategic v2', 'baseline original', 'baseline v2']
+					.map((a) => `node research/detective-v2/evaluate.js ${a} 300 300001`).join(' && '),
+				env: { RESEARCH_RESULTS: `${medium}/v2` }, inputs: v2, outputs: [`${medium}/v2/v2-baseline-v2-300001-300.txt`]
+			},
 			{ name: 'medium-soundness', command: `node research/detective-inference/soundness.js 10 700001 > ${medium}/research/soundness.txt`, env: { RESEARCH_RESULTS: `${medium}/research` }, inputs: research, outputs: [`${medium}/research/soundness.txt`] }
 		]
 	},
 	full: {
-		description: 'Full research validation and the Jack AI evaluation: the detective study (run-all.sh) and the 5,000-game evaluations. Research milestones, and before publishing results',
+		description: 'Full research validation: the Detective AI v2 evaluation, the detective study (run-all.sh) and the Jack AI 5,000-game evaluations. Research milestones, and before publishing results',
 		steps: [
+			{ name: 'full-v2', command: 'bash research/detective-v2/run-evaluation.sh', inputs: v2, outputs: ['research/detective-v2/results/evaluation/comparison.md'] },
 			{ name: 'full-research', command: 'bash research/detective-inference/run-all.sh "$WHITECHAPELR_CLONE"', inputs: research, outputs: ['research/detective-inference/results/paired-comparisons.md'] },
 			...[['baseline', 'deductive'], ['strategic', 'deductive'], ['baseline', 'random'], ['strategic', 'random']].map(([jack, police]) => ({
 				name: `full-${jack}-${police}`, command: simulate(jack, police, 5000, 1, `experiments/${jack}-${police}`), inputs: code, outputs: [`experiments/${jack}-${police}.txt`]

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased: Detective AI v2
+
+- **Detective AI v2** (`WC.policeVariants.v2`): the computer police weight the possible hideouts by how direct Jack's routes would have been to reach them, and stand between Jack and them. On fresh seeds it cuts the strategic Jack's win rate from 98.0% to 31.6%, the baseline Jack's from 21.8% to 12.6%, and a detouring Jack's from 88.8% to 63.0%. Coordination, a cordon, reachable-only hideouts and a lower arrest threshold were tested and left out. See [Detective AI v2](detective-ai-v2.md).
+- **Watch the computer police:** the setup dialog asks who leads the detectives: you (the default), Easy police (the original AI) or Normal police (v2). `?police=` fixes it for testing. Jack's difficulty is unaffected.
+- **Deduction fix:** a coach can no longer end where it started. The deduction now matches an exhaustive list of legal routes exactly; this sharpens both the police's beliefs and the strategic Jack's model of them.
+- `deduction.hideouts` takes a weighting (`walk`, the default; `uniform`; `hybrid`). `WC.createPolice` takes the v2 options, all off by default, so the original police play exactly as before.
+- Tests: `deduction.test.js` and `police-levels.test.js`; v2 in the smoke, medium and full test tiers.
+
 ## Unreleased: the verified board
 
 - **The map follows the physical board again.** The board was checked at the 13 places where this map and whitechapelR's differ, and agrees with this map in all of them. The whitechapelR topology overrides (`map.topologyCorrections`) are removed, and the three golden traces re-recorded for them (seeds 5, 7, 9) are back to their original recordings. `test/unit/map-topology.test.js` now pins the 13 board-verified connections. See [Map data](map-data.md#verified-against-the-board).

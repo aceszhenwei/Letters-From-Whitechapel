@@ -1,0 +1,14 @@
+Hybrid fitted on seeds 900001-900150 (1132 beliefs, three Jacks weighted equally): best w 0.9, rho 0.5, mean log score -3.435 (uniform -3.887)
+
+Held-out seeds 1-300: log score (higher is better) / P(true hideout) / mean rank / of candidates given 20% or more: how often the hideout
+| Situation | walk (current) | uniform | hybrid (w 0.9, rho 0.5) |
+|---|---|---|---|
+| baseline Jack (512) | -5.80 / 0.024 / 34.3 / 6% of 217 (given 29%) | -4.06 / 0.023 / 35.7 / 33% of 6 (given 33%) | -3.76 / 0.034 / 17.2 / 27% of 15 (given 26%) |
+| strategic Jack (898) | -7.02 / 0.034 / 36.4 / 8% of 622 (given 37%) | -3.46 / 0.058 / 23.5 / 29% of 205 (given 29%) | -2.73 / 0.102 / 6.5 / 39% of 270 (given 31%) |
+| detour Jack (882) | -7.81 / 0.018 / 47.1 / 3% of 486 (given 33%) | -4.07 / 0.024 / 36.7 / 24% of 25 (given 24%) | -3.85 / 0.034 / 21.0 / 35% of 26 (given 27%) |
+| night 2, all Jacks (828) | -6.85 / 0.010 / 59.6 / 9% of 47 (given 27%) | -4.40 / 0.015 / 46.3 / 23% of 13 (given 23%) | -4.05 / 0.023 / 21.0 / 30% of 10 (given 25%) |
+| night 3, all Jacks (781) | -6.76 / 0.029 / 33.3 / 6% of 471 (given 31%) | -3.72 / 0.037 / 26.9 / 29% of 66 (given 29%) | -3.30 / 0.058 / 13.0 / 36% of 76 (given 30%) |
+| night 4, all Jacks (683) | -7.62 / 0.041 / 24.0 / 5% of 807 (given 37%) | -3.26 / 0.064 / 18.3 / 29% of 157 (given 29%) | -2.70 / 0.109 / 8.4 / 39% of 225 (given 31%) |
+| 6-8 spare moves, all Jacks (501) | -9.09 / 0.011 / 41.5 / 1% of 355 (given 33%) | -3.86 / 0.030 / 29.7 / 29% of 17 (given 29%) | -3.06 / 0.070 / 7.6 / 46% of 54 (given 28%) |
+| 9 or more spare moves, all Jacks (1791) | -6.48 / 0.030 / 39.6 / 7% of 970 (given 35%) | -3.82 / 0.039 / 31.8 / 29% of 219 (given 29%) | -3.48 / 0.058 / 16.4 / 36% of 257 (given 31%) |
+| all (2292) | -7.05 / 0.026 / 40.0 / 6% of 1325 (given 34%) | -3.83 / 0.037 / 31.3 / 29% of 236 (given 29%) | -3.39 / 0.060 / 14.5 / 38% of 311 (given 30%) |

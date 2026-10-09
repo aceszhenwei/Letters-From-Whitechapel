@@ -3,148 +3,30 @@
  "from": 700001,
  "byJack": {
   "baseline": {
-   "prefixes": 1636,
+   "prefixes": 1766,
    "truthLostPlain": 0,
    "truthLostPruned": 0,
-   "enumerated": 1166,
+   "enumerated": 1187,
    "truthLostReference": 0,
    "notSuperset": 0,
-   "exact": 1159,
-   "extraCircles": 30,
-   "extraByMove": {
-    "carriage+walk": 7
-   },
-   "pruneShrink": 1990,
-   "examples": [
-    {
-     "seed": 700007,
-     "night": 1,
-     "steps": 7,
-     "kind": "extra",
-     "extra": [
-      57
-     ],
-     "moves": "carriage+walk"
-    },
-    {
-     "seed": 700008,
-     "night": 0,
-     "steps": 6,
-     "kind": "extra",
-     "extra": [
-      214,
-      222,
-      225,
-      230
-     ],
-     "moves": "carriage+walk"
-    },
-    {
-     "seed": 700008,
-     "night": 0,
-     "steps": 6,
-     "kind": "extra",
-     "extra": [
-      214,
-      222,
-      225,
-      230
-     ],
-     "moves": "carriage+walk"
-    },
-    {
-     "seed": 700008,
-     "night": 0,
-     "steps": 6,
-     "kind": "extra",
-     "extra": [
-      214,
-      222,
-      225
-     ],
-     "moves": "carriage+walk"
-    },
-    {
-     "seed": 700008,
-     "night": 0,
-     "steps": 6,
-     "kind": "extra",
-     "extra": [
-      214,
-      222
-     ],
-     "moves": "carriage+walk"
-    }
-   ]
+   "exact": 1187,
+   "extraCircles": 0,
+   "extraByMove": {},
+   "pruneShrink": 672,
+   "examples": []
   },
   "strategic": {
-   "prefixes": 2045,
+   "prefixes": 2056,
    "truthLostPlain": 0,
    "truthLostPruned": 0,
-   "enumerated": 1941,
+   "enumerated": 1948,
    "truthLostReference": 0,
    "notSuperset": 0,
-   "exact": 1630,
-   "extraCircles": 511,
-   "extraByMove": {
-    "carriage": 166,
-    "carriage+walk": 116,
-    "alley+carriage+walk": 4,
-    "alley+carriage": 25
-   },
-   "pruneShrink": 0,
-   "examples": [
-    {
-     "seed": 700001,
-     "night": 0,
-     "steps": 2,
-     "kind": "extra",
-     "extra": [
-      8
-     ],
-     "moves": "carriage"
-    },
-    {
-     "seed": 700001,
-     "night": 0,
-     "steps": 2,
-     "kind": "extra",
-     "extra": [
-      8
-     ],
-     "moves": "carriage"
-    },
-    {
-     "seed": 700001,
-     "night": 0,
-     "steps": 2,
-     "kind": "extra",
-     "extra": [
-      8
-     ],
-     "moves": "carriage"
-    },
-    {
-     "seed": 700001,
-     "night": 0,
-     "steps": 2,
-     "kind": "extra",
-     "extra": [
-      8
-     ],
-     "moves": "carriage"
-    },
-    {
-     "seed": 700001,
-     "night": 0,
-     "steps": 2,
-     "kind": "extra",
-     "extra": [
-      8
-     ],
-     "moves": "carriage"
-    }
-   ]
+   "exact": 1948,
+   "extraCircles": 0,
+   "extraByMove": {},
+   "pruneShrink": 145,
+   "examples": []
   }
  }
 }

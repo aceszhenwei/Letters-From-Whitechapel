@@ -13,7 +13,8 @@
 
 - **Two people on one screen.**
 - **A Jack that hides his hideout across nights**, and other next steps for the strategic AI (see [Jack's AI](jack-ai.md#what-would-come-next)).
-- **Stronger computer police**, in the order the [detective study](detective-inference-study.md#10-recommendations) ranks: guard the likely hideouts (H1) with hideout weights that don't assume Jack wanders (H2), and fix coach moves in the deduction (H3).
+- **Advanced coordinated containment:** police that plan cordons from time-dependent reachability, beyond [Detective AI v2](detective-ai-v2.md)'s blocking.
+- **Deceptive Jack:** a Jack that detours, doubles back and hides his hideout, aimed at v2's hideout model.
 - **Hard difficulty:** a third Jack level, once there is an AI to justify it (see [Detective inference](detective-inference-study.md#10-recommendations) for what the police need first).
 - **Play as Jack** against the computer police in `js/ai/police.js`, which already plays from the police view.
 - **Undo** for the police's last click within a phase.

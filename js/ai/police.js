@@ -18,7 +18,21 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 		arrestAt: 0.2,
 		// How much a policeman values standing near Jack's likely hideouts, against standing next to Jack now.
 		// Tried 0.5 and 1.5: both made the police weaker (Jack won 2 to 9 points more often), so it is off
-		blockWeight: 0
+		blockWeight: 0,
+		// The options below are off by default, so the original police play exactly as before. Detective AI v2 turns
+		// some of them on (WC.policeVariants, docs/detective-ai-v2.md).
+		// How the possible hideouts are weighted: 'walk', 'uniform' or 'hybrid' (with hideoutW and hideoutRho);
+		// see deduction.hideouts
+		hideoutWeighting: 'walk',
+		hideoutW: 0,
+		hideoutRho: 0,
+		// Count only the hideouts Jack could still reach tonight, by how much of his likely position could reach them
+		liveHideouts: false,
+		// Policemen placed later this turn get credit only for guarding a hideout better than those already placed
+		coordinate: false,
+		// Value standing on the crossings next to a likely hideout: Jack can only end the night by walking onto it,
+		// through one of them
+		cordon: false
 	}, options || {});
 
 	var hideoutChoices = rules.hideoutChoices();
@@ -29,7 +43,9 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 		// What the police can work out now. Past nights don't change, and tonight's belief only changes when
 		// something new is seen, so both are remembered between actions
 		if (memory.hideoutsFor !== view.night) {
-			memory.hideouts = deduction.hideouts(view.pastLogs(), hideoutChoices);
+			memory.hideouts = deduction.hideouts(view.pastLogs(), hideoutChoices, {
+				weighting: options.hideoutWeighting, w: options.hideoutW, rho: options.hideoutRho
+			});
 			memory.hideoutsFor = view.night;
 		}
 		var log = view.publicLog();
@@ -83,14 +99,51 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 
 	/* Hunting
 	   ------- */
+	var entryMemory = {};
+	function entries(home) {
+		// The crossings next to a circle: the last step of any walk onto it passes one of them
+		if (!entryMemory[home]) {
+			entryMemory[home] = _.reject(board.neighbours(home), function (id) { return board.isNumbered(id); });
+		}
+		return entryMemory[home];
+	}
+
+	function liveWeights(homes, jack, view) {
+		// Each possible hideout, weighted by how much of Jack's likely position could still reach it tonight
+		var alleys = view.jackTokens ? view.jackTokens.alleys > 0 : false;
+		var weights = {};
+		var total = 0;
+		_.each(homes, function (p, home) {
+			var bound = deduction.movesBound([Number(home)], alleys);
+			var reach = _.reduce(jack, function (sum, q, circle) {
+				return _.has(bound, circle) && bound[circle] <= view.remainingMoves ? sum + q : sum;
+			}, 0);
+			weights[home] = p * reach;
+			total += weights[home];
+		});
+		if (total === 0) {
+			return homes;
+		}
+		_.each(weights, function (w, home) { weights[home] = w / total; });
+		return weights;
+	}
+
 	function movePolice(game, view, random) {
 		// Each policeman in turn moves where he covers the most of Jack's likely position that no one else covers
 		// yet, plus some value for standing near Jack's likely hideouts (to cut off his way home)
 		var known = belief(view, false);
 		var jack = known.jack ? known.jack.current : {};
 		var homes = _.size(known.hideouts) < hideoutChoices.length ? known.hideouts : {}; // Only once something is known
+		if (options.liveHideouts && _.size(homes) > 0) {
+			homes = liveWeights(homes, jack, view);
+		}
 		var covered = {};
+		var guarded = {}; // With coordinate: for each hideout, how well the policemen placed so far guard it
 		var now = view.police.now;
+		var guard = function (to, home) {
+			var near = _.min(_.map(board.adjacentNumbers(to), function (circle) { return board.distance(circle, Number(home)); }));
+			return 1 / (1 + near);
+		};
 		_.each(_.range(now.length), function (index) {
 			if (_.contains(view.turn.moved, index)) {
 				return;
@@ -101,13 +154,22 @@ WC.createPolice = function (board, rules, deduction, _, options) {
 					return covered[circle] ? sum : sum + (jack[circle] || 0);
 				}, 0);
 				var block = _.reduce(homes, function (sum, p, home) {
-					var near = _.min(_.map(circles, function (circle) { return board.distance(circle, Number(home)); }));
-					return sum + p / (1 + near);
+					var g = guard(to, home);
+					if (options.coordinate) {
+						g = Math.max(0, g - (guarded[home] || 0));
+					}
+					if (options.cordon && _.contains(entries(Number(home)), to)) {
+						g += 1 / entries(Number(home)).length;
+					}
+					return sum + p * g;
 				}, 0);
 				return mass + options.blockWeight * block + random() * 1e-6; // The tiny random part breaks ties
 			};
 			var best = _.max(view.destinations(index).concat([now[index]]), score);
 			_.each(board.adjacentNumbers(best), function (circle) { covered[circle] = true; });
+			if (options.coordinate) {
+				_.each(homes, function (p, home) { guarded[home] = Math.max(guarded[home] || 0, guard(best, home)); });
+			}
 			game.movePoliceman(index, best);
 		});
 	}
@@ -198,3 +260,13 @@ WC.randomPolice = (function (_) {
 })(_);
 
 WC.policeAI = WC.createPolice(WC.board, WC.rules, WC.deduction, _);
+
+/* Police configurations for WC.createPolice (docs/detective-ai-v2.md). The original police use the defaults.
+   Detective AI v2 weights the possible hideouts by how direct Jack's routes would have been to reach them (with a
+   uniform floor, fitted on calibration seeds over three Jacks), and stands between Jack and those hideouts. Tried and
+   left out because they failed validation: coordinating the policemen, a cordon of the hideouts' crossings, counting
+   only reachable hideouts, and arresting at 15% instead of 20%. */
+WC.policeVariants = {
+	original: {},
+	v2: { hideoutWeighting: 'hybrid', hideoutW: 0.9, hideoutRho: 0.5, blockWeight: 1 }
+};
