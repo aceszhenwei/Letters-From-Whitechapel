@@ -36,6 +36,7 @@ Match the existing code:
    - a bug fix gets a regression test in `test/regression/bugs.test.js` that fails without the fix;
    - a UI change keeps the [class contract](ui.md#the-class-contract) or updates the code and tests that use it.
 3. Run `npm test`. If the golden traces fail, the change altered how seeded games play. If that was intended, regenerate them and explain why in the pull request (see [Testing](testing.md#golden-traces)).
+   Then the tier the change needs ([Testing](testing.md#test-tiers)): `npm run test:smoke` for any change to the AIs, rules, engine or map; `npm run eval:medium` for an algorithmic change; `npm run research:full` before relying on new research numbers. The runner skips expensive steps whose inputs haven't changed.
 4. For visual changes, check the page at desktop and phone widths, and attach a screenshot to the pull request.
 5. Update the relevant document in `docs/` and add a line to the [changelog](changelog.md).
 6. Open a pull request against `master`. GitHub Actions runs the tests.

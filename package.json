@@ -4,7 +4,13 @@
   "private": true,
   "description": "Browser based version of the Letters From Whitechapel board game",
   "scripts": {
-    "test": "node --test \"test/**/*.test.js\""
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:unit": "node --test \"test/unit/**/*.test.js\"",
+    "test:regression": "node --test \"test/regression/**/*.test.js\"",
+    "test:smoke": "node tools/tiers/run-tier.js smoke",
+    "eval:medium": "node tools/tiers/run-tier.js medium",
+    "research:full": "node tools/tiers/run-tier.js full",
+    "tier": "node tools/tiers/run-tier.js"
   },
   "devDependencies": {
     "jsdom": "^26.1.0"
