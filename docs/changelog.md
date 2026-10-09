@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased: Jack AI v2
+
+- **Jack AI v2** (`js/ai/jack-v2.js`, the new **Hard** difficulty): the strategic Jack, unchanged, plus early detours. On every night but the last, while 6 moves would stay spare, his first moves walk away from his hideout. Against Detective AI v2 on development seeds it wins 70.5% of games, against 32.0% for the strategic Jack and 68.0% for Detour Jack. It also beats Detour Jack against the original police (95.5% against 91.5%) and uniform blocking (65.5% against 60.5%). Validation on unseen seeds is proposed, not yet run. See [Jack AI v2](jack-ai-v2.md).
+- **The study** (`research/jack-v2/`): a diagnosis of the strategic Jack's losses (direct routes give the hideout away; the policemen then wall it off) and five candidate mechanisms screened and compared. Kept: early detours, and none on the last night. Left out: a waypoint planner, a way-home estimate around the policemen, random choice among near-best moves.
+- **Harness:** `research/jack-v2/run.js` stores each game with a fingerprint of the files it depends on, so runs resume and unchanged games aren't replayed.
+- **Tests:** `jack-v2.test.js` (14 tests); the Hard level in `difficulty.test.js`; Jack v2 in the smoke tier, in a new medium step and in the full tier. The strategic Jack, Detour Jack and the golden traces are unchanged.
+
 ## Unreleased: Detective AI v2
 
 - **Detective AI v2** (`WC.policeVariants.v2`): the computer police weight the possible hideouts by how direct Jack's routes would have been to reach them, and stand between Jack and them. On fresh seeds it cuts the strategic Jack's win rate from 98.0% to 31.6%, the baseline Jack's from 21.8% to 12.6%, and a detouring Jack's from 88.8% to 63.0%. Coordination, a cordon, reachable-only hideouts and a lower arrest threshold were tested and left out. See [Detective AI v2](detective-ai-v2.md).

@@ -1,0 +1,17 @@
+Jack decision times (ms) against Detective AI v2, seeds 800301-800340, one thread
+  strategic:
+    all                                927 decisions, mean 16.9 ms, p95 47.9, p99 69.8, max 132.4
+    late in the night (3 or fewer left)    48 decisions, mean 7.6 ms, p95 27.6, p99 40.2, max 40.2
+    moving by coach or alley           273 decisions, mean 20.4 ms, p95 54.9, p99 99.3, max 132.4
+    hideout walled off by policemen    157 decisions, mean 16.5 ms, p95 40.2, p99 66.4, max 68.1
+  detour:
+    all                               1132 decisions, mean 15.3 ms, p95 43.5, p99 65.9, max 140.0
+    late in the night (3 or fewer left)    22 decisions, mean 8.0 ms, p95 21.6, p99 25.0, max 25.0
+    moving by coach or alley           282 decisions, mean 22.0 ms, p95 48.1, p99 72.4, max 140.0
+    hideout walled off by policemen     51 decisions, mean 21.1 ms, p95 53.3, p99 109.2, max 109.2
+  jack-v2:
+    all                               1082 decisions, mean 16.7 ms, p95 46.8, p99 76.2, max 113.4
+    late in the night (3 or fewer left)    13 decisions, mean 10.6 ms, p95 34.6, p99 34.6, max 34.6
+    moving by coach or alley           280 decisions, mean 22.3 ms, p95 57.6, p99 79.6, max 94.9
+    hideout walled off by policemen     40 decisions, mean 22.1 ms, p95 78.5, p99 113.4, max 113.4
+  107 s in all

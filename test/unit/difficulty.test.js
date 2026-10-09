@@ -23,6 +23,14 @@ test('Normal is the strategic AI, with all its parts', () => {
 	for (const name of decisions) assert.strictEqual(typeof ai[name], 'function', name);
 });
 
+test('Hard is Jack AI v2: the strategic AI with its detours, not on the last night', () => {
+	const { WC } = loadCore({ seed: 1 });
+	const ai = WC.difficulty.create(WC, 'hard');
+	assert.notStrictEqual(ai, WC.jackAI);
+	assert.deepStrictEqual(Object.assign({}, ai.options), { detourMoves: 3, detourSpare: 6, detourLastNight: false });
+	for (const name of decisions) assert.strictEqual(typeof ai[name], 'function', name);
+});
+
 test('the default is Easy, and where a choice comes from follows the documented order', () => {
 	const { WC } = loadCore({ seed: 1 });
 	const r = (sources) => { const x = WC.difficulty.resolve(sources); return [x.id, x.source]; };
@@ -32,8 +40,9 @@ test('the default is Easy, and where a choice comes from follows the documented 
 	assert.deepStrictEqual(r({ search: '?difficulty=normal', chosen: 'easy', saved: 'easy' }), ['normal', 'address']);
 	assert.deepStrictEqual(r({ search: '?jack=strategic' }), ['normal', 'address']); // The old development switch
 	assert.deepStrictEqual(r({ search: '?jack=baseline', saved: 'normal' }), ['easy', 'address']);
-	assert.deepStrictEqual(r({ search: '?difficulty=hard', saved: 'nonsense' }), ['easy', 'default']); // Unknown levels are ignored
-	assert.strictEqual(WC.difficulty.create(WC, 'hard'), WC.jackAI);
+	assert.deepStrictEqual(r({ search: '?difficulty=nightmare', saved: 'nonsense' }), ['easy', 'default']); // Unknown levels are ignored
+	assert.strictEqual(WC.difficulty.create(WC, 'nightmare'), WC.jackAI);
+	assert.deepStrictEqual(r({ search: '?difficulty=hard' }), ['hard', 'address']);
 });
 
 test('the page starts with Easy until a difficulty is applied, so recorded games are unchanged', () => {
@@ -82,7 +91,7 @@ function watchedGame(level, seed) {
 	return { WC, game, used, allowed, calls, illegal, ai };
 }
 
-for (const level of ['easy', 'normal']) {
+for (const level of ['easy', 'normal', 'hard']) {
 	test(`${level}: a whole game with legal moves, reading only Jack's view`, () => {
 		for (const seed of [11, 12]) {
 			const { game, used, allowed, calls, illegal } = watchedGame(level, seed);
@@ -121,7 +130,7 @@ function setupPage({ seed = 5, search = '', saved = null } = {}) {
 test('the setup dialog offers every level, pre-selects Easy, and applies the choice when the game starts', () => {
 	const { window, store } = setupPage();
 	const $ = window.$;
-	assert.deepStrictEqual(Array.from($('input[name=difficulty]').map(function () { return this.value; }).get()), ['easy', 'normal']);
+	assert.deepStrictEqual(Array.from($('input[name=difficulty]').map(function () { return this.value; }).get()), ['easy', 'normal', 'hard']);
 	assert.strictEqual($('input[name=difficulty]:checked').val(), 'easy');
 	assert.ok($('.difficulty-badge').prop('hidden'), 'no badge before the game starts');
 	$('input[name=difficulty][value=normal]').prop('checked', true);
