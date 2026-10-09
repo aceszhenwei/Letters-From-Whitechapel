@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome, especially toward the items in the [roadmap](roadmap.md).
+Contributions are welcome, especially toward the known limitations and ideas in the [roadmap](roadmap.md). Its potential research is not approved: discuss it before starting.
 
 ## Set up
 

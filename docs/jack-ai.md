@@ -1,6 +1,6 @@
 # Jack's AI
 
-There are two AIs for Jack: the **baseline** (`js/ai/jack.js`, played at Easy, the default) and the **strategic AI** (`js/ai/strategic-jack.js`, played at Normal), which wins 97.2% of games against a deductive computer police player where the baseline wins 25.0%. This page describes the interface they share, both strategies, how they were compared, and what the strategic AI still does badly.
+This page covers two AIs for Jack: the **baseline** (`js/ai/jack.js`, played at Easy, the default) and the **strategic AI** (`js/ai/strategic-jack.js`, played at Normal), which wins 97.2% of games against a deductive computer police player where the baseline wins 25.0%. This page describes the interface they share, both strategies, how they were compared, and what the strategic AI still does badly. [Jack AI v2](jack-ai-v2.md), played at Hard, builds on the strategic AI; the [AI overview](ai.md) lists every AI.
 
 | Section | |
 |---|---|
@@ -78,7 +78,7 @@ The player chooses which AI plays Jack in the setup dialog. `js/ai/difficulty.js
 | Normal | Strategic Jack | `WC.createStrategicJack(WC.board, WC.deduction, WC.random, _)` |
 | Hard | Jack AI v2 | `WC.createJackV2(WC.board, WC.deduction, WC.random, _)`: the strategic Jack plus early detours (see [Jack AI v2](jack-ai-v2.md)) |
 
-The page creates the game with Easy; when the player starts it, `js/ui/setup.js` sets `game.ai` to the chosen level's AI, before Jack's first decision (the hideout). Both AIs get the same view and are checked by the same rules, so a level changes only how Jack decides.
+The page creates the game with Easy; when the player starts it, `js/ui/setup.js` sets `game.ai` to the chosen level's AI, before Jack's first decision (the hideout). Every level's AI gets the same view and is checked by the same rules, so a level changes only how Jack decides.
 
 **Where the choice comes from**, strongest first (`WC.difficulty.resolve`):
 
@@ -87,7 +87,7 @@ The page creates the game with Easy; when the player starts it, `js/ui/setup.js`
 3. The level saved from the last game (in the browser's local storage), which pre-selects the dialog.
 4. Easy.
 
-Unknown levels are ignored. Only Jack has a difficulty: the player is always the police, so there is no human-Jack game for it to affect.
+Unknown levels are ignored. The detectives have their own levels (`js/ai/police-levels.js`; see the [AI overview](ai.md#difficulty-levels)). A person can't play Jack, so Jack's level always applies.
 
 **Adding a level**: add an entry to `levels` in `js/ai/difficulty.js` with an `id`, `label`, `ai`, `description` and a `create(WC)` that returns an object with the six decision functions. The dialog lists the levels from there, so the page needs no change.
 

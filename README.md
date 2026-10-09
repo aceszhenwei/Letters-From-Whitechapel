@@ -8,35 +8,20 @@ A browser version of the board game *Letters from Whitechapel*. You lead the fiv
 
 Open `index.html` in a browser. There is nothing to install or build.
 
-Before the first night, choose how Jack plays:
-
-| Difficulty | Jack's AI |
-|---|---|
-| **Easy** (the default) | The baseline AI: simple rules of thumb |
-| **Normal** | The strategic AI: weighs the risk of arrest and the time left before every move |
-| **Hard** | Jack AI v2: the strategic AI, and he also hides the way to his hideout by walking away from it first |
-
-The labels name the AIs; they are not claims about how a typical human Jack plays. The choice is remembered for the next game, and it only changes how Jack decides: the rules and what Jack is allowed to know are the same. For testing, `index.html?difficulty=normal` (or `hard`, or the older `?jack=strategic`) fixes the level. See [Jack's AI](docs/jack-ai.md#difficulty-levels) and [Jack AI v2](docs/jack-ai-v2.md).
-
-You can also choose who leads the detectives: **you** (the default), or the computer police, whom you then watch hunt Jack. **Easy police** is the original detective AI; **Normal police** is Detective AI v2, which also guards the places Jack could be heading for; **Hard police** is Detective AI v3, which also prepares for Jack's last night before he strikes. `index.html?police=hard` (or `normal`, `easy`, `you`) fixes the choice for testing. See [Detective AI v2](docs/detective-ai-v2.md) and [Detective AI v3](docs/detective-ai-v3.md).
+Before the first night, choose how hard Jack plays (**Easy**, the default; **Normal**; **Hard**) and who leads the detectives: **you** (the default), or Easy, Normal or Hard computer police, whom you then watch hunt Jack. The choices only change how each side decides: the rules and what each side may know are the same. The [AI overview](docs/ai.md) says which AI each level plays; for testing, `index.html?difficulty=hard&police=normal` fixes both.
 
 The game follows the revised edition rulebook: four nights (including the double event), real and fake patrols, the Time of the Crime, Jack's coaches and alleys, and searching for clues or making an arrest. See [Game rules](docs/game-rules.md) for the details and what isn't implemented yet.
 
 ## Documentation
 
-Everything about how the game works and how to change it is in [`docs/`](docs/README.md):
+Start at the [documentation index](docs/README.md). The most used pages:
 
-- [Architecture](docs/architecture.md): files, data model and the phase state machine
-- [Game rules](docs/game-rules.md): the rules as implemented
-- [Map data](docs/map-data.md): the board graph and how alleys are worked out
-- [Jack's AI](docs/jack-ai.md): how the computer plays Jack, and how the strategic AI was evaluated
-- [Detective AI v3](docs/detective-ai-v3.md): police that prepare for Jack's last night (Hard police), and how they were evaluated
-- [Human strategy literature](docs/human-strategy-literature.md): BoardGameGeek strategy compared with the AIs, and the gaps that matter
-- [Jack AI v2](docs/jack-ai-v2.md): why the strategic Jack loses to Detective AI v2, the improvements tried, and the one kept
-- [Detective AI v2](docs/detective-ai-v2.md): the stronger computer police, and how it was evaluated
-- [User interface](docs/ui.md): layout, components and design tokens
-- [Testing](docs/testing.md): running and writing tests (`npm install && npm test`)
-- [Contributing](docs/contributing.md), [Roadmap](docs/roadmap.md) and [Changelog](docs/changelog.md)
+- [Game rules](docs/game-rules.md): the rules as implemented, and what isn't
+- [Architecture](docs/architecture.md): the modules, the state and the phases
+- [AI overview](docs/ai.md): every Jack and police AI, the levels, and the evidence behind each
+- [Testing](docs/testing.md): running the tests, the test tiers and the seeds (`npm install && npm test`)
+- [Research reports](docs/README.md#research-reports): the studies behind the AIs
+- [Roadmap](docs/roadmap.md) and [Changelog](docs/changelog.md)
 
 Contributions are welcome: see [Contributing](docs/contributing.md).
 

@@ -1,6 +1,6 @@
 # Game rules as implemented
 
-The game follows the *Letters from Whitechapel* revised edition rulebook (Fantasy Flight Games, 2012). The player is the police; the computer is Jack. Each rule below names the code that enforces it. Legality lives in `js/core/rules.js` (`WC.rules`); the phases and effects in `js/core/engine.js`. The tests that check each rule are mostly in `test/unit/rules.test.js`.
+The game follows the *Letters from Whitechapel* revised edition rulebook (Fantasy Flight Games, 2012). The player leads the police, or watches the computer police; the computer is Jack. Each rule below names the code that enforces it. Legality lives in `js/core/rules.js` (`WC.rules`); the phases and effects in `js/core/engine.js`. The tests that check each rule are mostly in `test/unit/rules.test.js`.
 
 ## Goal
 
