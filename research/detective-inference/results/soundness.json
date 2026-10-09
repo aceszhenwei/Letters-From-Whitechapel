@@ -1,0 +1,176 @@
+{
+ "games": 60,
+ "from": 700001,
+ "byJack": {
+  "baseline": {
+   "prefixes": 14098,
+   "truthLostPlain": 0,
+   "truthLostPruned": 3,
+   "enumerated": 9652,
+   "truthLostReference": 0,
+   "notSuperset": 0,
+   "exact": 9395,
+   "extraCircles": 437,
+   "extraByMove": {
+    "carriage+walk": 190,
+    "alley+carriage+walk": 31,
+    "carriage": 36
+   },
+   "pruneShrink": 19498,
+   "examples": [
+    {
+     "seed": 700007,
+     "night": 1,
+     "steps": 7,
+     "kind": "extra",
+     "extra": [
+      57
+     ],
+     "moves": "carriage+walk"
+    },
+    {
+     "seed": 700008,
+     "night": 0,
+     "steps": 6,
+     "kind": "extra",
+     "extra": [
+      214,
+      222,
+      225,
+      230
+     ],
+     "moves": "carriage+walk"
+    },
+    {
+     "seed": 700008,
+     "night": 0,
+     "steps": 6,
+     "kind": "extra",
+     "extra": [
+      214,
+      222,
+      225,
+      230
+     ],
+     "moves": "carriage+walk"
+    },
+    {
+     "seed": 700008,
+     "night": 0,
+     "steps": 6,
+     "kind": "extra",
+     "extra": [
+      214,
+      222,
+      225
+     ],
+     "moves": "carriage+walk"
+    },
+    {
+     "seed": 700008,
+     "night": 0,
+     "steps": 6,
+     "kind": "extra",
+     "extra": [
+      214,
+      222
+     ],
+     "moves": "carriage+walk"
+    },
+    {
+     "seed": 700024,
+     "night": 0,
+     "steps": 16,
+     "kind": "lost-pruned"
+    },
+    {
+     "seed": 700028,
+     "night": 2,
+     "steps": 14,
+     "kind": "lost-pruned"
+    },
+    {
+     "seed": 700056,
+     "night": 0,
+     "steps": 15,
+     "kind": "lost-pruned"
+    }
+   ]
+  },
+  "strategic": {
+   "prefixes": 12092,
+   "truthLostPlain": 0,
+   "truthLostPruned": 1,
+   "enumerated": 11362,
+   "truthLostReference": 0,
+   "notSuperset": 0,
+   "exact": 9781,
+   "extraCircles": 2941,
+   "extraByMove": {
+    "carriage": 948,
+    "carriage+walk": 440,
+    "alley+carriage+walk": 117,
+    "alley+carriage": 76
+   },
+   "pruneShrink": 1585,
+   "examples": [
+    {
+     "seed": 700001,
+     "night": 0,
+     "steps": 2,
+     "kind": "extra",
+     "extra": [
+      8
+     ],
+     "moves": "carriage"
+    },
+    {
+     "seed": 700001,
+     "night": 0,
+     "steps": 2,
+     "kind": "extra",
+     "extra": [
+      8
+     ],
+     "moves": "carriage"
+    },
+    {
+     "seed": 700001,
+     "night": 0,
+     "steps": 2,
+     "kind": "extra",
+     "extra": [
+      8
+     ],
+     "moves": "carriage"
+    },
+    {
+     "seed": 700001,
+     "night": 0,
+     "steps": 2,
+     "kind": "extra",
+     "extra": [
+      8
+     ],
+     "moves": "carriage"
+    },
+    {
+     "seed": 700001,
+     "night": 0,
+     "steps": 2,
+     "kind": "extra",
+     "extra": [
+      8
+     ],
+     "moves": "carriage"
+    },
+    {
+     "seed": 700045,
+     "night": 3,
+     "steps": 15,
+     "kind": "lost-pruned"
+    }
+   ]
+  }
+ }
+}
