@@ -15,7 +15,8 @@
 - **Validate Jack AI v2 on unseen seeds** (proposed, waiting for approval: [Jack AI v2](jack-ai-v2.md#9-independent-validation-proposed-not-run)).
 - **A smarter deception for Jack:** detours that vary in when and where they happen, and escape estimates recalibrated against blocking police (see [Jack AI v2](jack-ai-v2.md#10-limitations-and-future-work)).
 - **Advanced coordinated containment:** police that plan cordons from time-dependent reachability, beyond [Detective AI v2](detective-ai-v2.md)'s blocking.
-- **Police that see through Jack AI v2's detours**, for example by weighting hideouts by the route after an early detour.
+- **Police that prepare the next night** (the forum's "proximity trap"): value end-of-night positions next to likely hideouts and the red circles one walk from them; the top recommendation of [Human strategy literature](human-strategy-literature.md#10-prioritised-recommendations).
+- **Police that see through Jack AI v2's detours** by learning a Jack's habit from earlier nights (a fixed detour-aware model beats Jack AI v2 but loses to a direct Jack).
 - **Play as Jack** against the computer police in `js/ai/police.js`, which already plays from the police view.
 - **Undo** for the police's last click within a phase.
 - **Save and resume** a game in browser storage.

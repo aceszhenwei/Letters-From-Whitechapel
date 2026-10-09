@@ -30,6 +30,7 @@ Everything about how the game works and how to change it is in [`docs/`](docs/RE
 - [Game rules](docs/game-rules.md): the rules as implemented
 - [Map data](docs/map-data.md): the board graph and how alleys are worked out
 - [Jack's AI](docs/jack-ai.md): how the computer plays Jack, and how the strategic AI was evaluated
+- [Human strategy literature](docs/human-strategy-literature.md): BoardGameGeek strategy compared with the AIs, and the gaps that matter
 - [Jack AI v2](docs/jack-ai-v2.md): why the strategic Jack loses to Detective AI v2, the improvements tried, and the one kept
 - [Detective AI v2](docs/detective-ai-v2.md): the stronger computer police, and how it was evaluated
 - [User interface](docs/ui.md): layout, components and design tokens

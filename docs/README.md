@@ -19,6 +19,7 @@ npm install && npm test  # run the automated tests (Node.js 22 or later)
 | [Jack's AI](jack-ai.md) | How the computer plays Jack: the baseline and the strategic AI, what each knows, how they were measured against each other, and the results |
 | [Detective inference](detective-inference-study.md) | A study of the computer police: their deduction against whitechapelR and an exhaustive check, why they lose to the strategic Jack, and what to improve next |
 | [Detective AI v2](detective-ai-v2.md) | The stronger computer police: what changed, how it was tuned and evaluated, results, robustness and limits |
+| [Human strategy literature](human-strategy-literature.md) | What experienced players say on BoardGameGeek, compared with the AIs: what the AIs already do, what our research rediscovered, what is missing, which forum tactics hold up on the board and in play, and what to research next |
 | [Jack AI v2](jack-ai-v2.md) | Why the strategic Jack loses to Detective AI v2, the improvements tested against each other, the one kept (the Hard level), and the validation still to run |
 | [User interface](ui.md) | Layout, components, design tokens, the CSS class contract, accessibility and responsiveness |
 | [Testing](testing.md) | Running the tests, how they are organised, the test helpers, and writing new tests |

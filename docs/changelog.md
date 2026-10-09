@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased: human strategy literature
+
+- **Study:** [Human strategy literature](human-strategy-literature.md) reviews five BoardGameGeek strategy threads and compares every claim with the AIs. The forum's board facts all match our map (an independent check on the map data). Two forum schemes that kill next to home beat Detective AI v2, because neither police prepares positions for the next night; a detective who expects Jack AI v2's detours beats it. Recommendation: research the detectives' cross-night positioning next. Scripts in `research/human-strategy/`; `test/unit/human-strategy-scenarios.test.js` pins the board facts. No AI or rule changed.
+- **Fix:** choosing a second policeman before moving the first no longer makes the first disappear and stall the turn.
+
 ## Unreleased: Jack AI v2
 
 - **Jack AI v2** (`js/ai/jack-v2.js`, the new **Hard** difficulty): the strategic Jack, unchanged, plus early detours. On every night but the last, while 6 moves would stay spare, his first moves walk away from his hideout. Against Detective AI v2 on development seeds it wins 70.5% of games, against 32.0% for the strategic Jack and 68.0% for Detour Jack. It also beats Detour Jack against the original police (95.5% against 91.5%) and uniform blocking (65.5% against 60.5%). Validation on unseen seeds is proposed, not yet run. See [Jack AI v2](jack-ai-v2.md).
