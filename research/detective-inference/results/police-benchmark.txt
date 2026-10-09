@@ -1,0 +1,11 @@
+Police decision times (ms), strategic Jack, seeds 800101-800102, one thread
+  original:
+    moving the policemen      38 decisions, mean 6.11, p95 13.42, max 17.2
+    a search or arrest       189 decisions, mean 4.39, p95 29.73, max 56.8
+    placing patrols            8 decisions, mean 16.87, p95 44.17, max 44.2
+    moving the Wretched        0 decisions, mean 0.00, p95 0.00, max 0.0
+  v2:
+    moving the policemen      26 decisions, mean 3.18, p95 6.30, max 11.0
+    a search or arrest       128 decisions, mean 4.55, p95 26.44, max 54.5
+    placing patrols            7 decisions, mean 6.78, p95 15.49, max 15.5
+    moving the Wretched        0 decisions, mean 0.00, p95 0.00, max 0.0

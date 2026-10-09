@@ -7,7 +7,7 @@ cd "$(dirname "$0")/../.."
 export RESEARCH_RESULTS=research/detective-v2/results/evaluation
 for from in 1 650001; do
   for jack in strategic baseline detour; do
-    for config in original uniform hybrid block uniform+block hybrid+block hybrid+block+coordinate v2; do
+    for config in original uniform hybrid block uniform+block hybrid+block hybrid+block+coordinate v2-candidate+arrest0.15; do
       node research/detective-v2/evaluate.js $jack $config 500 $from > /dev/null
     done
   done

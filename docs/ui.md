@@ -43,6 +43,7 @@ The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't
 | Board | `.board` > `.map` | `streets`, `map`, `createElement` | `started` |
 | Move track | `.move-tracker p span` (20 spans) | `tracker` | `timeOfCrime`, `jackWaited`, `murder`, `jackMoved` |
 | Dialogs | `.overlay.intro`, `.overlay.ending` (shown with the `open` class) | Start-up code in `main.js`, the `gameOver` event | |
+| Who leads the detectives | `.police-options`, `.police-note`; while the computer leads them, `body.computer-police` (the board takes no clicks) and the subtitle says the player is watching | `WC.ui.setup` and `WC.ui.autoPolice(game, police, { delay })` in `js/ui/autopolice.js` | Start button; then the engine's `policeTurn` and `phase` events |
 | Jack's difficulty | `.difficulty-options` (one radio button per level), `.difficulty-note`, and `.difficulty-badge` in the top bar | `WC.ui.setup(game, { search, storage })` in `js/ui/setup.js` | Start button |
 
 ## Tokens on the board

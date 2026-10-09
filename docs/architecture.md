@@ -61,7 +61,9 @@ The same in plain text, reading down from what depends on nothing:
 | `core/random.js` | Biased random choices (`int`, `safe`, `safeIndex`), with an injectable source | `Math.random` by default | |
 | `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
 | `ai/difficulty.js` | The difficulty levels: which Jack AI each one plays, and where a choice comes from (address, dialog, saved, default) | The AI constructors | Play, or touch the page or the rules |
-| `ui/setup.js` | The setup dialog: Jack's difficulty and starting the game (sets `game.ai`) | Difficulty, the page | Change the rules |
+| `ai/police-levels.js` | Who leads the detectives: the player, or the original or v2 computer police (`WC.policeVariants`) | The police AI constructor | Play, or touch the page or the rules |
+| `ui/autopolice.js` | Plays a computer police through the engine's police actions, a pause apart, for the player to watch | The police AI, the police view, the engine | Change the rules, or see Jack's secrets |
+| `ui/setup.js` | The setup dialog: Jack's difficulty, who leads the detectives, and starting the game (sets `game.ai`; starts `autoPolice`) | Difficulty, police levels, the page | Change the rules |
 | `main.js` | Creating the game (Easy until the setup dialog applies a level) and attaching the interface; opening the setup dialog | Everything above | |
 
 The core (`board`, `rules`, `engine`, `random`) and the AI run without a page. The tests load them into a bare JavaScript context to prove it (`test/helpers/core.js`).
@@ -182,7 +184,7 @@ A policeman moving, from click to screen:
 | `js/ai/jack.js` | The baseline Jack AI |
 | `js/ai/strategic-jack.js` | The strategic Jack AI |
 | `js/ai/police.js` | Computer police for simulations |
-| `js/ai/difficulty.js`, `js/ui/setup.js` | Jack's difficulty levels and the setup dialog |
+| `js/ai/difficulty.js`, `js/ai/police-levels.js`, `js/ui/setup.js`, `js/ui/autopolice.js` | Jack's difficulty, who leads the detectives, the setup dialog, and computer police in the page |
 | `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)) |
 | `experiments/` | Recorded simulation results |
 | `js/ui/renderer.js` | The interface |

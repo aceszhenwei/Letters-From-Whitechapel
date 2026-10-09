@@ -26,36 +26,51 @@
  },
  "medium-strategic": {
   "tier": "medium",
-  "inputs": "f9eb822e28b3aad4",
+  "inputs": "b691a6695245273c",
   "ok": true,
-  "seconds": 47.5,
-  "finished": "2026-10-09T04:07:40.055Z",
+  "seconds": 62.7,
+  "finished": "2026-10-09T06:49:48.113Z",
   "node": "v22.22.0"
  },
  "medium-baseline": {
   "tier": "medium",
-  "inputs": "abef98a946ef980d",
+  "inputs": "9d60b19836c57b88",
   "ok": true,
-  "seconds": 36.3,
-  "finished": "2026-10-09T04:08:16.311Z",
+  "seconds": 52.5,
+  "finished": "2026-10-09T06:50:40.601Z",
   "node": "v22.22.0"
  },
  "medium-police": {
   "tier": "medium",
-  "inputs": "da31c133725e92e9",
+  "inputs": "a0737e1084c3fbed",
   "ok": true,
-  "seconds": 118.9,
-  "finished": "2026-10-09T04:16:57.411Z",
-  "node": "v22.22.0",
-  "recorded": true
+  "seconds": 174.7,
+  "finished": "2026-10-09T06:53:35.296Z",
+  "node": "v22.22.0"
  },
  "medium-soundness": {
   "tier": "medium",
-  "inputs": "b2a0bdbb1d8cda57",
+  "inputs": "b500968eec4d7990",
   "ok": true,
-  "seconds": 63.2,
-  "finished": "2026-10-09T04:17:06.628Z",
+  "seconds": 158.4,
+  "finished": "2026-10-09T06:59:15.645Z",
+  "node": "v22.22.0"
+ },
+ "full-v2": {
+  "tier": "full",
+  "inputs": "56a0837568374c86",
+  "ok": true,
+  "seconds": 3831,
+  "finished": "2026-10-09T06:48:45.394Z",
   "node": "v22.22.0",
   "recorded": true
+ },
+ "medium-v2": {
+  "tier": "medium",
+  "inputs": "18afa24f77951806",
+  "ok": true,
+  "seconds": 182,
+  "finished": "2026-10-09T06:56:37.253Z",
+  "node": "v22.22.0"
  }
 }

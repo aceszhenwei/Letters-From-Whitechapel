@@ -52,11 +52,13 @@ timed('the deduction never loses Jack, and matches the exhaustive reference', ()
 	}
 });
 
-timed('the improved police (research harness) plays whole games', () => {
+timed('Detective AI v2 and the study\'s improved police play whole games', () => {
 	for (const jack of ['baseline', 'strategic']) {
 		for (const seed of seeds.slice(0, 2)) {
-			const state = play({ jack, police: 'deductive', seed, policeOptions: { blockWeight: 1, uniformHideouts: true } });
-			check(state.over && results.has(state.result.type), `${jack}, improved police, seed ${seed}: did not finish`);
+			for (const [label, policeOptions] of [['v2', WC.policeVariants.v2], ['improved', { blockWeight: 1, uniformHideouts: true }]]) {
+				const state = play({ jack, police: 'deductive', seed, policeOptions });
+				check(state.over && results.has(state.result.type), `${jack}, ${label} police, seed ${seed}: did not finish`);
+			}
 		}
 	}
 });

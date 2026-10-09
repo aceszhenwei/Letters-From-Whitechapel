@@ -33,7 +33,9 @@ function mcnemar(a, b) {
 const pct = (x) => (100 * x).toFixed(1) + '%';
 const p = (x) => x < 1e-6 ? '< 10⁻⁶' : x.toPrecision(2);
 const mean = (v) => v.length ? v.reduce((a, b) => a + b, 0) / v.length : 0;
-const configs = ['original', 'uniform', 'hybrid', 'block', 'uniform+block', 'hybrid+block', 'hybrid+block+coordinate', 'v2'];
+// 'hybrid+block' is Detective AI v2 as shipped (WC.policeVariants.v2); the candidate with arrests at 15% was rejected
+const configs = ['original', 'uniform', 'hybrid', 'block', 'uniform+block', 'hybrid+block', 'hybrid+block+coordinate', 'v2-candidate+arrest0.15'];
+const final = 'hybrid+block';
 const lines = [];
 for (const from of ['1', '650001']) {
 	for (const jack of ['strategic', 'baseline', 'detour']) {
@@ -55,11 +57,11 @@ for (const from of ['1', '650001']) {
 			const nights = [1, 2, 3, 4].map((k) => run.filter((g) => g.result !== 'jackWins' && g.night === k).length).join('/');
 			const attempts = run.reduce((s, g) => s + g.arrests, 0);
 			const guarded = run.filter((g) => g.guarded !== null);
-			lines.push(`| ${config === 'v2' ? '**v2**' : config} | ${pct(wins / n)} (${pct(ci[0])}–${pct(ci[1])}) | ${test} | ${arrests} | ${out} (${blocked}) | ${nights} | ${mean(run.map((g) => g.clues)).toFixed(1)} | ${(attempts / n).toFixed(2)} (${pct(arrests / Math.max(1, attempts))}) | ${pct(mean(guarded.map((g) => g.guarded)))} / ${pct(mean(guarded.map((g) => g.guardedTrue)))} |`);
+			lines.push(`| ${config === final ? '**hybrid+block = v2**' : config} | ${pct(wins / n)} (${pct(ci[0])}–${pct(ci[1])}) | ${test} | ${arrests} | ${out} (${blocked}) | ${nights} | ${mean(run.map((g) => g.clues)).toFixed(1)} | ${(attempts / n).toFixed(2)} (${pct(arrests / Math.max(1, attempts))}) | ${pct(mean(guarded.map((g) => g.guarded)))} / ${pct(mean(guarded.map((g) => g.guardedTrue)))} |`);
 		}
-		const v2 = runs[`${jack}|v2|${from}`];
+		const v2 = runs[`${jack}|${final}|${from}`];
 		if (v2) {
-			lines.push('', `v2 against each part (paired): ` + configs.filter((c) => c !== 'v2' && runs[`${jack}|${c}|${from}`]).map((c) => {
+			lines.push('', `v2 against each part (paired): ` + configs.filter((c) => c !== final && runs[`${jack}|${c}|${from}`]).map((c) => {
 				const r = mcnemar(runs[`${jack}|${c}|${from}`], v2);
 				return `${c} ${r.onlyA}:${r.onlyB} (p ${p(r.p)})`;
 			}).join('; '));

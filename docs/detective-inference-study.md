@@ -36,6 +36,8 @@ The current hideout weights are not just biased but **badly calibrated**. Candid
 
 **Why random police do better than deductive police against the strategic Jack:** the strategic Jack's arrest-risk estimates were measured against the deductive police, who arrest only when they are at least 20% sure of a circle. So Jack sits next to policemen on circles the deduction rates low. Random police ignore the belief and arrest often (17.5 failed arrests a game, against 1.3), so they turn twice as many of their chances into arrests (9.1% against 4.5%). This is an exploited, predictable decision rule, not an inference problem.
 
+> **Since this study:** H1–H3 were implemented and evaluated in [Detective AI v2](detective-ai-v2.md). The coach defect is fixed, and blocking with goal-directed (hybrid) hideout weights beat the uniform weights recommended here.
+
 **Recommendation:** the next implementation should focus on **detective action selection**: positioning that uses hideout knowledge, with better-calibrated hideout weights. A small correctness fix for coaches should go with it. A new deduction algorithm, or a port of whitechapelR, would not help: the sets it computes are already right.
 
 ## 2. Research questions and method
