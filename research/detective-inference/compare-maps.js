@@ -3,6 +3,7 @@
 // Needs fixtures/whitechapelR-*.json (export-whitechapelR-data.R). Prints counts and every difference.
 const fs = require('fs');
 const path = require('path');
+const resultsDir = require('./results-dir');
 const { loadCore } = require('../../tools/sim/run-game');
 
 const { WC, map } = loadCore();
@@ -33,4 +34,4 @@ const alleys = compare('alleys', edges((id) => WC.board.alleys(id)), theirs('all
 // Are their extra alleys our walking connections (or the other way round)?
 const ourWalks = edges((id) => WC.board.walk(id, []));
 console.log(`  of whitechapelR-only alleys, also walking connections here: ${alleys.onlyTheirs.filter((e) => ourWalks.has(e)).length}`);
-fs.writeFileSync(path.join(__dirname, 'results', 'map-differences.json'), JSON.stringify({ walks, alleys }, null, 1));
+fs.writeFileSync(path.join(resultsDir, 'map-differences.json'), JSON.stringify({ walks, alleys }, null, 1));

@@ -10,7 +10,7 @@
 //   800001-...     smoke tests
 //   900001-...     calibration of the strategic Jack
 const code = ['js', 'tools/sim', 'tools/simulate.js', 'package.json'];
-const research = code.concat(['research/detective-inference/lib.js', 'research/detective-inference/police-diagnostics.js',
+const research = code.concat(['research/detective-inference/lib.js', 'research/detective-inference/results-dir.js', 'research/detective-inference/police-diagnostics.js',
 	'research/detective-inference/soundness.js', 'research/detective-inference/summarise.js',
 	'research/detective-inference/hideout-weighting.js', 'research/detective-inference/hideout-calibration.js',
 	'research/detective-inference/scenarios.js', 'research/detective-inference/growth.js',

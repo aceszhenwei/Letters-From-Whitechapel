@@ -7,12 +7,13 @@
 // Without a clone (or without Rscript), the whitechapelR column is left out. Results: results/scenarios.md, .json
 const fs = require('fs');
 const path = require('path');
+const resultsDir = require('./results-dir');
 const { execFileSync } = require('child_process');
 const { WC, _, play, seeded } = require('./lib');
 const { enumerate } = require('./lib');
 
 const clone = process.argv[2];
-const results = path.join(__dirname, 'results');
+const results = resultsDir;
 const board = WC.board;
 
 // A route chosen by the harness, step by step: each step is { move, to, via? }, with policemen standing at `police`

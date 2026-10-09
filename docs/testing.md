@@ -24,10 +24,10 @@ The simulations and research behind the AIs take up to a couple of hours in full
 
 | Tier | Command | What it runs | When | Typical time (4 cores) |
 |---|---|---|---|---|
-| Fast | `npm test` (or `npm run test:unit`, `npm run test:regression`) | Unit and regression tests, including the golden traces | Every change; CI runs it | RUNTIME_FAST |
-| Smoke | `npm run test:smoke` | Small simulations: every Jack against every police (4 games each), seeded determinism, the deduction against the exhaustive reference, the improved police from the research harness | Any change to the AIs, rules, engine, map or research scripts; CI runs it too | RUNTIME_SMOKE |
-| Medium | `npm run eval:medium` | 500 games per Jack against the deductive police; the original against the improved police (300 games per Jack); a 10-game soundness check. Development seeds only. Results in `experiments/medium/` | Algorithmic changes to the AIs, the police or the deduction, before running the full tier | RUNTIME_MEDIUM |
-| Full | `npm run research:full` (set `WHITECHAPELR_CLONE` for the whitechapelR comparisons) | The whole detective study (`research/detective-inference/run-all.sh`) and the four 5,000-game evaluations of [Jack's AI](jack-ai.md) | Research milestones, and before publishing or relying on new numbers | RUNTIME_FULL |
+| Fast | `npm test` (or `npm run test:unit`, `npm run test:regression`) | Unit and regression tests, including the golden traces | Every change; CI runs it | 1.7 min |
+| Smoke | `npm run test:smoke` | Small simulations: every Jack against every police (4 games each), seeded determinism, the deduction against the exhaustive reference, the improved police from the research harness | Any change to the AIs, rules, engine, map or research scripts; CI runs it too | 11 s |
+| Medium | `npm run eval:medium` | 500 games per Jack against the deductive police; the original against the improved police (300 games per Jack); a 10-game soundness check. Development seeds only. Results in `experiments/medium/` | Algorithmic changes to the AIs, the police or the deduction, before running the full tier | 4.5 min |
+| Full | `npm run research:full` (set `WHITECHAPELR_CLONE` for the whitechapelR comparisons) | The whole detective study (`research/detective-inference/run-all.sh`) and the four 5,000-game evaluations of [Jack's AI](jack-ai.md) | Research milestones, and before publishing or relying on new numbers | about 1 h 45 min: the study 52 min, the four evaluations about 50 min |
 
 `node tools/tiers/run-tier.js <tier>` runs any tier and prints each step's time. Every tier is defined in `tools/tiers/tiers.js`.
 

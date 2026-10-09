@@ -5,6 +5,7 @@
 //   node research/detective-inference/soundness.js [games per Jack, default 60] [first seed, default 700001]
 const fs = require('fs');
 const path = require('path');
+const resultsDir = require('./results-dir');
 const { WC, play, publicPrefixes, enumerate, policeContext } = require('./lib');
 
 const games = Number(process.argv[2] || 60);
@@ -45,4 +46,4 @@ for (const jack of ['baseline', 'strategic']) {
 	console.log(`  compared with the exhaustive reference on ${s.enumerated} short prefixes: reference lost the truth ${s.truthLostReference}, deduction not a superset ${s.notSuperset}, identical ${s.exact}, with extra circles ${s.enumerated - s.exact} (${s.extraCircles} circles), by moves so far ${JSON.stringify(s.extraByMove)}`);
 	console.log(`  pruning removed ${(s.pruneShrink / s.prefixes).toFixed(1)} circles per prefix on average`);
 }
-fs.writeFileSync(path.join(__dirname, 'results', 'soundness.json'), JSON.stringify(out, null, 1));
+fs.writeFileSync(path.join(resultsDir, 'soundness.json'), JSON.stringify(out, null, 1));

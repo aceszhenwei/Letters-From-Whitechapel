@@ -10,6 +10,7 @@
 //   --uniformHideouts gives every possible hideout the same weight, as whitechapelR does)
 const fs = require('fs');
 const path = require('path');
+const resultsDir = require('./results-dir');
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 if (!isMainThread) {
@@ -119,6 +120,6 @@ Promise.all(Array.from({ length: workers }, (x, w) => new Promise((resolve, reje
 	}
 	console.log(lines.join('\n'));
 	const name = `police-${jack}-${police}${policeOptions.arrestAt !== undefined ? '-arrest' + policeOptions.arrestAt : ''}${policeOptions.blockWeight !== undefined ? '-block' + policeOptions.blockWeight : ''}${policeOptions.uniformHideouts ? '-uniform' : ''}-${from}-${games}`;
-	fs.writeFileSync(path.join(__dirname, 'results', name + '.json'), JSON.stringify(all));
-	fs.writeFileSync(path.join(__dirname, 'results', name + '.txt'), lines.join('\n') + '\n');
+	fs.writeFileSync(path.join(resultsDir, name + '.json'), JSON.stringify(all));
+	fs.writeFileSync(path.join(resultsDir, name + '.txt'), lines.join('\n') + '\n');
 });

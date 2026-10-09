@@ -1,10 +1,10 @@
 // Runs a test tier (tools/tiers/tiers.js), times each step, and records it in experiments/tiers/manifest.json.
 // An expensive step is skipped when its inputs (file contents and command) are unchanged since it last succeeded and
 // its outputs are still there: its earlier results stand. Use --force to run it anyway.
-//   node tools/tiers/run-tier.js <fast|smoke|medium|full> [--force] [--dry-run] [--record seconds]
+//   node tools/tiers/run-tier.js <fast|smoke|medium|full> [--force] [--dry-run] [--record seconds] [--only step]
 // --record marks the tier's cached steps as done with today's inputs, without running them, when their outputs were
 // produced outside this runner (for example by running research/detective-inference/run-all.sh directly). The time
-// given is recorded for each step it marks.
+// given is recorded for each step it marks. --only limits the run (or the record) to one named step.
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -14,11 +14,13 @@ const tiers = require('./tiers');
 const root = path.join(__dirname, '..', '..');
 const manifestFile = path.join(root, 'experiments', 'tiers', 'manifest.json');
 const argv = process.argv.slice(2);
-const tierName = argv.find((a) => !a.startsWith('--'));
+const tierName = argv.find((a, i) => !a.startsWith('--') && !['--record', '--only'].includes(argv[i - 1]));
 const force = argv.includes('--force');
 const dryRun = argv.includes('--dry-run');
 const recordAt = argv.indexOf('--record');
 const recordSeconds = recordAt === -1 ? null : Number(argv[recordAt + 1]);
+const onlyAt = argv.indexOf('--only');
+const only = onlyAt === -1 ? null : argv[onlyAt + 1];
 const tier = tiers[tierName];
 if (!tier) {
 	console.error(`Usage: node tools/tiers/run-tier.js <${Object.keys(tiers).join('|')}> [--force] [--dry-run]`);
@@ -52,7 +54,7 @@ const save = () => {
 console.log(`Tier "${tierName}": ${tier.description}`);
 const started = Date.now();
 let failed = false;
-for (const step of tier.steps) {
+for (const step of tier.steps.filter((s) => !only || s.name === only)) {
 	const id = fingerprint(step);
 	const last = manifest[step.name];
 	const outputsThere = (step.outputs || []).every((out) => fs.existsSync(path.join(root, out)));

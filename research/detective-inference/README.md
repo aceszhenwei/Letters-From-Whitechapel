@@ -27,7 +27,7 @@ git clone https://github.com/bmewing/whitechapelR.git /tmp/whitechapelR
 | `police-replay.js <seed> [jack] [police] [night]` | One game from the police's side, round by round | seconds |
 | `hideout-weighting.js [games]` | How the hideout belief weights the true hideout, by how direct Jack's route was | ~1 min |
 
-`lib.js` holds what they share: playing a seeded game (the same random streams as `tools/simulate.js`, so seed *n* is the same game in both), cutting a night's public record into prefixes, and `enumerate`, an exhaustive reference for where Jack could be, written from the rules rather than from `js/core/deduction.js`.
+`results-dir.js` says where results go: `results/`, or the folder named in the `RESEARCH_RESULTS` environment variable (the medium test tier writes to `experiments/medium/research/` this way). `lib.js` holds what they share: playing a seeded game (the same random streams as `tools/simulate.js`, so seed *n* is the same game in both), cutting a night's public record into prefixes, and `enumerate`, an exhaustive reference for where Jack could be, written from the rules rather than from `js/core/deduction.js`.
 
 ## Reproducing the study
 

@@ -3,6 +3,7 @@
 // after each step.  node research/detective-inference/growth.js <path to a whitechapelR clone> [steps, default 9]
 const fs = require('fs');
 const path = require('path');
+const resultsDir = require('./results-dir');
 const { execFileSync } = require('child_process');
 const { WC, _, seeded } = require('./lib');
 
@@ -29,7 +30,7 @@ if (clone) {
 		`paths = start_round(${log[0].scenes[0]}); out = list()`,
 		`for (i in 1:${steps}) { t = Sys.time(); paths = take_a_step(paths, roads); out[[i]] = list(paths = length(paths), seconds = as.numeric(Sys.time() - t, units = "secs")); cat(toJSON(out[[i]], auto_unbox = TRUE), "\\n") }`
 	].join('\n');
-	const file = path.join(__dirname, 'results', '.growth.R');
+	const file = path.join(resultsDir, '.growth.R');
 	fs.writeFileSync(file, script);
 	try {
 		r = execFileSync('Rscript', [file], { encoding: 'utf8', timeout: 900000 }).trim().split('\n').map((line) => JSON.parse(line));
@@ -46,4 +47,4 @@ for (let i = 1; i <= steps; i++) {
 	rows.push({ steps: i, circles: known.size, deductionMs: +ms.toFixed(2), whitechapelRPaths: r && r[i - 1] ? r[i - 1].paths : null, whitechapelRStepSeconds: r && r[i - 1] ? +r[i - 1].seconds.toFixed(2) : null });
 }
 console.table(rows);
-fs.writeFileSync(path.join(__dirname, 'results', 'growth.json'), JSON.stringify(rows, null, 1));
+fs.writeFileSync(path.join(resultsDir, 'growth.json'), JSON.stringify(rows, null, 1));

@@ -5,6 +5,7 @@
 //   node research/detective-inference/hideout-weighting.js [games per Jack, default 300] [first seed, default 1]
 const fs = require('fs');
 const path = require('path');
+const resultsDir = require('./results-dir');
 const { WC, _, play, stepsIn } = require('./lib');
 
 const games = Number(process.argv[2] || 300);
@@ -35,5 +36,5 @@ for (const jack of ['baseline', 'strategic']) {
 	}
 }
 console.log(lines.join('\n'));
-fs.writeFileSync(path.join(__dirname, 'results', 'hideout-weighting.txt'), lines.join('\n') + '\n');
-fs.writeFileSync(path.join(__dirname, 'results', 'hideout-weighting.json'), JSON.stringify(out, null, 1));
+fs.writeFileSync(path.join(resultsDir, 'hideout-weighting.txt'), lines.join('\n') + '\n');
+fs.writeFileSync(path.join(resultsDir, 'hideout-weighting.json'), JSON.stringify(out, null, 1));

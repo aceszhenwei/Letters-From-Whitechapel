@@ -4,8 +4,9 @@
 //   node research/detective-inference/summarise.js
 const fs = require('fs');
 const path = require('path');
+const resultsDir = require('./results-dir');
 
-const dir = path.join(__dirname, 'results');
+const dir = resultsDir;
 const load = (name) => {
 	const file = path.join(dir, `police-${name}.json`);
 	return fs.existsSync(file) ? new Map(JSON.parse(fs.readFileSync(file)).map((g) => [g.seed, g.result === 'jackWins'])) : null;
@@ -36,11 +37,14 @@ const variants = [
 	['deductive-arrest0.05', 'arrest threshold 0.05'],
 	['random', 'random police']
 ];
+// The seed sets present: every run of the original police (police-<jack>-deductive-<first seed>-<games>.json)
+const sets = [...new Set(fs.readdirSync(dir).map((f) => (/^police-(?:strategic|baseline)-deductive-(\d+-\d+)\.json$/.exec(f) || [])[1]).filter(Boolean))]
+	.sort((a, b) => Number(a.split('-')[0]) - Number(b.split('-')[0]));
 const pct = (x) => (100 * x).toFixed(1) + '%';
 const p = (x) => x < 1e-6 ? '< 10⁻⁶' : x.toPrecision(2);
 const lines = ['| Jack | Seeds | Police (against the original deductive police) | Jack wins: original → variant | Only the original\'s Jack won | Only the variant\'s Jack won | McNemar exact p |', '|---|---|---|---:|---:|---:|---:|'];
 for (const jack of ['strategic', 'baseline']) {
-	for (const set of ['1-500', '600001-500']) {
+	for (const set of sets) {
 		const original = load(`${jack}-deductive-${set}`);
 		if (!original) continue;
 		for (const [infix, label] of variants) {
@@ -54,7 +58,7 @@ for (const jack of ['strategic', 'baseline']) {
 // The two halves of the improvement against each other
 lines.push('', '| Jack | Seeds | Comparison | Jack wins | Only the first\'s Jack won | Only the second\'s | McNemar exact p |', '|---|---|---|---:|---:|---:|---:|');
 for (const jack of ['strategic', 'baseline']) {
-	for (const set of ['1-500', '600001-500']) {
+	for (const set of sets) {
 		const a = load(`${jack}-deductive-block1-${set}`); const b = load(`${jack}-deductive-block1-uniform-${set}`);
 		if (!a || !b) continue;
 		const r = mcnemar(a, b);

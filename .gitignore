@@ -6,3 +6,5 @@ research/detective-inference/**/police-*.json
 research/detective-inference/results/.*.R
 # Clones of external projects used for research are never committed
 references/
+experiments/medium/*.json
+experiments/**/police-*.json
