@@ -10,7 +10,7 @@ const { seededRandom } = require('../helpers/game');
 // What jackView offers (see js/core/rules.js and docs/jack-ai.md)
 const viewKeys = ['hideout', 'night', 'route', 'position', 'remainingMoves', 'timeOfCrime', 'tokens', 'targets', 'women',
 	'wretched', 'victims', 'debug', 'walks', 'specialMoves', 'canMove', 'endsNight', 'distanceToHideout', 'threats', 'policeNow',
-	'publicLog', 'pastLogs', 'patrols'];
+	'publicLog', 'pastLogs', 'patrols', 'wretchedMoves'];
 
 // A game paused at Jack's first move, with the view he would get
 function atFirstMove(seed) {

@@ -44,6 +44,7 @@ The engine checks every answer (`rules.isLegalHideout`, `isLegalWomen`, `isLegal
 | `threats()` | For each circle, how many ways the policemen could arrest there next round |
 | `policeNow()` | Where the policemen are (they are on the board, so Jack can see them) |
 | `patrols()` | The patrol tokens: `{ mapid, revealed, real }`, with `real` only once he has revealed the token |
+| `wretchedMoves(mapid)` | Where the police could move a Wretched if he waits (public: the tokens, the Wretched and the crime scenes are on the board) |
 | `publicLog()`, `pastLogs()` | The public record of tonight and of earlier nights: what the police have seen (see [Information allowed](#4-information-allowed)) |
 | `debug` | Whether the engine was created with `debug: true` |
 
@@ -210,7 +211,7 @@ It does **not** model the police's *policy*. It assumes they arrest when they ar
 | Decision | Strategic AI |
 |---|---|
 | Hideout | The mean P(home) from the red circles with 15 moves, averaged over all red circles; at random among those within 0.02 of the best, so the police can't guess it |
-| Wait or kill | Waits only while the best victim would leave fewer than 6 moves to spare. In practice it always kills at I: every move spent waiting is a move less for getting home |
+| Wait or kill | Waits only while the best victim would leave fewer than 6 moves to spare. In practice it always kills at I. Waiting gives more moves, but lets the police move the victims; [Strategic waiting](jack-waiting.md) measures that trade and offers a policy that weighs it |
 | Victims | Each Wretched valued like a move: P(home from there) × P(surviving the police's first turn). Any unrevealed patrol could be real. On the double event the police move first and know he is on one of the two scenes (a 50% share); otherwise he moves first and they know he is next to the scene. He escapes from the best one |
 | Patrol to reveal | The one threatening the most Wretched: if it is fake, it leaves the board |
 | Placing women | The baseline's |

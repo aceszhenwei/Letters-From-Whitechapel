@@ -19,7 +19,9 @@ Each Jack AI is an object with the same six decision functions ([the interface](
 - Strategic Jack: `path`, `risk`, `lookahead`, `hideout`, `hell` (each part can be switched off for ablations) and `beam` (6). `WC.strategicVariants` names the combinations measured in [Jack's AI §9](jack-ai.md#ablation-which-parts-help-1000-games-each-seeds-1-to-1000-deductive-police).
 - Jack AI v2: `detourMoves` (3), `detourSpare` (6), `detourLastNight` (false). See [Jack AI v2 §6](jack-ai-v2.md#6-jack-ai-v2).
 
-**Research-only Jacks**, never played in the game: Detour Jack (`research/detective-v2/jacks.js`), the Jack v2 candidates (`research/jack-v2/policies/`), the BoardGameGeek schemes (`research/human-strategy/policies.js`) and the short-return Jacks (`research/detective-v3/jacks.js`).
+**Strategic waiting** (`js/ai/jack-waiting.js`, `WC.createWaitingJack(board, base, _, options)`) wraps any Jack AI with a `wantsToWait` that compares killing now with waiting, by measured escape chances (`options.table`: `'jack-v2'` or `'strategic'`; `options.info`). It is an option, played by no level. See [Strategic waiting](jack-waiting.md).
+
+**Research-only Jacks**, never played in the game: Detour Jack (`research/detective-v2/jacks.js`), the Jack v2 candidates (`research/jack-v2/policies/`), the BoardGameGeek schemes (`research/human-strategy/policies.js`) the short-return Jacks (`research/detective-v3/jacks.js`), and the forced-wait diagnostics (`research/jack-waiting/jacks.js`).
 
 ## Police
 

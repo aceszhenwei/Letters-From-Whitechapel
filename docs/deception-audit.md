@@ -21,6 +21,8 @@ The rulebook's "fake Wretched" are the **unmarked women**: face-down woman token
   - The police move every Wretched towards the real patrols. On the baseline Jack's wait nights, those moves alone narrow the 21 possible choices of real tokens to 3.7 on average, and identify every fake on 36% of nights.
 - **Recommendation: leave both mechanics out of Detective AI v4's core.** Add a patient, observant Jack to v4's final validation as a counter-strategy. Make the police's preparation less predictable (R1 below) only if that Jack exploits it. Section 7 ranks the improvements.
 
+> **Follow-up:** [Strategic waiting](jack-waiting.md) re-tested patrol information with a Jack who waits and reveals tokens. It still changed none of his decisions (section 7 there).
+
 ## 1. How the mechanics work here
 
 The preparation phase runs in this order (`js/core/engine.js`):

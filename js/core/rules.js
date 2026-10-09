@@ -316,7 +316,10 @@ WC.rules = (function (board, _) {
 			// Public information: what the police have seen, so Jack can estimate what they can work out
 			publicLog: function () { return night ? publicLog(state, state.police.length - 1) : []; },
 			pastLogs: function () { return pastLogs(state); },
-			patrols: function () { return state.police.length > 0 ? patrolKnowledge(state) : []; }
+			patrols: function () { return state.police.length > 0 ? patrolKnowledge(state) : []; },
+			// Where the police could move a Wretched if he waits (public: the tokens, the Wretched and the crime scenes are on
+			// the board)
+			wretchedMoves: function (mapid) { return state.police.length > 0 ? wretchedMoves(state, mapid) : []; }
 		};
 	}
 

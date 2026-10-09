@@ -19,6 +19,7 @@ const scripts = [
 	'js/ai/jack.js',
 	'js/ai/strategic-jack.js',
 	'js/ai/jack-v2.js',
+	'js/ai/jack-waiting.js',
 	'js/ai/difficulty.js',
 	'js/ai/police-levels.js',
 	'js/ai/containment.js',
