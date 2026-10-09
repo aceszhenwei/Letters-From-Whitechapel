@@ -78,6 +78,19 @@ timed('Jack AI v2 plays whole games against both police, the same way twice', ()
 	}
 });
 
+timed('Detective AI v3 plays whole games against every Jack, and stops the hideout-134 scheme', () => {
+	const shortReturn = require('../../research/detective-v3/jacks');
+	const bgg = require('../../research/human-strategy/policies');
+	registerJack('short-return', shortReturn['short-return']);
+	registerJack('bgg-134', bgg['bgg-134']);
+	for (const jack of ['baseline', 'strategic', 'jack-v2', 'short-return']) {
+		const state = play({ jack, police: 'deductive', seed: seeds[0], policeOptions: WC.policeVariants.v3 });
+		check(state.over && results.has(state.result.type), `${jack} vs Detective AI v3: did not finish`);
+	}
+	const scheme = play({ jack: 'bgg-134', police: 'deductive', seed: seeds[0], policeOptions: WC.policeVariants.v3 });
+	check(scheme.result.type !== 'jackWins', 'Detective AI v3 no longer stops the hideout-134 scheme');
+});
+
 if (failures.length) {
 	console.error(`Smoke tests FAILED:\n  ${failures.join('\n  ')}`);
 	process.exit(1);

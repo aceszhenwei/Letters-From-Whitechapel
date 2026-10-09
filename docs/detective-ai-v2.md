@@ -12,7 +12,7 @@ On fresh seeds that nothing was tuned on, it cuts the win rate of each Jack:
 
 All three gains have p < 0.0001 on paired seeds.
 
-In the game, the player can watch it play: choose **Normal police** in the setup dialog. **Easy police** is the original.
+In the game, the player can watch it play: choose **Normal police** in the setup dialog. **Easy police** is the original. [Detective AI v3](detective-ai-v3.md) (**Hard police**) adds containment for the last night.
 
 It builds on the [detective inference study](detective-inference-study.md), which found that the police's deduction was sound but their decisions weren't. Scripts and results are in [`research/detective-v2/`](../research/detective-v2/).
 
@@ -236,7 +236,8 @@ The setup dialog asks **Who leads the detectives?**:
 
 - **You** (the default, as before);
 - **Easy police**: the original detective AI;
-- **Normal police**: Detective AI v2.
+- **Normal police**: Detective AI v2;
+- **Hard police**: [Detective AI v3](detective-ai-v3.md), added later.
 
 With a computer police:
 

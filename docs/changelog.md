@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased: Detective AI v3
+
+- **Detective AI v3** (`WC.policeVariants.v3`, the new **Hard police**): Detective AI v2 plus containment for the last night. On night 3 each policeman also values standing where he could stop Jack from killing next to his hideout and walking home on his first move (`js/ai/containment.js`). On nights 2–4 a station's patrol token is made real instead of a policeman's when it clearly closes more of the night's threat. On fresh seeds it more than doubles the police's wins against short-return Jacks (14.0% → 32.7%), stops the BoardGameGeek hideout-134 scheme every time, and matches v2 against the other Jacks (56.3% → 56.5%). Easy and Normal police are unchanged. See [Detective AI v3](detective-ai-v3.md).
+- **Police options** for containment (`contain`, `containHideouts`, `containNeighbours`, `containEarly`, `containCoordinate`, `containPatrols`, `containSwap`, `containWretched`, `containTiming`, `containScale`), all off by default: the original police and v2 play exactly as before.
+- **Study** (`research/detective-v3/`): a lifecycle audit of where the police can act, the failure analysis (positioning, not information), 19 screened configurations, a comparison, an ablation and a fresh-seed confirmation. Tests: `containment.test.js` (the tactical scenarios), the Hard level in `police-levels.test.js`, v3 in the smoke tier and a new medium step.
+
 ## Unreleased: human strategy literature
 
 - **Study:** [Human strategy literature](human-strategy-literature.md) reviews five BoardGameGeek strategy threads and compares every claim with the AIs. The forum's board facts all match our map (an independent check on the map data). Two forum schemes that kill next to home beat Detective AI v2, because neither police prepares positions for the next night; a detective who expects Jack AI v2's detours beats it. Recommendation: research the detectives' cross-night positioning next. Scripts in `research/human-strategy/`; `test/unit/human-strategy-scenarios.test.js` pins the board facts. No AI or rule changed.

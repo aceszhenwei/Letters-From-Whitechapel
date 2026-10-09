@@ -64,6 +64,8 @@ Jack AI v2's advantage disappears against detectives who know its habit. Neither
 - **For the police:** cross-night positioning, Wretched handling that knows the hideout, and adapting to Jack's habits.
 - **For Jack:** planning victims and hideout across nights, short nights next to home, and varied strategies.
 
+**Follow-up:** [Detective AI v3](detective-ai-v3.md) took up recommendation 1. It is the Hard police: it stops the 134 scheme and more than doubles the police's wins against generalised short-return Jacks, without losing against the ordinary ones.
+
 **Recommendation:** the next priority is **the detectives**, specifically cross-night positioning, the "proximity trap". It is the largest demonstrated gap. Simple human schemes beat our best police through it. Improving Jack first would mostly teach him to exploit a mistake that, according to the experienced players here, competent human detectives do not make.
 
 ## 2. Methodology

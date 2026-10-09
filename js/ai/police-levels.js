@@ -2,7 +2,7 @@
    player then watches hunt Jack. Each computer level names an existing police configuration; nothing here plays.
    It has the same shape as WC.difficulty (Jack's levels), so the setup dialog handles both the same way.
 
-   Where the choice comes from, strongest first: the address (index.html?police=you|easy|normal, for testing), the
+   Where the choice comes from, strongest first: the address (index.html?police=you|easy|normal|hard, for testing), the
    choice in the setup dialog, the choice saved from the last game, and the default: the player leads them. */
 var WC = WC || {};
 
@@ -29,6 +29,13 @@ WC.policeLevels = (function (_) {
 			ai: 'Detective AI v2',
 			description: 'Watch the computer police hunt Jack: they also guard the places he could be making for.',
 			create: function (WC) { return WC.createPolice(WC.board, WC.rules, WC.deduction, _, WC.policeVariants.v2); }
+		},
+		{
+			id: 'hard',
+			label: 'Hard police',
+			ai: 'Detective AI v3',
+			description: 'Watch the computer police hunt Jack: they also prepare for his last night, before he strikes.',
+			create: function (WC) { return WC.createPolice(WC.board, WC.rules, WC.deduction, _, WC.policeVariants.v3); }
 		}
 	];
 	var defaultLevel = 'you';

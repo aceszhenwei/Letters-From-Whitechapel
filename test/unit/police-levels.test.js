@@ -13,6 +13,9 @@ test('the player leads the detectives by default; Easy is the original police an
 	assert.deepStrictEqual(Object.assign({}, easy.options), Object.assign({}, WC.createPolice(WC.board, WC.rules, WC.deduction, _).options));
 	const normal = WC.policeLevels.create(WC, 'normal');
 	for (const [key, value] of Object.entries(WC.policeVariants.v2)) assert.deepStrictEqual(normal.options[key], value, key);
+	const hard = WC.policeLevels.create(WC, 'hard');
+	for (const [key, value] of Object.entries(WC.policeVariants.v3)) assert.deepStrictEqual(hard.options[key], value, key);
+	assert.ok(hard.options.contain > 0 && hard.options.containPatrols, 'Hard is Detective AI v3: containment on');
 });
 
 test('where the police choice comes from: address, then dialog, then saved, then the player', () => {
@@ -21,7 +24,8 @@ test('where the police choice comes from: address, then dialog, then saved, then
 	assert.deepStrictEqual(r({ saved: 'easy' }), ['easy', 'saved']);
 	assert.deepStrictEqual(r({ saved: 'easy', chosen: 'normal' }), ['normal', 'chosen']);
 	assert.deepStrictEqual(r({ search: '?police=you', chosen: 'normal' }), ['you', 'address']);
-	assert.deepStrictEqual(r({ search: '?police=hard' }), ['you', 'default']);
+	assert.deepStrictEqual(r({ search: '?police=nightmare' }), ['you', 'default']);
+	assert.deepStrictEqual(r({ search: '?police=hard' }), ['hard', 'address']);
 });
 
 function setupPage({ seed = 6, search = '', saved = {} } = {}) {
@@ -45,7 +49,7 @@ const until = (check, ms = 120000) => new Promise((resolve, reject) => {
 test('the dialog offers both choices; by default the player leads, and the board takes clicks', () => {
 	const { window } = setupPage();
 	const $ = window.$;
-	assert.deepStrictEqual(Array.from($('input[name=police]').map(function () { return this.value; }).get()), ['you', 'easy', 'normal']);
+	assert.deepStrictEqual(Array.from($('input[name=police]').map(function () { return this.value; }).get()), ['you', 'easy', 'normal', 'hard']);
 	assert.strictEqual($('input[name=police]:checked').val(), 'you');
 	assert.strictEqual($('input[name=difficulty]:checked').val(), 'easy');
 	$('.start-game').click();
@@ -54,7 +58,7 @@ test('the dialog offers both choices; by default the player leads, and the board
 	assert.strictEqual(window.game.state.phase, 2, 'waiting for the player to place the patrols');
 });
 
-for (const level of ['easy', 'normal']) {
+for (const level of ['easy', 'normal', 'hard']) {
 	test(`with ${level} computer police, the police play a whole game by themselves, with Jack at his own difficulty`, async () => {
 		const { window, store } = setupPage({ seed: 7 });
 		const $ = window.$;
@@ -63,7 +67,7 @@ for (const level of ['easy', 'normal']) {
 		$('.start-game').click();
 		assert.ok($('body').hasClass('computer-police'), 'the board takes no clicks');
 		assert.match($('.brand-subtitle').text(), /watching the police/);
-		assert.match($('.difficulty-badge').text(), new RegExp(`Jack: Normal · ${level === 'easy' ? 'Easy' : 'Normal'} police`));
+		assert.match($('.difficulty-badge').text(), new RegExp(`Jack: Normal · ${level[0].toUpperCase() + level.slice(1)} police`));
 		assert.ok(window.game.ai.options && window.game.ai.options.beam, 'Jack is still the strategic AI');
 		await until(() => window.game.state.over);
 		assert.ok(['jackWins', 'arrested', 'outOfMoves', 'trapped'].includes(window.game.state.result.type));

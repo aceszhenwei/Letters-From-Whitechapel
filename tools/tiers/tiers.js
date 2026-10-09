@@ -21,6 +21,7 @@ const research = code.concat(['research/detective-inference/lib.js', 'research/d
 const v2 = research.concat(['research/detective-v2/jacks.js', 'research/detective-v2/configs.js', 'research/detective-v2/evaluate.js',
 	'research/detective-v2/compare.js', 'research/detective-v2/run-evaluation.sh']);
 const jackV2 = v2.concat(['research/jack-v2']);
+const detectiveV3 = jackV2.concat(['research/human-strategy', 'research/detective-v3']);
 const medium = 'experiments/medium';
 const diagnostics = (args) => `node research/detective-inference/police-diagnostics.js ${args}`;
 const simulate = (jack, police, games, from, out) =>
@@ -60,12 +61,20 @@ module.exports = {
 				command: `node research/jack-v2/summary.js v2 100 300001 strategic,detour,jack-v2 detour > ${medium}/jack-v2/summary.md`,
 				env: { JACK_V2_RESULTS: `${medium}/jack-v2` }, inputs: jackV2, outputs: [`${medium}/jack-v2/summary.md`]
 			},
+			{
+				// Detective AI v3 against v2, 30 games against a short-return Jack and Strategic Jack, on development seeds
+				name: 'medium-detective-v3',
+				command: ['short-return', 'strategic'].map((j) => ['v2', 'v3'].map((p) => `node research/detective-v3/experiment.js ${j} ${p} 30 300001`).join(' && ')).join(' && ') +
+					` && (node research/detective-v3/summary.js short-return 30 300001 v2,v3 && node research/detective-v3/summary.js strategic 30 300001 v2,v3) > ${medium}/detective-v3.md`,
+				inputs: detectiveV3, outputs: [`${medium}/detective-v3.md`]
+			},
 			{ name: 'medium-soundness', command: `node research/detective-inference/soundness.js 10 700001 > ${medium}/research/soundness.txt`, env: { RESEARCH_RESULTS: `${medium}/research` }, inputs: research, outputs: [`${medium}/research/soundness.txt`] }
 		]
 	},
 	full: {
 		description: 'Full research validation: the Detective AI v2 evaluation, the detective study (run-all.sh) and the Jack AI 5,000-game evaluations. Research milestones, and before publishing results',
 		steps: [
+			{ name: 'full-detective-v3', command: 'bash research/detective-v3/compare.sh && bash research/detective-v3/ablation.sh && bash research/detective-v3/confirm.sh', inputs: detectiveV3, outputs: ['research/detective-v3/results/confirmation.md'] },
 			{ name: 'full-jack-v2', command: 'bash research/jack-v2/screen.sh && bash research/jack-v2/compare.sh && bash research/jack-v2/ablation.sh', inputs: jackV2, outputs: ['research/jack-v2/results/ablation.md'] },
 			{ name: 'full-v2', command: 'bash research/detective-v2/run-evaluation.sh', inputs: v2, outputs: ['research/detective-v2/results/evaluation/comparison.md'] },
 			{ name: 'full-research', command: 'bash research/detective-inference/run-all.sh "$WHITECHAPELR_CLONE"', inputs: research, outputs: ['research/detective-inference/results/paired-comparisons.md'] },
