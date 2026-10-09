@@ -288,6 +288,41 @@ WC.rules = (function (board, _) {
 		});
 	}
 
+	function freeze(value) {
+		// Deep-freeze a plain copy, so a record can be handed around without anyone changing it
+		if (value && typeof value == 'object') {
+			_.each(value, freeze);
+			Object.freeze(value);
+		}
+		return value;
+	}
+
+	function nightRecord(state, night) {
+		// What the police know about a night once it is over (or so far): a plain, frozen copy for reviewing it later.
+		// Only what was on the table: the crime scenes and the move track, where the policemen and patrols stood, the
+		// searches, arrests and clues, and the kind of each of Jack's moves. Never his route, position or hideout.
+		var police = state.police[night];
+		var jack = state.jack[night];
+		if (!police || !jack) {
+			return null;
+		}
+		var log = publicLog(state, night);
+		var earlier = _.flatten(_.map(_.range(night), function (n) {
+			return _.flatten(_.pluck(_.where(publicLog(state, n), { type: 'crime' }), 'scenes'));
+		}));
+		return freeze(JSON.parse(JSON.stringify({
+			night: night,
+			crimeScenes: _.flatten(_.pluck(_.where(log, { type: 'crime' }), 'scenes')),
+			earlierCrimeScenes: earlier,
+			murderMove: jack.murderMove, // Where Jack's pawn started on the move track (it is on the table)
+			patrols: { real: police.start, fake: police.fake, revealed: police.revealed },
+			policeRoutes: police.route, // Every crossing each policeman stood on, in order
+			clues: police.clue,
+			log: log,
+			escaped: !!_.findWhere(log, { type: 'escaped' })
+		})));
+	}
+
 	function jackView(state, options) {
 		// The questions Jack's AI may ask. It shows Jack only what he would know at the table:
 		// not which patrol tokens are real until he reveals them.
@@ -371,6 +406,7 @@ WC.rules = (function (board, _) {
 		hiddenPatrols: hiddenPatrols,
 		isFakePatrol: isFakePatrol,
 		wretchedMoves: wretchedMoves,
+		nightRecord: nightRecord,
 		policeDestinations: policeDestinations,
 		canMovePoliceman: canMovePoliceman,
 		arrestable: arrestable,

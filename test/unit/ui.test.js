@@ -42,7 +42,7 @@ test('the phase card shows the current phase and night', () => {
 	assert.strictEqual($('.phase-title').text(), 'Patrolling the streets');
 	assert.strictEqual($('.phase-part').text(), 'Hell');
 	assert.strictEqual($('.phase-step.current').text(), 'Patrolling the streets');
-	assert.strictEqual($('.phase-step').length, 12);
+	assert.strictEqual($('.phase-step').length, 13);
 	assert.strictEqual($('.night-name').text(), 'First night of four');
 	assert.strictEqual($('.night-date').text(), '31 August 1888');
 	assert.ok(advanceTo(window, 10, { seed: 4 }));

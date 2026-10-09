@@ -54,6 +54,7 @@ WC.ui.setup = function (game, options) {
 		var computer = WC.policeLevels.create(WC, policeLevel);
 		var badge = 'Jack: ' + WC.difficulty.level(jackLevel).label;
 		if (computer) {
+			game.settings.confirmPoliceMoves = false; // The computer police move and search without waiting for a click
 			badge += ' · ' + WC.policeLevels.level(policeLevel).label;
 			$('body').addClass('computer-police'); // The board can't be clicked while the computer leads the police
 			$('.brand-subtitle').text('London, 1888 · You are watching the police');

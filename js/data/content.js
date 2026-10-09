@@ -5,7 +5,7 @@ var WC = WC || {};
 WC.content = (function () {
 
 var phases = new Array();
-for (var a = 0; a <= 11; a++ ){
+for (var a = 0; a <= 12; a++ ){
     phases[a] = {};
 }
 phases[0].title = 'Prepare the scene';
@@ -44,6 +44,9 @@ phases[10].description = 'Each policeman pawn moves';
 phases[11].title = 'Clues and suspicion';
 phases[11].part = 'Hunting';
 phases[11].description = 'Each policeman pawn either looks for clues or executes an arrest';
+phases[12].title = 'The night is over';
+phases[12].part = 'Hunting';
+phases[12].description = 'Jack has reached his hideout. Look over the night before the next one begins';
 
 var nights = [
     { name: 'First night', date: '31 August 1888' },

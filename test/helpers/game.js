@@ -25,6 +25,7 @@ const scripts = [
 	'js/ai/containment.js',
 	'js/ai/police.js',
 	'js/ui/renderer.js',
+	'js/ui/review.js',
 	'js/ui/autopolice.js',
 	'js/ui/setup.js',
 	'js/main.js'
@@ -105,6 +106,7 @@ function policeAction(window, random) {
 		case 10:
 			if (q('.token-move-police').length) { pick(q('.token-move-police')).click(); return 'move police'; }
 			if (q('.token-police.selectable').length) { q('.token-police.selectable').eq(0).click(); return 'select police'; }
+			if (!$('.finish-moves').prop('disabled') && !$('.finish-moves').prop('hidden')) { $('.finish-moves').click(); return 'finish moving'; }
 			return 'stuck';
 		case 11:
 			if (q('.token-arrest').length) { pick(q('.token-arrest')).click(); return 'arrest'; }
@@ -117,6 +119,9 @@ function policeAction(window, random) {
 				q('.token-arrest-adjacent').eq(0).click();
 				return 'choose arrest';
 			}
+			return 'stuck';
+		case 12:
+			if ($('.state.the-night-is-over .begin-next-night').length) { $('.state.the-night-is-over .begin-next-night').click(); return 'next night'; }
 			return 'stuck';
 		default:
 			return 'stuck';

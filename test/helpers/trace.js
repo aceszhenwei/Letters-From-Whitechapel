@@ -55,6 +55,10 @@ function screen(window) {
 
 function traceGame(seed) {
 	const window = startGame({ seed });
+	// The traces were recorded when the police's moves took effect at once and a night followed the last straight away:
+	// the interface's confirm and review steps are switched off, so the same actions play the same game
+	window.game.settings.confirmPoliceMoves = false;
+	window.game.settings.reviewNights = false;
 	const random = seededRandom(seed + 1000);
 	const steps = crypto.createHash('sha256');
 	let actions = 0;

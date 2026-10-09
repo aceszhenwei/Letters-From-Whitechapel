@@ -65,6 +65,7 @@ The same in plain text, reading down from what depends on nothing:
 | `ai/difficulty.js` | The difficulty levels: which Jack AI each one plays, and where a choice comes from (address, dialog, saved, default) | The AI constructors | Play, or touch the page or the rules |
 | `ai/containment.js` | Where a policeman stops a murder next to a likely hideout from ending the night at once: threats, blocking crossings and their value (see [Detective AI v3](detective-ai-v3.md)) | The board | Read the game state, or play |
 | `ai/police-levels.js` | Who leads the detectives: the player, or the original, v2 or v3 computer police (`WC.policeVariants`) | The police AI constructor | Play, or touch the page or the rules |
+| `ui/review.js` | The night review: keeps each night's public record (`rules.nightRecord`) when it ends, and shows it on the board and in the case files, with walking distances | Board, rules, content, the game it is attached to | Change the state (only `beginNextNight`, when the player asks), or show anything outside the public record |
 | `ui/autopolice.js` | Plays a computer police through the engine's police actions, a pause apart, for the player to watch | The police AI, the police view, the engine | Change the rules, or see Jack's secrets |
 | `ui/setup.js` | The setup dialog: Jack's difficulty, who leads the detectives, and starting the game (sets `game.ai`; starts `autoPolice`) | Difficulty, police levels, the page | Change the rules |
 | `main.js` | Creating the game (Easy until the setup dialog applies a level) and attaching the interface; opening the setup dialog | Everything above | |
@@ -107,6 +108,13 @@ Constants (tokens per night, women, victims, track length) are in `WC.rules.conf
 
 `game.enter(phase)` sets the phase, reports it, and runs it. Jack's phases finish at once and enter the next one. The police's phases report `policeTurn` and wait for police actions; the action that completes the phase enters the next one.
 
+Two engine settings (`game.settings`, both off unless set; the page turns them on in `js/main.js`) make the engine wait for the player where the rules wouldn't. They change no rule, and simulations and the computer police leave them off:
+
+- **`confirmPoliceMoves`:** Hunting the monster doesn't end when the last policeman moves, but when the police call `finishPoliceMoves()`. Until then `undoPoliceMove()` takes back the most recent move (a history in `state.turn.history`, newest first). Moving reveals nothing, so an undo gains nothing; once the phase ends, searches and arrests can reveal clues, and the moves stand. The setup dialog turns it off when the computer leads the police.
+- **`reviewNights`:** after Jack escapes on nights 1–3 the engine enters phase 12, **The night is over**, reports `nightOver`, and waits for `beginNextNight()`. On the fourth night the game ends as before.
+
+`rules.nightRecord(state, night)` gives a frozen copy of what the police know about a night: its public log, crime scenes, move-track spaces, patrols, policemen's routes and clues. It holds nothing of Jack's route, position or hideout. The night review is drawn from it.
+
 ```mermaid
 stateDiagram-v2
     direction LR
@@ -131,7 +139,7 @@ stateDiagram-v2
     }
     state "Hunting" as hunting {
         Escape: 9 Escape in the night (AI moves Jack)
-        Hunt: 10 Hunting the monster (police: movePoliceman)
+        Hunt: 10 Hunting the monster (police: movePoliceman, undoPoliceMove, finishPoliceMoves)
         Clues: 11 Clues and suspicion (police: search or arrest)
         Escape --> Hunt
         Hunt --> Clues
@@ -140,6 +148,9 @@ stateDiagram-v2
     Alarm --> Escape
     Alarm --> Hunt: double event (third night)
     Escape --> Prepare: Jack walks onto his hideout
+    Escape --> Over: Jack walks onto his hideout (reviewNights)
+    Over: 12 The night is over (police: beginNextNight)
+    Over --> Prepare
     Escape --> [*]: hideout on the fourth night, trapped, or out of moves
     Clues --> [*]: arrest
 ```
@@ -152,7 +163,8 @@ Each step separates deciding from doing:
 |---|---|---|
 | Jack moves | `ai.chooseMove(view)` picks from `view.walks()` and `view.specialMoves()` | `rules.isLegalJackMove` checks it; `game.moveJack(move)` updates the sheet, tokens and track; event `jackMoved` |
 | Jack kills | `ai.chooseVictims(view)` | `rules.isLegalVictims`; `game.murder(scenes)`; event `murder` |
-| A policeman moves | The player clicks one of `rules.policeDestinations(state, i)` | `game.movePoliceman(i, to)` checks `rules.canMovePoliceman`, then moves; event `policemanMoved` |
+| A policeman moves | The player clicks one of `rules.policeDestinations(state, i)` | `game.movePoliceman(i, to)` checks `rules.canMovePoliceman`, then moves; event `policemanMoved` (and, with `confirmPoliceMoves`, `policeMovesReady` once all have moved) |
+| A move is undone | The player clicks Undo | `game.undoPoliceMove()` (only in Hunting the monster); event `policeMoveUndone` |
 | A search | The player clicks one of `police.search[i]` | `game.search(i, mapid)` finds a clue or not; events `searchMissed` / `searchFinished` |
 
 So the important behaviour can be tested with no browser. For example, `engine.test.js` plays 20 complete games in about two seconds, through engine actions alone.
@@ -191,7 +203,7 @@ A policeman moving, from click to screen:
 | `js/ai/difficulty.js`, `js/ai/police-levels.js`, `js/ui/setup.js`, `js/ui/autopolice.js` | Jack's difficulty, who leads the detectives, the setup dialog, and computer police in the page |
 | `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)) |
 | `experiments/` | Recorded simulation results |
-| `js/ui/renderer.js` | The interface |
+| `js/ui/renderer.js`, `js/ui/review.js` | The interface, and the night review |
 | `js/main.js` | Start-up |
 | `js/vendor/` | jQuery 1.11, Underscore 1.8.3 |
 | `generate-svg-map.html` | Developer tool: prints the streets as SVG |

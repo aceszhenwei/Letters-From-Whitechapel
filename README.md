@@ -10,6 +10,8 @@ Open `index.html` in a browser. There is nothing to install or build.
 
 Before the first night, choose how hard Jack plays (**Easy**, the default; **Normal**; **Hard**) and who leads the detectives: **you** (the default), or Easy, Normal or Hard computer police, whom you then watch hunt Jack. The choices only change how each side decides: the rules and what each side may know are the same. The [AI overview](docs/ai.md) says which AI each level plays; for testing, `index.html?difficulty=hard&police=normal` fixes both.
 
+While you lead the detectives you can undo a policeman's move until you choose Done. After each night the board stays as it was, with the night's log in the case files, until you begin the next night. Any earlier night can be looked at again, with walking distances from its crime scenes and clues. The women and the Wretched are ringed on the board, and **Highlight** makes them stand out. See [User interface](docs/ui.md#the-detectives-tools).
+
 The game follows the revised edition rulebook: four nights (including the double event), real and fake patrols, the Time of the Crime, Jack's coaches and alleys, and searching for clues or making an arrest. See [Game rules](docs/game-rules.md) for the details and what isn't implemented yet.
 
 ## Documentation
