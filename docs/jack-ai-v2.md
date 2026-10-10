@@ -12,7 +12,7 @@ Against Detective AI v2, on development seeds 420001–420200 (200 games, paired
 
 - **Against Strategic Jack:** Jack AI v2 wins 70.5% where Strategic Jack wins 32.0% (p < 10⁻¹¹).
 - **Against Detour Jack:** Jack AI v2 also does at least as well, on every police and on all three development seed sets. That margin is small, and against Detective AI v2 it is **not yet statistically established**.
-- **Independent validation:** this has been proposed (section 9) and is **waiting for approval**. It has not been run.
+- **Independent validation** (section 9, run in [Study J3](jack-adaptive.md#10-jack-ai-v2s-independent-validation), 1,000 games per matchup on unseen seeds): it beats Strategic Jack against Detective AI v2 (65.8% against 30.0%, p 3.6 × 10⁻⁵⁶). Its edge over Detour Jack is **not established** (+1.7 points, p 0.068). Against the original police it is **4.5 points worse than Strategic Jack** (p 7 × 10⁻⁷).
 
 In the game, Jack AI v2 is the new **Hard** difficulty. Easy (the baseline Jack) and Normal (the strategic Jack) are unchanged.
 
@@ -28,7 +28,7 @@ Scripts and results are in [`research/jack-v2/`](../research/jack-v2/).
 6. [Jack AI v2](#6-jack-ai-v2)
 7. [Ablation and tests](#7-ablation-and-tests)
 8. [Cost and test tiers](#8-cost-and-test-tiers)
-9. [Independent validation (proposed, not run)](#9-independent-validation-proposed-not-run)
+9. [Independent validation](#9-independent-validation)
 10. [Limitations and future work](#10-limitations-and-future-work)
 11. [Reproducing](#11-reproducing)
 
@@ -308,9 +308,21 @@ The full suite passes (`npm test`, 171 tests), as do the smoke tier and the medi
 
 `validate.sh` (section 9) is in no tier and runs only by hand.
 
-## 9. Independent validation (proposed, not run)
+## 9. Independent validation
 
-**Not run. Waiting for approval.**
+**Run** in October 2026, unchanged, as part of [Study J3](jack-adaptive.md#10-jack-ai-v2s-independent-validation) (results in [`results/validation.md`](../research/jack-v2/results/validation.md), 27 minutes on 4 cores):
+
+| Police | Strategic Jack | Detour Jack | Jack AI v2 | vs Strategic (only / only, p) | vs Detour (only / only, p) |
+|---|---:|---:|---:|---|---|
+| Detective AI v2 | 30.0% | 64.1% | **65.8%** | 456 / 98, 3.6 × 10⁻⁵⁶ | 47 / 30, 0.068 |
+| Original | 97.8% | 89.1% | **93.3%** | 19 / 64, 7.4 × 10⁻⁷ | 46 / 4, 4.5 × 10⁻¹⁰ |
+| Uniform+block | 66.2% | 69.9% | **73.8%** | 231 / 155, 1.3 × 10⁻⁴ | 60 / 21, 1.7 × 10⁻⁵ |
+
+- **(a) Confirmed.** Against Detective AI v2, Jack AI v2 beats Strategic Jack by 35.8 points.
+- **(b) Not established.** It is no worse than Detour Jack against v2, but the +1.7 points are not significant.
+- **(c) One regression.** Against the original police it is 4.5 points behind Strategic Jack (significant after Holm's correction), from arrests while detouring early (24 losses on night 1, none for Strategic Jack). Against uniform blocking it is ahead of both.
+
+The plan, as written before it was run:
 
 1. **Final candidate:** Jack AI v2 as in section 6 (`WC.createJackV2` defaults).
 2. **Questions:**

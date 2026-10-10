@@ -2,7 +2,20 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: repository clean-up
+## Unreleased: adaptive deception (Study J3)
+
+- **Study:** [Adaptive deception under opponent uncertainty](jack-adaptive.md) asks whether Jack can choose how much to deceive from what he sees of the police. It was pre-registered, with development, selection and held-out seeds (21,200 games) and six detectives, two held out. Two of the detectives were built for the study to forgive Jack AI v2's detours.
+- **Results:**
+  - Reading the police across nights fails: the signal is the same against every detective, and relaxing deception costs 5–14 points.
+  - Varying deception at random loses 3.7 points.
+  - `safe-skip`, Jack AI v2 whose detour steps avoid the policemen's next-turn reach, gains +4.1 points on held-out seeds (+1.6 to +6.7) and +3.1 over a control that skips as often at random, with no regression. It misses the pre-registered +5-point bar and doesn't behave differently by detective. **Recommendation B: kept as experimental**; no AI or difficulty level changed.
+- **Jack AI v2's independent validation** ran (9,000 games, seeds 760001–761000):
+  - It beats Strategic Jack against Detective AI v2 (65.8% against 30.0%).
+  - Its edge over Detour Jack is not established (p 0.068).
+  - It is 4.5 points behind Strategic Jack against the original police ([Jack AI v2 §9](jack-ai-v2.md#9-independent-validation)).
+- **Scripts:** `research/jack-adaptive/`. **Tests:** `jack-adaptive.test.js`.
+
+## Repository clean-up ([aceszhenwei/Letters-From-Whitechapel#26](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/26))
 
 - **Removed files nothing used** (all still in the git history): `construction/whitechapel.ai` (the board's Illustrator source, 5.9 MB), `svg/` (three street drawings; the game draws the streets from the map data), `images/whitechapel-numbers.jpg`, `css/font-awesome.css` (the page loads the minified copy) and `fonts/FontAwesome.otf` (the stylesheet loads the web fonts). The published site is 1.5 MB instead of 2.6.
 - **Moved** `generate-svg-map.html` to `tools/`.

@@ -39,7 +39,7 @@ The simulations and research behind the AIs take up to a couple of hours in full
 
 The fast and smoke tiers are never skipped.
 
-The Jack v2 study's own scripts (`research/jack-v2/run.js`) also keep every game they play, fingerprinted by the files it depends on, so an interrupted run resumes and an unchanged game is never played twice. Its independent validation (`research/jack-v2/validate.sh`) is in no tier: it runs only by hand, once approved (see [Jack AI v2](jack-ai-v2.md#9-independent-validation-proposed-not-run)).
+The Jack v2 study's own scripts (`research/jack-v2/run.js`) also keep every game they play, fingerprinted by the files it depends on, so an interrupted run resumes and an unchanged game is never played twice. Its independent validation (`research/jack-v2/validate.sh`) is in no tier: it ran once, by hand (see [Jack AI v2](jack-ai-v2.md#9-independent-validation)).
 
 **Runtimes.** `experiments/tiers/manifest.json` records the last time of every step the runner ran. The table above gives typical times, measured on an otherwise idle 4-core machine. Update it when a tier's cost changes noticeably.
 
@@ -67,10 +67,14 @@ Every experiment uses fixed seeds, so it plays the same games on every run and e
 | 580001–580200 | Waiting against containment: focused comparisons |
 | 590001–590030 | Detective coordination and inference: exploration and held-out Jack ([Detective coordination and inference](detective-study.md)) |
 | 591001–591100 | Detective coordination and inference: focused comparison |
+| 592001–592100 | Study J3, adaptive deception: development ([Adaptive deception](jack-adaptive.md)) |
+| 593001–593200 | Study J3: selection |
+| 594001–594400 | Study J3: held out (run once) |
+| 595001–595400 | Study J3: reserved for a validation of `safe-skip`, if it is revisited |
 | 600001–600500 | Fresh-seed validation in the detective study |
 | 650001–650500 | Fresh-seed validation of Detective AI v2 |
 | 700001–700060 | Deduction soundness checks |
-| 760001–761000 | Jack v2 study: reserved for its independent validation |
+| 760001–761000 | Jack v2 study: its independent validation (run in Study J3) |
 | 800001 on | Smoke tests |
 | 900001 on | Calibration of the strategic Jack |
 
@@ -103,6 +107,7 @@ If a core module touched the page, it would fail to load in the core loader. Tha
 | `test/unit/police-undo.test.js` | Core | Undoing a policeman's move restores his crossing, route and turn; several moves undo newest first; Done only once everyone has moved, and no undo after it; moving and undoing record nothing; without the settings the computer police play whole games as before; the night review waits for `beginNextNight`; four-night games end on the last escape; night records are frozen, unchanged by later nights, and hold only public facts |
 | `test/unit/waiting-containment.test.js` | Core | Waiting against v3's containment, in positions set up by hand: killing at once against a closed one-walk escape; one wait, where the police's move opens it or not; two waits, beyond the threat model; the model counting circles no Wretched can reach; across the board, how often v3's and `containWretched`'s moves open an escape; and that the police's choice never depends on Jack's true hideout |
 | `test/unit/detective-study.test.js` | Core | The detective study's analysis tools: walking distance with policemen blocking crossings, and a cut on the 111/134/147 crossing; the cut search near and far from the hideout; the route-style likelihoods are distributions and the style-learning model is uniform before any night; log loss and Brier scores |
+| `test/unit/jack-adaptive.test.js` | Core | Study J3's harness: its fixed-extent Jacks replay Jack AI v2 and Strategic Jack exactly, a detective forgiving no detour is Detective AI v2, the adaptive Jack follows its pressure and never detours on the last night, the pressure reads only Jack's view, `mixed` ignores the police, and `safe-skip` detours only out of the policemen's reach |
 | `test/unit/game-records.test.js` | Core | Game records: every kind of action recorded and replayed exactly (four nights, waiting, coaches and alleys, searches and arrests, night reviews); what the police's and Jack's public records may show; the women before and after the victims are chosen; a full record only after the game ends or is ended on purpose; undone moves and patrol tokens taken back kept apart; each action's `known`; the example files, fixtures and the summary; malformed, tampered and incompatible records rejected; no personal data; recording changes no game |
 | `test/regression/game-export-ui.test.js` | Page | The export dialog: a human detective's game played by clicking (with a move undone), both records saved and read back (the full one replays); a game in progress offers only the police's record until the player confirms ending it |
 | `test/unit/containment.test.js` | Core | Detective AI v3's tactical scenarios: the blocking crossings of a one-walk escape; the hideout-134 scheme beats v2 (even when told the hideout) but not v3; central hideouts and the Night 4 trap; the defence following an uncertain belief; coordination; whole legal, deterministic games; v2 unchanged with the options off |

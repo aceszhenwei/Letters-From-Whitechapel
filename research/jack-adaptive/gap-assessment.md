@@ -23,7 +23,7 @@ Written before any game of the study. Sources: the reports linked from [the docu
 
 ## What is open
 
-1. **Jack AI v2 was never validated on unseen seeds** ([§9](../../docs/jack-ai-v2.md#9-independent-validation-proposed-not-run)). Its gain over Detour Jack rests on 13 discordant games. Run here, unchanged, as its own pre-registered plan.
+1. **Jack AI v2 was never validated on unseen seeds** ([§9](../../docs/jack-ai-v2.md#9-independent-validation)). Its gain over Detour Jack rests on 13 discordant games. Run here, unchanged, as its own pre-registered plan.
 2. **Jack AI v2's deception is fixed in shape and extent.** The v2 report names the risk: police that expect "Jack starts by walking away" could recover what it hides. No such police were ever built, so the risk is unmeasured.
 3. **Its deception is spent against every detective,** including those that don't read directness, where it costs a little. Whether Jack can tell, from what he sees, which kind of detective he faces has not been tested.
 4. **Adaptation has never been separated from unpredictability.** The only unpredictability test (random near-best moves) changed move choice, not deception.

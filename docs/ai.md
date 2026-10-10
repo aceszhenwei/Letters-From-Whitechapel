@@ -62,7 +62,7 @@ The labels name AIs; they are not claims about how hard a human opponent would f
 |---|---|---|---|---|
 | Strategic Jack | [Jack's AI §9](jack-ai.md#9-results) | 1–5,000 | Wins 97.2% against the original police, where the baseline wins 25.0% | The evaluation seeds were used once, at the end; development and calibration used other seeds |
 | Detective AI v2 | [Detective AI v2 §5](detective-ai-v2.md#5-results) | 650001–650500 (fresh) | Strategic Jack's win rate 98.0% → 31.6% | Fresh seeds, as above |
-| Jack AI v2 | [Jack AI v2 §5–7](jack-ai-v2.md#5-controlled-comparison) | 420001–420200 (development) | Wins 70.5% against v2, against 32.0% for Strategic Jack | **Proposed, not run** (seeds 760001–761000 reserved) |
+| Jack AI v2 | [Jack AI v2 §5–7](jack-ai-v2.md#5-controlled-comparison) | 420001–420200 (development) | Wins 70.5% against v2, against 32.0% for Strategic Jack | **Run** on 760001–761000 ([§9](jack-ai-v2.md#9-independent-validation)): 65.8% against 30.0% (confirmed); edge over Detour Jack not established; 4.5 points behind Strategic Jack against the original police |
 | Detective AI v3 | [Detective AI v3 §9](detective-ai-v3.md#9-comparative-results) | 470001–470100 (fresh) | Police wins against short-return Jacks 14.0% → 32.7%; against ordinary Jacks 56.3% → 56.5% | **Proposed, not run** (seeds 480001–480500 reserved) |
 
 The research that led to each, in order, is listed in the [documentation index](README.md#research-reports). What the AIs still do badly is in the [roadmap](roadmap.md#known-limitations).
