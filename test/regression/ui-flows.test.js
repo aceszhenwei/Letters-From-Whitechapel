@@ -132,3 +132,111 @@ test('choosing another policeman before moving the first puts the first back, so
 	$('.token-move-police').filter(function () { return $(this).text() === 'Stay'; }).click();
 	assert.strictEqual($('.phase-progress').text(), 'Policemen moved: 2 of 5');
 });
+
+// Clues and suspicion with several policemen: one acts at a time, and each policeman's tokens are his own, so one
+// policeman's search or arrest never removes another's (the reported softlock: a clue found by one policeman used to
+// remove every search token, stranding a second policeman who had already chosen to search)
+function twoSearchers(window) {
+	const police = last(gameState(window).police);
+	const can = police.search.map((list, i) => i).filter((i) => police.search[i].length > 0);
+	assert.ok(can.length >= 2);
+	return { police, a: can[0], b: can[1] };
+}
+
+test('one policeman acts at a time: the others wait, and a clue found never strands them', () => {
+	const window = atClues(1);
+	const $ = window.$;
+	const { police, a, b } = twoSearchers(window);
+	last(gameState(window).jack).route.unshift(police.search[a][0]); // A clue at the first policeman's first circle
+	$('.token-search-adjacent-' + police.now[a]).click();
+	assert.ok($('.token-search-adjacent-' + police.now[b]).hasClass('waiting'), 'the others\' choices wait');
+	$('.token-search-adjacent-' + police.now[b]).click();
+	assert.strictEqual(gameState(window).turn.choice[b], undefined, 'a second policeman can\'t start while the first acts');
+	$('.token-search.for-police-' + a).filter(function () { return $(this).data('mapid') === police.search[a][0]; }).click();
+	assert.ok(gameState(window).turn.done.includes(a), 'the clue ends his search');
+	const next = $('.token-search-adjacent-' + police.now[b]);
+	assert.strictEqual(next.length, 1);
+	assert.ok(!next.hasClass('waiting'), 'the next policeman may act');
+	next.click();
+	assert.ok($('.token-search.for-police-' + b).length > 0, 'his circles are on the board');
+	police.search[b].slice().forEach((id) => $('.token-search.for-police-' + b).filter(function () { return $(this).data('mapid') === id; }).click());
+	assert.ok(gameState(window).turn.done.includes(b), 'and he finishes');
+	assert.deepStrictEqual(window.errors, []);
+});
+
+test('policemen beside the same circle each keep their own token for it', () => {
+	for (let seed = 1; seed < 20; seed++) {
+		const window = startGame({ seed });
+		const $ = window.$;
+		const { rules, board } = window.WC;
+		if (!advanceTo(window, 10, { seed })) continue;
+		// Move two policemen next to the same circle; the others stay where they are
+		const game = window.game;
+		const now = Array.from(rules.policeNight(game.state).now);
+		const reach = (i) => [now[i]].concat(Array.from(rules.policeDestinations(game.state, i)));
+		let pair = null;
+		for (let a = 0; a < now.length && !pair; a++) {
+			for (let b = a + 1; b < now.length && !pair; b++) {
+				for (const toA of reach(a)) {
+					const toB = reach(b).find((to) => to !== toA && board.adjacentNumbers(to).some((id) => board.adjacentNumbers(toA).includes(id)));
+					if (toB !== undefined) { pair = { a, b, toA, toB }; break; }
+				}
+			}
+		}
+		if (!pair) continue;
+		now.forEach((crossing, i) => assert.ok(game.movePoliceman(i, i === pair.a ? pair.toA : i === pair.b ? pair.toB : crossing)));
+		game.finishPoliceMoves();
+		if (game.state.phase !== 11) continue;
+		const police = last(game.state.police);
+		const route = last(last(game.state.jack).route ? game.state.jack : []).route;
+		const shared = police.search[pair.a].filter((id) => police.search[pair.b].includes(id) && !route.includes(id));
+		if (!shared.length) continue;
+		$('.token-search-adjacent-' + police.now[pair.a]).click();
+		$('.token-search.for-police-' + pair.a).filter(function () { return $(this).data('mapid') === shared[0]; }).click();
+		$('.state.clues-and-suspicion .search-rest').click(); // He finishes his search, if anything is left
+		assert.ok(game.state.turn.done.includes(pair.a));
+		$('.token-search-adjacent-' + police.now[pair.b]).click();
+		assert.strictEqual($('.token-search.for-police-' + pair.b).filter(function () { return $(this).data('mapid') === shared[0]; }).length, 1,
+			'the circle the first policeman searched is still the second\'s to search');
+		assert.deepStrictEqual(window.errors, []);
+		return;
+	}
+	assert.fail('no position with two policemen beside the same circle');
+});
+
+test('Search his remaining circles finishes the chosen policeman\'s search, in order, stopping at a clue', () => {
+	const window = atClues(4);
+	const $ = window.$;
+	const { index, crossing, circles } = searcher(window, 3);
+	const route = last(gameState(window).jack).route;
+	circles.forEach((id) => { const at = route.indexOf(id); if (at !== -1) route.splice(at, 1); });
+	route.unshift(circles[1]);
+	const rest = $('.state.clues-and-suspicion .search-rest');
+	assert.ok(rest.prop('hidden'), 'only once a policeman is searching');
+	$('.token-search-adjacent-' + crossing).click();
+	assert.ok(!rest.prop('hidden'));
+	rest.click();
+	assert.ok(gameState(window).turn.done.includes(index));
+	assert.deepStrictEqual(Array.from(last(gameState(window).police).clue), [circles[1]], 'the first circle missed, the second had a clue');
+	assert.ok(!last(gameState(window).police).log.some((e) => e.type === 'search' && e.mapid === circles[2]), 'the search stopped there');
+	assert.strictEqual($('.token-search.for-police-' + index).length, 0);
+});
+
+test('Search with every policeman left: each who can search does; one who can only arrest is left to act', () => {
+	const window = atClues(4);
+	const $ = window.$;
+	const police = last(gameState(window).police);
+	const searchers = police.now.map((c, i) => i).filter((i) => police.search[i].length > 0);
+	const arrestOnly = police.now.map((c, i) => i).filter((i) => police.search[i].length === 0 && police.arrest[i].length > 0);
+	const everyone = $('.state.clues-and-suspicion .search-everyone');
+	assert.ok(!everyone.prop('hidden'));
+	everyone.click();
+	if (arrestOnly.length) {
+		assert.strictEqual(gameState(window).phase, 11, 'still waiting for the policeman who can only arrest');
+		searchers.forEach((i) => assert.ok(gameState(window).turn.done.includes(i)));
+		assert.ok(everyone.prop('hidden'), 'nobody left to search');
+	} else {
+		assert.notStrictEqual(gameState(window).phase, 11, 'every policeman acted, so the night went on');
+	}
+	assert.deepStrictEqual(window.errors, []);
+});
