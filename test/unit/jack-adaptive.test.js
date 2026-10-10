@@ -66,3 +66,30 @@ test('the pressure reads only Jack\'s view, and the mixed control ignores the po
 	const k = Math.min(a.length, b.length) - 1; // The last night played may differ in length of game
 	assert.deepStrictEqual(a.slice(0, Math.min(k, 3)), b.slice(0, Math.min(k, 3)));
 });
+
+test('safe-skip detours only to circles out of the policemen\'s reach, and skips only when every away step is in it', () => {
+	const ai = jacks.policies['safe-skip'](37);
+	let checked = 0;
+	const watched = Object.assign({}, ai, {
+		chooseMove(view) {
+			const before = ai.debug.nights.length ? ai.debug.nights[ai.debug.nights.length - 1] : null;
+			const counts = before ? [before.detours, before.skipped] : [0, 0];
+			const move = ai.chooseMove(view);
+			const night = ai.debug.nights[ai.debug.nights.length - 1];
+			const here = view.distanceToHideout(view.position);
+			const away = view.walks().filter((m) => m !== view.hideout && view.distanceToHideout(m) > here);
+			const reach = jacks.policeReach(view.policeNow());
+			if (night.detours > (before === night ? counts[0] : 0)) {
+				assert.ok(!reach.has(move.mapid), 'a detour step never ends in the policemen\'s reach');
+				checked++;
+			}
+			if (night.skipped > (before === night ? counts[1] : 0)) {
+				assert.ok(away.length > 0 && away.every((m) => reach.has(m)), 'skipped only when every away step is in reach');
+				checked++;
+			}
+			return move;
+		}
+	});
+	play(watched, v2, 37);
+	assert.ok(checked > 0);
+});
