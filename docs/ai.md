@@ -45,7 +45,16 @@ The research configurations built from them are in `research/detective-v2/config
 
 ## Difficulty levels
 
-Players choose only Jack's level, Normal or Hard, by name; the player always leads the detectives. **Developer Mode** (`index.html?dev=1`) shows every level of both, with the AI each plays. No level changes the rules or what a side may know.
+Players first choose who they play. **As the detectives** (the default) they choose Jack's level, Normal or Hard, by name. **As Jack** they choose the detectives' level ([Playing Jack](playing-jack.md)):
+
+| The detectives, when the player plays Jack (`WC.detectiveLevels`, `js/ai/police-levels.js`) | AI |
+|---|---|
+| Easy | Detective AI v2 (`WC.policeVariants.v2`) |
+| Normal (default) | Detective AI v3 (`WC.policeVariants.v3`) |
+
+The detectives' AIs are unchanged. Playing against a person, they are given only the police's methods (`game.policeActions()`) and the police view, as in every simulation.
+
+**Developer Mode** (`index.html?dev=1`) shows every level, with the AI each plays, and, when the player plays the detectives, the choice to watch the computer police instead. No level changes the rules or what a side may know.
 
 | Jack (`js/ai/difficulty.js`, `WC.difficulty`) | Detectives (`js/ai/police-levels.js`, `WC.policeLevels`; Developer Mode, or the address) |
 |---|---|
@@ -54,7 +63,7 @@ Players choose only Jack's level, Normal or Hard, by name; the player always lea
 | Easy: Baseline Jack (Developer Mode) | Normal police: Detective AI v2 |
 | Hard, waiting: Jack AI v2 with strategic waiting (Developer Mode, experimental) | Hard police: Detective AI v3 |
 
-The labels name AIs; they are not claims about how hard a human opponent would find them. Where a choice comes from, strongest first: the address (`?difficulty=easy|normal|hard|hard-waiting`, or the older `?jack=baseline|strategic`; `?police=you|easy|normal|hard`; any level, with or without Developer Mode, for tests and research), the dialog, the choice saved from the last game (Developer Mode keeps its own), the default. To add a level, add an entry to `levels` in the matching file: the dialog lists the levels from there. More detail: [Jack's AI, Difficulty levels](jack-ai.md#difficulty-levels).
+The labels name AIs; they are not claims about how hard a human opponent would find them. Where a choice comes from, strongest first: the address (`?role=detectives|jack`; `?difficulty=easy|normal|hard|hard-waiting`, or the older `?jack=baseline|strategic`; `?police=you|easy|normal|hard`; `?detectives=easy|normal`; any level, with or without Developer Mode, for tests and research), the dialog, the choice saved from the last game (each role keeps its own, and Developer Mode its own), the default. To add a level, add an entry to `levels` in the matching file: the dialog lists the levels from there. More detail: [Jack's AI, Difficulty levels](jack-ai.md#difficulty-levels).
 
 ## How each AI was chosen
 

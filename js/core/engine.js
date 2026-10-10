@@ -15,7 +15,15 @@
      confirmPoliceMoves  Hunting the monster ends when the police call finishPoliceMoves, not as soon as the last
                          policeman has moved, so a move can be undone (undoPoliceMove) until then
      reviewNights        After Jack escapes on nights 1-3, the engine waits in phase 12 until beginNextNight, so the
-                         police can look over the night before the board is cleared */
+                         police can look over the night before the board is cleared
+     humanJack           A person plays Jack: instead of asking game.ai, the engine waits at each of Jack's decisions
+                         (a 'jackTurn' event, and game.jackTurn()) until the matching method is called: jackHideout,
+                         jackWomen, jackWait or jackVictims, jackReveal, jackMove. Each checks the rules and returns false,
+                         changing nothing, if the decision isn't legal or isn't the one awaited. The AI's decisions and
+                         the person's go through the same code from there, so both play by exactly the same rules.
+
+   policeActions() gives the police's methods alone, without the state: what a computer police player is handed, so it
+   can only act through them and see what WC.rules.policeView shows. */
 /* Actions: every decision the engine accepts is also reported as an 'action' event, before it takes effect:
      { side: 'jack' | 'police', type, args, result }
    Jack's: hideout { mapid }, women { marked, unmarked }, wait {}, victims { scenes }, reveal { mapid } -> { fake },
@@ -92,8 +100,9 @@ WC.engine = (function (rules, _) {
 			state: createState(),
 			ai: options.ai, // Jack's decisions: replace it to change his strategy
 			debug: !!options.debug,
-			settings: { confirmPoliceMoves: !!options.confirmPoliceMoves, reviewNights: !!options.reviewNights }
+			settings: { confirmPoliceMoves: !!options.confirmPoliceMoves, reviewNights: !!options.reviewNights, humanJack: !!options.humanJack }
 		};
+		var awaiting = null; // With humanJack: the decision the engine waits for ('hideout', 'women', 'murder', 'reveal', 'move')
 
 		function emit(type, data) {
 			_.each(listeners, function (listener) {
@@ -119,13 +128,52 @@ WC.engine = (function (rules, _) {
 			listeners.push(listener);
 		};
 
-		game.start = function () {
-			var hideout = game.ai.chooseHideout(rules.hideoutChoices());
-			check(rules.isLegalHideout(hideout), 'hideout ' + hideout);
+		/* Jack's decisions: asked of his AI, or, with humanJack, awaited from the person playing him
+		   ------------------------------------------------------------------------------------------- */
+		function ask(decision, data) {
+			awaiting = decision;
+			emit('jackTurn', _.extend({ decision: decision }, data));
+		}
+
+		function awaited(decision) {
+			// Is the engine waiting for this decision of a human Jack? Taking it means it can't be made twice
+			if (!game.settings.humanJack || game.state.over || awaiting !== decision) {
+				return false;
+			}
+			return true;
+		}
+
+		game.jackTurn = function () {
+			// The decision the engine is waiting for from a human Jack, or null
+			return game.settings.humanJack && !game.state.over ? awaiting : null;
+		};
+
+		function hideoutChosen(hideout) {
 			action('jack', 'hideout', { mapid: hideout });
 			game.state.base = hideout;
+		}
+
+		game.start = function () {
+			if (game.settings.humanJack) {
+				emit('started');
+				ask('hideout', { choices: rules.hideoutChoices() });
+				return;
+			}
+			var hideout = game.ai.chooseHideout(rules.hideoutChoices());
+			check(rules.isLegalHideout(hideout), 'hideout ' + hideout);
+			hideoutChosen(hideout);
 			emit('started');
 			game.enter(0);
+		};
+
+		game.jackHideout = function (mapid) {
+			if (!awaited('hideout') || game.state.base !== undefined || !rules.isLegalHideout(mapid)) {
+				return false;
+			}
+			awaiting = null;
+			hideoutChosen(mapid);
+			game.enter(0);
+			return true;
 		};
 
 		game.enter = function (phase) {
@@ -158,14 +206,32 @@ WC.engine = (function (rules, _) {
 			game.enter(1);
 		};
 
+		function womenPlaced(marked, unmarked) {
+			var state = game.state;
+			action('jack', 'women', { marked: marked.slice(), unmarked: unmarked.slice() });
+			state.womenMarked = marked.slice();
+			state.womenUnmarked = unmarked.slice();
+			game.enter(2);
+		}
+
 		phases[1] = function theTargetsAreIdentified() {
 			var state = game.state;
+			if (game.settings.humanJack) {
+				ask('women', { targets: rules.targetCircles(state), counts: rules.womenTonight(state) });
+				return;
+			}
 			var women = game.ai.placeWomen(view());
 			check(rules.isLegalWomen(state, women.marked, women.unmarked), 'women ' + women.marked + ' / ' + women.unmarked);
-			action('jack', 'women', { marked: women.marked.slice(), unmarked: women.unmarked.slice() });
-			state.womenMarked = women.marked.slice();
-			state.womenUnmarked = women.unmarked.slice();
-			game.enter(2);
+			womenPlaced(women.marked, women.unmarked);
+		};
+
+		game.jackWomen = function (marked, unmarked) {
+			if (!awaited('women') || !_.isArray(marked) || !_.isArray(unmarked) || !rules.isLegalWomen(game.state, marked, unmarked)) {
+				return false;
+			}
+			awaiting = null;
+			womenPlaced(marked, unmarked);
+			return true;
 		};
 
 		phases[2] = function patrollingTheStreets() {
@@ -185,16 +251,48 @@ WC.engine = (function (rules, _) {
 				console.log('Error: Multiple murders attempted.');
 				return;
 			}
+			if (game.settings.humanJack) {
+				ask('murder', { canWait: !rules.mustKill(state), victims: rules.victimsTonight(state) });
+				return;
+			}
 			if (!rules.mustKill(state) && game.ai.wantsToWait(view())) {
-				action('jack', 'wait', {});
-				game.enter(5);
+				jackWaits();
 			} else {
 				var scenes = game.ai.chooseVictims(view());
 				check(rules.isLegalVictims(state, scenes), 'victims ' + scenes);
-				action('jack', 'victims', { scenes: scenes.slice() });
-				game.murder(scenes);
-				game.enter(8);
+				jackKills(scenes);
 			}
+		};
+
+		function jackWaits() {
+			action('jack', 'wait', {});
+			game.enter(5);
+		}
+
+		function jackKills(scenes) {
+			action('jack', 'victims', { scenes: scenes.slice() });
+			game.murder(scenes);
+			game.enter(8);
+		}
+
+		game.jackWait = function () {
+			// Wait instead of killing, while the Time of the Crime allows it (not on V)
+			if (!awaited('murder') || rules.mustKill(game.state)) {
+				return false;
+			}
+			awaiting = null;
+			jackWaits();
+			return true;
+		};
+
+		game.jackVictims = function (scenes) {
+			// Kill: the victims in order (on the double event, the second is Jack's first move)
+			if (!awaited('murder') || !_.isArray(scenes) || !rules.isLegalVictims(game.state, scenes)) {
+				return false;
+			}
+			awaiting = null;
+			jackKills(scenes);
+			return true;
 		};
 
 		phases[5] = function suspenseGrows() {
@@ -218,12 +316,31 @@ WC.engine = (function (rules, _) {
 			var state = game.state;
 			var hidden = rules.hiddenPatrols(state);
 			if (hidden.length > 0) {
+				if (game.settings.humanJack) {
+					ask('reveal', { tokens: hidden });
+					return;
+				}
 				var mapid = game.ai.choosePatrolToReveal(view(), hidden);
 				check(_.contains(hidden, mapid), 'reveal ' + mapid);
-				action('jack', 'reveal', { mapid: mapid }, { fake: rules.isFakePatrol(state, mapid) });
-				game.reveal(mapid);
+				patrolRevealed(mapid);
 			}
 			game.enter(4);
+		};
+
+		function patrolRevealed(mapid) {
+			action('jack', 'reveal', { mapid: mapid }, { fake: rules.isFakePatrol(game.state, mapid) });
+			game.reveal(mapid);
+		}
+
+		game.jackReveal = function (mapid) {
+			// Reveal one patrol token that is still face down
+			if (!awaited('reveal') || !_.contains(rules.hiddenPatrols(game.state), mapid)) {
+				return false;
+			}
+			awaiting = null;
+			patrolRevealed(mapid);
+			game.enter(4);
+			return true;
 		};
 
 		phases[8] = function alarmWhistles() {
@@ -245,8 +362,31 @@ WC.engine = (function (rules, _) {
 				game.end('trapped');
 				return;
 			}
+			if (game.settings.humanJack) {
+				ask('move', {});
+				return;
+			}
 			var move = game.ai.chooseMove(view());
 			check(rules.isLegalJackMove(state, move), 'move ' + JSON.stringify(move));
+			jackMoves(move);
+		};
+
+		game.jackMove = function (move) {
+			// One move: { type: 'walk' | 'alley', mapid } or { type: 'carriage', via, mapid }
+			if (!awaited('move') || !move || !_.contains(['walk', 'alley', 'carriage'], move.type)) {
+				return false;
+			}
+			var chosen = move.type == 'carriage' ? { type: move.type, mapid: move.mapid, via: move.via } : { type: move.type, mapid: move.mapid };
+			if (!rules.isLegalJackMove(game.state, chosen)) {
+				return false;
+			}
+			awaiting = null;
+			jackMoves(chosen);
+			return true;
+		};
+
+		function jackMoves(move) {
+			var state = game.state;
 			action('jack', 'move', move.type == 'carriage' ? { type: move.type, mapid: move.mapid, via: move.via } : { type: move.type, mapid: move.mapid },
 				{ escaped: rules.escapes(state, move) });
 			game.moveJack(move);
@@ -268,7 +408,7 @@ WC.engine = (function (rules, _) {
 				return;
 			}
 			game.enter(10);
-		};
+		}
 
 		phases[10] = function huntingTheMonster() {
 			// history: each move this phase, { index, from }, newest last, so moves can be undone in reverse order
@@ -348,6 +488,7 @@ WC.engine = (function (rules, _) {
 
 		game.end = function (type, data) {
 			var state = game.state;
+			awaiting = null;
 			state.over = true;
 			state.result = _.extend({ type: type }, data);
 			emit('gameOver', state.result);
@@ -562,6 +703,24 @@ WC.engine = (function (rules, _) {
 			emit('arrestFailed', { index: index, mapid: mapid });
 			actionDone(index);
 			return 'missed';
+		};
+
+		// The police's methods alone, for a computer police player: it acts through these and sees only the police view
+		var policeActions = Object.freeze({
+			togglePatrol: game.togglePatrol,
+			moveWretched: game.moveWretched,
+			keepWretched: game.keepWretched,
+			movePoliceman: game.movePoliceman,
+			canUndoPoliceMove: game.canUndoPoliceMove,
+			undoPoliceMove: game.undoPoliceMove,
+			finishPoliceMoves: game.finishPoliceMoves,
+			beginNextNight: game.beginNextNight,
+			chooseAction: game.chooseAction,
+			search: game.search,
+			arrest: game.arrest
+		});
+		game.policeActions = function () {
+			return policeActions;
 		};
 
 		return game;

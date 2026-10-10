@@ -1,5 +1,7 @@
 /* Exporting the game log: a dialog that saves the game's record (js/core/record.js) as a JSON file on this device.
    - The police's record (public): only what the police could see. Available at any time, so it never spoils a game.
+   - Jack's record (public, role 'jack'), when the player plays Jack: what Jack knew, his own secrets included, and
+     the detectives' public moves; never the detectives' patrol tokens before they are turned over.
    - The full record: Jack's hideout and route too. Only once the game is over, or after the player ends it on
      purpose, ticking that they understand it reveals Jack's secrets and can't be continued.
    Nothing is sent anywhere: the file is made in the page and saved through the browser. The optional label and
@@ -56,6 +58,7 @@ WC.ui.exportLog = function (game, recorder, options) {
 			'Available once the game is over, or if you end the game below.');
 		dialog.find('.export-end').prop('hidden', recorder.status() != 'inProgress');
 		dialog.find('.export-end-game').prop('disabled', !dialog.find('.export-confirm').prop('checked'));
+		dialog.find('.export-jack-choice').prop('hidden', !game.settings.humanJack);
 	}
 
 	function open() {
@@ -79,6 +82,9 @@ WC.ui.exportLog = function (game, recorder, options) {
 	});
 	dialog.find('.export-public').off('click').on('click', function () {
 		save(recorder.exportPublic('police', { feedback: feedback() }));
+	});
+	dialog.find('.export-jack').off('click').on('click', function () {
+		save(recorder.exportPublic('jack', { feedback: feedback() }));
 	});
 	dialog.find('.export-full').off('click').on('click', function () {
 		if (recorder.canExportFull()) {

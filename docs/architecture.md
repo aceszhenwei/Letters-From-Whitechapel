@@ -55,23 +55,24 @@ The same in plain text, reading down from what depends on nothing:
 | `data/content.js` | Words for the 12 phases and 4 nights | Nothing | |
 | `core/board.js` | Map queries: walking between circles, police steps, adjacent circles, alleys, distances, straight-line distance | The map | Know about a game, a state, or a turn |
 | `core/rules.js` | Legality and derived facts about a state: patrol placement, Wretched moves, police destinations, Jack's legal moves, escaping, threats, and the **view** of what Jack knows | Board, a state passed in | Change the state |
-| `core/engine.js` | The state; the phases of a night; every change to the state (effects); police actions; events (including an `action` event for each decision it accepts) | Rules; the AI only through its six functions | Touch the page; decide anything for Jack |
+| `core/engine.js` | The state; the phases of a night; every change to the state (effects); police actions; Jack's actions when a person plays him (`humanJack`: `jackTurn`, `jackHideout` … `jackMove`, through the same code as the AI's decisions); `policeActions()`, the police's methods alone; events (including an `action` event for each decision it accepts) | Rules; the AI only through its six functions | Touch the page; decide anything for Jack |
 | `core/record.js` | The game's record: listens to the engine's `action` events, keeps the actions that stand, builds the public and full exports, and replays a full record through the engine (see [Game records](game-records.md)) | Rules, engine, the map (for a hash) | Change a game's state, draw random numbers, or put a secret in a public export |
 | `core/deduction.js` | What can be worked out from a night's public record: where Jack could be (and how likely each circle is), where his route may have passed, where the hideout could be | Board, a public record passed in | Read the state |
 | `ai/jack.js` | The baseline AI: Jack's six decisions | Board, random, the view it is given | Read the state directly, change it, or touch the page |
 | `ai/strategic-jack.js` | The strategic AI: the same six decisions, valuing moves by the chance of surviving and getting home (see [Jack's AI](jack-ai.md)) | Board, deduction, random, the baseline (for decisions it leaves alone), the view | As `ai/jack.js` |
 | `ai/police.js` | Computer police players: deductive (the Easy, Normal and Hard police levels, and simulations) and random (simulations) | Board, rules, deduction, the police view | Read the state; it acts only through engine actions |
 | `core/random.js` | Biased random choices (`int`, `safe`, `safeIndex`), with an injectable source | `Math.random` by default | |
-| `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
+| `ui/renderer.js` | Drawing the board, tokens, phase card, Jack's panel and case log; turning clicks into engine actions. With `setRole('jack')` it draws only what both sides share, and `ui/jack-player.js` the rest | Board, rules, content, the game it is attached to | Change the state, or decide what is legal |
 | `ai/jack-v2.js` | Jack AI v2: the strategic AI plus early detours on every night but the last (see [Jack AI v2](jack-ai-v2.md)) | The strategic AI, the view | As `ai/jack.js` |
 | `ai/jack-waiting.js` | Strategic waiting: wraps any Jack AI with a choice between killing now and waiting, by measured escape chances (an option, played by no level; see [Strategic waiting](jack-waiting.md)) | The board, the base AI, the view | As `ai/jack.js` |
 | `ai/difficulty.js` | The difficulty levels: which Jack AI each one plays, and where a choice comes from (address, dialog, saved, default) | The AI constructors | Play, or touch the page or the rules |
 | `ai/containment.js` | Where a policeman stops a murder next to a likely hideout from ending the night at once: threats, blocking crossings and their value (see [Detective AI v3](detective-ai-v3.md)) | The board | Read the game state, or play |
-| `ai/police-levels.js` | Who leads the detectives: the player, or the original, v2 or v3 computer police (`WC.policeVariants`) | The police AI constructor | Play, or touch the page or the rules |
+| `ai/police-levels.js` | Who leads the detectives: the player, or the original, v2 or v3 computer police (`WC.policeVariants`); the detectives' difficulty when the player plays Jack (`WC.detectiveLevels`: Easy is v2, Normal v3); and the roles (`WC.roles`) | The police AI constructor | Play, or touch the page or the rules |
 | `ui/review.js` | The night review: keeps each night's public record (`rules.nightRecord`) when it ends, and shows it on the board and in the case files, with walking distances | Board, rules, content, the game it is attached to | Change the state (only `beginNextNight`, when the player asks), or show anything outside the public record |
-| `ui/autopolice.js` | Plays a computer police through the engine's police actions, a pause apart, for the player to watch | The police AI, the police view, the engine | Change the rules, or see Jack's secrets |
+| `ui/autopolice.js` | Plays a computer police through the engine's police actions (`game.policeActions()`), a pause apart, for the player to watch or to hunt a human Jack; one step at a time, never after the end | The police AI, the police view, the engine | Change the rules, hand the police AI the game or its state, or see Jack's secrets |
+| `ui/jack-player.js` | The game from Jack's side when the player plays him: his board, his decisions (from the rules, confirmed before they reach the engine), the case log in his words, and the detectives' turns paced to follow (see [Playing Jack](playing-jack.md)) | Board, rules, content, the renderer's drawing, the game | Change the state other than through Jack's actions, or show anything of the detectives' AI beyond their public actions |
 | `ui/export.js` | The export dialog: saves the police's record or, once the game is over or ended on purpose, the full record, as a file on the device | The recorder, the board (the hideout's number after ending), the page | Send anything anywhere, or offer the full record of a game still being played |
-| `ui/setup.js` | The setup dialog: Jack's difficulty, and in Developer Mode (`?dev=1`) every level and who leads the detectives; starting the game (sets `game.ai`; starts `autoPolice`) | Difficulty, police levels, the page | Change the rules |
+| `ui/setup.js` | The setup dialog: the role, the opponent's difficulty, and in Developer Mode (`?dev=1`) every level and who leads the detectives; starting the game (sets `game.ai`, or `humanJack`; starts `autoPolice` and, as Jack, `jackPlayer`) | Difficulty, police levels, roles, the page | Change the rules |
 | `main.js` | Creating the game (Easy until the setup dialog applies a level) and attaching the interface; opening the setup dialog | Everything above | |
 
 The core (`board`, `rules`, `engine`, `random`) and the AI run without a page. The tests load them into a bare JavaScript context to prove it (`test/helpers/core.js`).
@@ -165,8 +166,8 @@ Each step separates deciding from doing:
 
 | Step | Decision | Effect |
 |---|---|---|
-| Jack moves | `ai.chooseMove(view)` picks from `view.walks()` and `view.specialMoves()` | `rules.isLegalJackMove` checks it; `game.moveJack(move)` updates the sheet, tokens and track; event `jackMoved` |
-| Jack kills | `ai.chooseVictims(view)` | `rules.isLegalVictims`; `game.murder(scenes)`; event `murder` |
+| Jack moves | `ai.chooseMove(view)` picks from `view.walks()` and `view.specialMoves()`; or, with `humanJack`, the engine reports `jackTurn` and waits for `game.jackMove(move)` | `rules.isLegalJackMove` checks it; `game.moveJack(move)` updates the sheet, tokens and track; event `jackMoved` |
+| Jack kills | `ai.chooseVictims(view)`, or the player through `game.jackVictims(scenes)` | `rules.isLegalVictims`; `game.murder(scenes)`; event `murder` |
 | A policeman moves | The player clicks one of `rules.policeDestinations(state, i)` | `game.movePoliceman(i, to)` checks `rules.canMovePoliceman`, then moves; event `policemanMoved` (and, with `confirmPoliceMoves`, `policeMovesReady` once all have moved) |
 | A move is undone | The player clicks Undo | `game.undoPoliceMove()` (only in Hunting the monster); event `policeMoveUndone` |
 | A search | The player clicks one of `police.search[i]` | `game.search(i, mapid)` finds a clue or not; events `searchMissed` / `searchFinished` |
@@ -206,7 +207,8 @@ A policeman moving, from click to screen:
 | `js/ai/strategic-jack.js` | The strategic Jack AI |
 | `js/ai/jack-v2.js` | Jack AI v2 (the Hard level) |
 | `js/ai/police.js`, `js/ai/containment.js` | Computer police (the original, v2 and v3), and v3's containment model |
-| `js/ai/difficulty.js`, `js/ai/police-levels.js`, `js/ui/setup.js`, `js/ui/autopolice.js` | Jack's difficulty, who leads the detectives, the setup dialog, and computer police in the page |
+| `js/ai/difficulty.js`, `js/ai/police-levels.js`, `js/ui/setup.js`, `js/ui/autopolice.js` | Jack's difficulty, who leads the detectives and the detectives' difficulty, the setup dialog, and computer police in the page |
+| `js/ui/jack-player.js` | Playing Jack: his side of the board and his decisions |
 | `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)); `game-log/`, which checks, replays and summarises exported game records (see [Game records](game-records.md)) |
 | `experiments/` | Recorded simulation results |
 | `js/ui/renderer.js`, `js/ui/review.js`, `js/ui/export.js` | The interface, the night review, and exporting the game log |

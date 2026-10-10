@@ -1287,3 +1287,269 @@ h2 {
 .map .waiting {
     display: none;
 }
+
+/* Playing Jack (js/ui/jack-player.js): his hideout, where he is, his route tonight, and his choices
+   ------------------------------------------------------------------------------------------------ */
+.map .jv-hideout {
+    width: 27px;
+    height: 27px;
+    border: 3px solid var(--brass);
+    background: rgba(201, 162, 39, 0.25);
+    box-shadow: 0 0 0 2px #fffaf0;
+    z-index: 2;
+}
+
+.map .jv-hideout:before {
+    content: "\f015"; /* home */
+    position: absolute;
+    top: -13px;
+    left: -10px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 50%;
+    background: var(--brass);
+    color: #2b2119;
+    font-size: 10px;
+    box-shadow: 0 0 0 1.5px #fffaf0;
+}
+
+.map .jv-jack {
+    width: 25px;
+    height: 25px;
+    line-height: 21px;
+    background: var(--blood);
+    border: 2px solid #fffaf0;
+    box-shadow: 0 0 0 2px var(--blood), 0 2px 8px rgba(0, 0, 0, 0.6);
+    z-index: 6;
+}
+
+.map .jv-jack:before {
+    content: "\f21b"; /* user-secret: Jack */
+    font-size: 13px;
+}
+
+.map .jv-trail {
+    width: 15px;
+    height: 15px;
+    line-height: 13px;
+    background: rgba(90, 14, 16, 0.85);
+    border: 1px solid #fffaf0;
+    font: 700 8px/13px var(--font-body);
+    transform: translate(35%, -105%);
+    z-index: 4;
+}
+
+/* A choice: a ring around the circle (the number stays readable), gold once picked */
+.map .jv-target, .map .jv-dest {
+    width: 25px;
+    height: 25px;
+    border: 3px solid rgba(201, 162, 39, 0.85);
+    background: rgba(201, 162, 39, 0.12);
+    z-index: 5;
+}
+
+.map .jv-target.jv-hideout-choice {
+    width: 21px;
+    height: 21px;
+    border-width: 2px;
+    border-color: rgba(201, 162, 39, 0.6);
+}
+
+.map .jv-dest-alley { border-color: var(--alley); background: rgba(74, 144, 184, 0.18); }
+.map .jv-dest-carriage { border-color: var(--coach); background: rgba(217, 138, 43, 0.18); }
+
+.map .jv-dest-home {
+    width: auto;
+    height: auto;
+    min-width: 25px;
+    padding: 2px 5px;
+    border-radius: 999px;
+    font: 700 9px/15px var(--font-body);
+    color: #2b2119;
+    background: var(--brass);
+}
+
+.map .jv-via {
+    padding: 1px 6px;
+    border-radius: 999px;
+    font: 700 9px/14px var(--font-body);
+    background: var(--coach);
+    transform: translate(-50%, -170%);
+    z-index: 7;
+}
+
+.map .jv-picked, .map .jv-choice.jv-picked {
+    border-color: #fffaf0 !important;
+    box-shadow: 0 0 0 3px var(--brass), 0 0 14px 5px rgba(201, 162, 39, 0.85) !important;
+    background: rgba(201, 162, 39, 0.45);
+    z-index: 6;
+}
+
+.map .jv-victim-choice {
+    font: 700 11px/21px var(--font-body);
+    color: #fff;
+}
+
+.map .jv-reveal-choice {
+    animation: pulse 1.6s ease-in-out infinite;
+}
+
+/* The policemen glide to their crossings one after another, unless the player turned it off or skipped */
+.map .jv-police {
+    transition: left 0.45s ease-in-out, top 0.45s ease-in-out;
+}
+
+.board.jv-still .map .jv-police, .board.jv-hurry .map .jv-police {
+    transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .map .jv-police, .map .jv-reveal-choice {
+        transition: none;
+        animation: none;
+    }
+}
+
+/* Touch screens: bigger targets for Jack's choices */
+@media (pointer: coarse) {
+    .map .jv-target.jv-hideout-choice {
+        width: 24px;
+        height: 24px;
+    }
+    .map .jv-dest, .map .jv-target {
+        width: 29px;
+        height: 29px;
+    }
+}
+
+.state .jack-turn-title {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--brass);
+}
+
+.state .jack-intro p {
+    margin: 0 0 8px;
+}
+
+.state .jack-status {
+    margin: 4px 0 0;
+    font-weight: 700;
+    color: var(--brass);
+    min-height: 1.4em;
+}
+
+.state .jack-unavailable {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+/* Jack's markers in the legend, only when the player plays him */
+.legend .legend-jack-only {
+    display: none;
+}
+
+.human-jack .legend .legend-jack-only {
+    display: flex;
+}
+
+.legend-icon.legend-hideout {
+    border: 2px solid var(--brass);
+    background: rgba(201, 162, 39, 0.25);
+    border-radius: 50%;
+}
+
+.legend-icon.legend-jack {
+    background: var(--blood);
+    border: 2px solid #fffaf0;
+    border-radius: 50%;
+}
+
+.legend-icon.legend-trail {
+    background: rgba(90, 14, 16, 0.85);
+    border: 1px solid #fffaf0;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 8px;
+    text-align: center;
+}
+
+.legend-icon.legend-choice {
+    border: 3px solid rgba(201, 162, 39, 0.85);
+    border-radius: 50%;
+}
+
+.jack-move-kinds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+}
+
+.jack-move-kinds .button {
+    flex: 1 1 auto;
+    min-height: 40px;
+}
+
+.jack-animate {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.ending-summary {
+    margin: 0 0 16px;
+    padding-left: 18px;
+    text-align: left;
+}
+
+.role-options {
+    display: grid;
+    gap: 8px;
+}
+
+/* Jack's choices always above his static markers (redrawn after an event), so a tap always reaches them */
+.map .jv-choice {
+    z-index: 8;
+}
+
+.map .jv-choice.jv-via {
+    z-index: 9;
+}
+
+/* Playing Jack on a narrow screen: his status and buttons again under the board, where he makes his choices */
+.jack-board-actions {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--ink-raised);
+    color: var(--text);
+}
+
+.jack-board-actions .jack-status {
+    margin: 0 0 6px;
+    font-weight: 700;
+    color: var(--brass);
+}
+
+.jack-board-actions .jack-move-kinds {
+    margin: 0 0 8px;
+}
+
+@media (min-width: 1101px) {
+    .jack-board-actions {
+        display: none;
+    }
+}
+
+/* Once the player ends the game (export dialog), Jack's buttons under the board go too */
+.game-ended .jack-board-actions {
+    display: none;
+}

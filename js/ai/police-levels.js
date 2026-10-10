@@ -84,3 +84,104 @@ WC.policeLevels = (function (_) {
 
 	return { levels: levels, offered: offered, defaultLevel: defaultLevel, level: level, fromAddress: fromAddress, resolve: resolve, create: create };
 })(_);
+
+/* The detectives' difficulty, when the player plays Jack: which existing police AI hunts him. Easy is Detective AI v2,
+   Normal (the default) Detective AI v3, each made with its own configuration, unchanged. The same shape as
+   WC.difficulty, so the setup dialog handles both the same way. Where the choice comes from, strongest first: the
+   address (index.html?role=jack&detectives=easy|normal), the dialog, the choice saved from the last game as Jack, and
+   the default. */
+WC.detectiveLevels = (function (_) {
+
+	var levels = [
+		{
+			id: 'easy',
+			label: 'Easy',
+			ai: 'Detective AI v2',
+			player: true,
+			description: 'The detectives chase where you most likely are, and guard the hideouts your routes point to.',
+			create: function (WC) { return WC.createPolice(WC.board, WC.rules, WC.deduction, _, WC.policeVariants.v2); }
+		},
+		{
+			id: 'normal',
+			label: 'Normal',
+			ai: 'Detective AI v3',
+			player: true,
+			description: 'The detectives also prepare for your last night, before you strike.',
+			create: function (WC) { return WC.createPolice(WC.board, WC.rules, WC.deduction, _, WC.policeVariants.v3); }
+		}
+	];
+	var defaultLevel = 'normal';
+
+	function level(id) {
+		return _.findWhere(levels, { id: id });
+	}
+
+	function fromAddress(search) {
+		var match = /[?&]detectives=([a-z]+)/.exec(search || '');
+		return match && level(match[1]) ? match[1] : null;
+	}
+
+	function offered(dev) {
+		return _.filter(levels, function (l) { return dev || l.player; });
+	}
+
+	function resolve(sources) {
+		// sources: { search, chosen, saved, dev }. Returns { id, source: 'address' | 'chosen' | 'saved' | 'default' }
+		sources = sources || {};
+		var address = fromAddress(sources.search);
+		if (address) {
+			return { id: address, source: 'address' };
+		}
+		var ok = function (id) { return _.findWhere(offered(sources.dev), { id: id }); };
+		if (ok(sources.chosen)) {
+			return { id: sources.chosen, source: 'chosen' };
+		}
+		if (ok(sources.saved)) {
+			return { id: sources.saved, source: 'saved' };
+		}
+		return { id: defaultLevel, source: 'default' };
+	}
+
+	function create(WC, id) {
+		return (level(id) || level(defaultLevel)).create(WC);
+	}
+
+	return { levels: levels, offered: offered, defaultLevel: defaultLevel, level: level, fromAddress: fromAddress, resolve: resolve, create: create };
+})(_);
+
+/* Who the player plays: 'detectives' (the default: the player leads the detectives against Jack's AI) or 'jack' (the
+   player is Jack, against the detectives' AI). From the address (?role=jack|detectives), the dialog, the saved choice,
+   or the default. */
+WC.roles = (function (_) {
+	var roles = [
+		{ id: 'detectives', label: 'Play as the Detectives', description: 'Lead the five detectives against the computer\'s Jack.' },
+		{ id: 'jack', label: 'Play as Jack', description: 'Kill and escape four nights running, hunted by the computer\'s detectives.' }
+	];
+	var defaultRole = 'detectives';
+
+	function role(id) {
+		return _.findWhere(roles, { id: id });
+	}
+
+	function fromAddress(search) {
+		var match = /[?&]role=([a-z]+)/.exec(search || '');
+		return match && role(match[1]) ? match[1] : null;
+	}
+
+	function resolve(sources) {
+		sources = sources || {};
+		var address = fromAddress(sources.search);
+		if (address) {
+			return { id: address, source: 'address' };
+		}
+		if (role(sources.chosen)) {
+			return { id: sources.chosen, source: 'chosen' };
+		}
+		if (role(sources.saved)) {
+			return { id: sources.saved, source: 'saved' };
+		}
+		return { id: defaultRole, source: 'default' };
+	}
+
+	return { roles: roles, defaultRole: defaultRole, role: role, fromAddress: fromAddress, resolve: resolve };
+})(_);

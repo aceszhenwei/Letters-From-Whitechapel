@@ -1,12 +1,15 @@
 /* Interface: shows the game and turns the police's clicks into engine actions.
    - It displays the state (game.state) and reacts to the engine's events (game.on).
    - Clickable choices come from the rules (WC.rules): the interface never decides what is legal.
-   - It never changes the state itself: clicks call the engine (togglePatrol, movePoliceman, search ...). */
+   - It never changes the state itself: clicks call the engine (togglePatrol, movePoliceman, search ...).
+   When the player plays Jack (setRole('jack')), it draws only what both sides share (the map, the phase card, the
+   move track) and leaves the rest to WC.ui.jackPlayer, which shows the game from Jack's side. */
 var WC = WC || {};
 
 WC.ui = (function ($, _, board, rules, content) {
 
 	var game;
+	var role = 'detectives'; // Who the player plays: 'detectives' or 'jack'
 
 	function state() {
 		return game.state;
@@ -537,6 +540,9 @@ WC.ui = (function ($, _, board, rules, content) {
 			$('.state').hide();
 			draw.progress('');
 			draw.updateTitle();
+			if (role == 'jack') {
+				return; // WC.ui.jackPlayer draws Jack's board
+			}
 			// The last phase's choices and pieces. A filter function, not a selector: jQuery's selector engine
 			// draws on Math.random, which Jack's AI also uses
 			$('.map .token').filter(function () { return !$(this).hasClass('token-clue'); }).remove();
@@ -679,9 +685,19 @@ WC.ui = (function ($, _, board, rules, content) {
 		}
 	};
 
+	// What the board shows the same way whoever the player is
+	var shared = ['started', 'phase', 'timeOfCrime'];
+
+	function setRole(chosen) {
+		role = chosen == 'jack' ? 'jack' : 'detectives';
+	}
+
 	function attach(attachedGame) {
 		game = attachedGame;
 		game.on(function (type, data) {
+			if (role == 'jack' && !_.contains(shared, type)) {
+				return; // Shown from Jack's side by WC.ui.jackPlayer
+			}
 			if (events[type]) {
 				events[type](data);
 			}
@@ -700,5 +716,5 @@ WC.ui = (function ($, _, board, rules, content) {
 		});
 	}
 
-	return { attach: attach, draw: draw };
+	return { attach: attach, draw: draw, setRole: setRole, role: function () { return role; }, policeNames: policeNames };
 })(jQuery, _, WC.board, WC.rules, WC.content);
