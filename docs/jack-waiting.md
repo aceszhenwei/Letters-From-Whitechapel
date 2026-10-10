@@ -184,6 +184,8 @@ The audit found fake patrols worthless to Jacks who never wait. With waiting, Ja
 
 ## 9. Implications for Detective AI v4
 
+*Later: no Detective AI v4 was built ([Detective coordination and inference](detective-study.md), which used `jack-v2-waiting` as an opponent).*
+
 - *Corrected by [Waiting against containment](waiting-containment.md):* containment doesn't need to expect waiting against Jack AI v2, who never kills one walk from home.
 - **`containWretched`, re-tested against waiting Jacks:** it cuts first-move escapes after a wait but changes no win rate. It stays an option, off.
 - **Fake patrols remain a low priority.** Even with waiting, which token is fake doesn't change Jack's decisions on this board (section 7).

@@ -27,6 +27,8 @@ Start at the [documentation index](docs/README.md). The most used pages:
 - [AI overview](docs/ai.md): every Jack and police AI, the levels, and the evidence behind each
 - [Testing](docs/testing.md): running the tests, the test tiers and the seeds (`npm install && npm test`)
 - [Research reports](docs/README.md#research-reports): the studies behind the AIs
+- [Game records](docs/game-records.md): exporting a game, and checking and replaying exported games
+- [Deployment](docs/deployment.md): how the online game is published
 - [Roadmap](docs/roadmap.md) and [Changelog](docs/changelog.md)
 
 Contributions are welcome: see [Contributing](docs/contributing.md).

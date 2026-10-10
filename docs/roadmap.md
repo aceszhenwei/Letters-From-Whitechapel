@@ -5,7 +5,9 @@ This page keeps four things apart: what is **implemented**, its **known limitati
 ## Implemented
 
 - **The game:** the revised edition's standard rules for one police player against a computer Jack ([Game rules](game-rules.md)), on a map verified against the physical board ([Map data](map-data.md#verified-against-the-board)).
-- **Computer players:** three Jack levels (Baseline, Strategic, Jack AI v2) and three computer police levels (original, Detective AI v2, Detective AI v3) that the player can watch instead of playing ([AI overview](ai.md)).
+- **Play online:** https://aceszhenwei.github.io/Letters-From-Whitechapel/, published from `master` ([Deployment](deployment.md)), playable on phones (zoom and pan).
+- **Computer players:** players choose Jack's difficulty, Normal (Strategic Jack) or Hard (Jack AI v2). Developer Mode (`?dev=1`) adds Baseline Jack, an experimental Jack with strategic waiting, and three computer police levels (original, Detective AI v2, Detective AI v3) to watch instead of playing ([AI overview](ai.md)).
+- **The detective's tools:** undoing a move, reviewing each night, faster searching, zooming the board ([User interface](ui.md#the-detectives-tools)).
 - **Game records:** players can export a game (the police's record at any time, the full record once it is over), and `npm run research:import` checks, replays and summarises the files ([Game records](game-records.md)).
 - **Testing:** fast, smoke, medium and full tiers, with fixed seed ranges for every experiment ([Testing](testing.md)).
 
@@ -29,7 +31,7 @@ The [changelog](changelog.md) lists every change, pull request by pull request.
 **Code:**
 - The page tests are slow: most of their time is jsdom running jQuery selectors.
 - The default Jack AI shares the page's random source, so an interface change that draws random numbers could shift Jack's choices.
-- The phases are numbered (0 to 11) rather than named across the engine, the interface and the content.
+- The phases are numbered (0 to 12) rather than named across the engine, the interface and the content.
 
 ## Potential research (not approved)
 
@@ -50,6 +52,6 @@ Proposals made by the reports. **None is approved or scheduled**; each would nee
 
 ## Other ideas (not scheduled)
 
-- **Gameplay:** two people on one screen; play as Jack against the computer police (`js/ai/police.js` already plays from the police view); undo the police's last click within a phase; save and resume a game in browser storage; show the police's deductions (where Jack could be, from `js/core/deduction.js`).
-- **Interface:** keyboard play for the board; zoom and pan on small screens; sound effects with a mute button.
+- **Gameplay:** two people on one screen; play as Jack against the computer police (`js/ai/police.js` already plays from the police view); undo patrol placement or a Wretched's move as moves can be undone now; save and resume a game in browser storage; show the police's deductions (where Jack could be, from `js/core/deduction.js`).
+- **Interface:** keyboard play for the board; pinch to zoom the board itself; sound effects with a mute button.
 - **Code:** move more page tests to the core and headless layers; give the default AI its own seeded random source (this changes the golden traces, so it needs a deliberate re-recording); name the phases.
