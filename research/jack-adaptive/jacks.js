@@ -61,10 +61,24 @@ function pressure(view) {
 	return guard(view.hideout) - others.reduce((a, b) => a + b, 0) / others.length;
 }
 
+function policeReach(police) {
+	// Circles the policemen could search or arrest at on their next turn (each moves up to two crossings), as Jack can
+	// see them: where they stand now (public: the tokens are on the board)
+	const circles = new Set();
+	for (const c of _.union(police, _.flatten(police.map((x) => WC.board.crossingsWithinTwo(x))))) {
+		for (const n of WC.board.adjacentNumbers(c)) circles.add(n);
+	}
+	return circles;
+}
+
 function createModeJack(random, chooser, extra) {
-	// Strategic Jack with Jack AI v2's detour rule, its extent chosen each night by chooser(view) -> mode name
+	// Strategic Jack with Jack AI v2's detour rule, its extent chosen each night by chooser(view) -> mode name.
+	// extra.step (optional): how a detour step is chosen given where the policemen stand: 'random' (Jack AI v2),
+	// 'skip' (only to circles out of their reach; no detour this move if none is), 'steer' (out of reach when one is,
+	// else as Jack AI v2), or 'skipRandom' (the control: skip with probability extra.skipRate, ignoring the police)
 	const strategic = WC.createStrategicJack(WC.board, WC.deduction, random, _);
 	const debug = _.extend(strategic.debug, { nights: [] });
+	const step = (extra && extra.step) || 'random';
 	let night = null;
 
 	function detour(view, options) {
@@ -73,7 +87,14 @@ function createModeJack(random, chooser, extra) {
 		const here = view.distanceToHideout(view.position);
 		const spare = view.remainingMoves - here;
 		if (movesSoFar > options.detourMoves || spare - 2 < options.detourSpare) return null;
-		const away = _.filter(view.walks(), (mapid) => mapid != view.hideout && view.distanceToHideout(mapid) > here);
+		let away = _.filter(view.walks(), (mapid) => mapid != view.hideout && view.distanceToHideout(mapid) > here);
+		if (step === 'skip' || step === 'steer') {
+			const reach = policeReach(view.policeNow());
+			const safe = away.filter((m) => !reach.has(m));
+			if (safe.length) away = safe;
+			else if (step === 'skip' && away.length) { night.skipped++; return null; }
+		}
+		if (step === 'skipRandom' && away.length && extra.skipDraw() < extra.skipRate) { night.skipped++; return null; }
 		return away.length > 0 ? { mapid: away[random.int(0, away.length)], type: 'walk' } : null;
 	}
 
@@ -82,7 +103,7 @@ function createModeJack(random, chooser, extra) {
 			const last = view.night >= WC.rules.config.nights - 1;
 			const started = Date.now();
 			const decision = last ? { mode: 'none', pressure: null } : chooser(view);
-			night = { night: view.night, mode: decision.mode, pressure: decision.pressure, detours: 0, ms: Date.now() - started };
+			night = { night: view.night, mode: decision.mode, pressure: decision.pressure, detours: 0, skipped: 0, ms: Date.now() - started };
 			debug.nights.push(night);
 		}
 		const options = modes[night.mode];
@@ -94,7 +115,7 @@ function createModeJack(random, chooser, extra) {
 		return strategic.chooseMove(view);
 	}
 
-	return _.extend({}, strategic, { chooseMove, debug }, extra || {});
+	return _.extend({}, strategic, { chooseMove, debug });
 }
 
 // Each policy: (seed) -> Jack. Every one uses the harness's Jack random stream (seed * 7919 + 1); a mixed choice draws
@@ -131,8 +152,16 @@ const policies = {
 	adaptive: (seed) => createModeJack(jackRandom(seed), adaptiveChooser()),
 	// Variants explored on the development seeds
 	'adaptive-up': (seed) => createModeJack(jackRandom(seed), adaptiveChooser({ down: 'v2' })), // Escalate only
-	'adaptive-down': (seed) => createModeJack(jackRandom(seed), adaptiveChooser({ up: 'v2' })) // Relax only
+	'adaptive-down': (seed) => createModeJack(jackRandom(seed), adaptiveChooser({ up: 'v2' })), // Relax only
+	// Adaptation within the night: Jack AI v2's detours, each step chosen by where the policemen stand now
+	'safe-skip': (seed) => createModeJack(jackRandom(seed), () => ({ mode: 'v2', pressure: null }), { step: 'skip' }),
+	'safe-steer': (seed) => createModeJack(jackRandom(seed), () => ({ mode: 'v2', pressure: null }), { step: 'steer' })
 };
+
+// The control for a detour-step candidate: skip detour steps at random at a given rate, ignoring the police
+function randomSkip(rate) {
+	return (seed) => createModeJack(jackRandom(seed), () => ({ mode: 'v2', pressure: null }), { step: 'skipRandom', skipRate: rate, skipDraw: seeded(seed * 7901 + 3) });
+}
 
 // The matched control (ablation): the adaptive candidate's modes, chosen at random with the frequencies it used, so
 // it deceives as much as the candidate on average but without reading the police. Set from the selection stage
@@ -140,4 +169,4 @@ function matchedMixed(mix) {
 	return (seed) => createModeJack(jackRandom(seed), mixedChooser(modeRandom(seed), mix));
 }
 
-module.exports = { policies, modes, defaults, pressure, createModeJack, adaptiveChooser, mixedChooser, matchedMixed, jackRandom, modeRandom, files: [file, 'research/jack-adaptive/jacks.js'] };
+module.exports = { policies, modes, defaults, pressure, policeReach, randomSkip, createModeJack, adaptiveChooser, mixedChooser, matchedMixed, jackRandom, modeRandom, files: [file, 'research/jack-adaptive/jacks.js'] };

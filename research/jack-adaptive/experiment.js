@@ -74,6 +74,7 @@ if (!isMainThread) {
 			n.mode = m ? m.mode : null;
 			n.pressure = m ? m.pressure : null;
 			n.detours = m ? m.detours : null;
+			n.skipped = m ? m.skipped : null;
 			n.escaped = i < nights.length - 1 || final.result.type === 'jackWins';
 			n.outcome = n.escaped ? 'escaped' : final.result.type;
 			n.detour = n.escaped ? n.used - n.startDistance : null;

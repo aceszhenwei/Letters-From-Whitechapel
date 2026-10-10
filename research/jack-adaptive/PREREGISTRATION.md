@@ -51,4 +51,31 @@ Production difficulty levels are unchanged.
 
 ## Part 2 (after stages A and B, before stage C)
 
-*To be filled in.*
+### After stage A (written before stage B was run)
+
+**Stage A findings** (`results/stage-a.md`, exploratory, 100 games per matchup):
+- The pressure signal does not tell the detectives apart: its distribution is the same against all four (median about
+  −0.05, 10th–90th percentile about −0.37 to +0.37), so the pressure-adaptive Jack chose almost the same extents
+  everywhere (about 40 / 42 / 18% none / v2 / long). No choice of thresholds can make the extents depend on the
+  detective when the signal doesn't, so the thresholds stay as written (0.15, 0.02).
+- Relaxing deception on low pressure costs 11–14 points against v2 and v3: low pressure follows from the deception
+  working, not from a weak detective.
+- `long` barely differs from `v2`: the 6-move reserve binds first.
+- A second family was added in stage A (adaptation within the night): each detour step chosen by where the policemen
+  stand now, `safe-steer` (a circle out of their reach when one exists) and `safe-skip` (no detour step when every
+  away step is in reach). Neither beat Jack AI v2 (−2.3 and −2.5 points).
+
+**Candidates for stage B:** `adaptive`, `adaptive-up`, `safe-steer`, `safe-skip`, with `jack-v2`, `mixed` and
+`strategic` as references.
+
+**Selection rule:** the candidate with the highest primary metric against `jack-v2` on the stage B seeds; on a tie
+within 1 point, the simpler (fewer rules). It goes to stage C whatever its stage B result, so the held-out stage tests
+the best the study found rather than nothing.
+
+**Matched control:** for a pressure-adaptive candidate, `matched` uses its stage B frequencies of none / v2 / long; for
+a detour-step candidate, `matched` skips detour steps at random at its stage B skip rate (or, for `safe-steer`, which
+never skips, chooses its detour steps at random as Jack AI v2 does, which is `jack-v2` itself).
+
+### After stage B
+
+*To be filled in before stage C.*
