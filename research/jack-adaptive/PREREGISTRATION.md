@@ -76,6 +76,20 @@ the best the study found rather than nothing.
 a detour-step candidate, `matched` skips detour steps at random at its stage B skip rate (or, for `safe-steer`, which
 never skips, chooses its detour steps at random as Jack AI v2 does, which is `jack-v2` itself).
 
-### After stage B
+### After stage B (written before stage C was run)
 
-*To be filled in before stage C.*
+**Stage B results** (`results/stage-b.md`, exploratory, 200 games per matchup), primary metric against `jack-v2`:
+`safe-skip` +1.5 (95% interval −1.8 to +4.8), `safe-steer` +0.9, `adaptive-up` −0.1, `adaptive` −3.4, `mixed` −5.3,
+`strategic` −18.4.
+
+**Selected candidate:** `safe-skip` (highest primary metric). It takes Jack AI v2's detours, but each detour step only
+to a circle the policemen can't reach on their next turn; when every away step is in reach, that move is not a detour.
+
+**Matched control:** `matched` = Jack AI v2 that skips each detour step at random with probability **0.12**, the share of
+detour opportunities `safe-skip` skipped in stage B (346 of 2,883, nights 1–3). It deceives as much as the candidate
+but ignores where the policemen stand. Command: `experiment.js matched <police> 400 594001 '{"skipRate":0.12}'`.
+
+**Stage C** (seeds 594001–594400, 400 games per matchup), run once: `strategic`, `jack-v2`, `mixed`, `safe-skip`,
+`matched` against all six detectives. Criteria as in part 1, with `matched` as the control for criterion 2. Criterion 4
+(adaptation is real) is measured for this candidate as: its skips happen only when every away step is within the
+policemen's reach (by construction), and its skip rate differs between detectives (chi-square, p < 0.01).

@@ -30,7 +30,8 @@ if (!isMainThread) {
 	const hybrid = { weighting: 'hybrid', w: 0.9, rho: 0.5 };
 
 	function play(seed) {
-		const make = workerData.mix ? jacks.matchedMixed(workerData.mix) : jacks.policies[workerData.jack];
+		const mix = workerData.mix;
+		const make = !mix ? jacks.policies[workerData.jack] : mix.skipRate !== undefined ? jacks.randomSkip(mix.skipRate) : jacks.matchedMixed(mix);
 		const ai = make(seed);
 		const nights = [];
 		let current = null;
