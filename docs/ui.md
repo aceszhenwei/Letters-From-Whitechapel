@@ -44,6 +44,11 @@ Three tools help a player keep track of the investigation. None changes the rule
 - **Undo last move** takes back the most recent move: the policeman returns to his crossing and can move again. Repeating it undoes the moves before, newest first ([screenshot](images/night-review/after-undone.jpg)).
 - Once everyone has moved, **Done: on to Clues and suspicion** ends the phase. Moves can't be undone after that: searches and arrests reveal information, so the board can't be wound back past them.
 
+**Searching and arresting.**
+- In Clues and suspicion one policeman acts at a time: once he has chosen to search or arrest, the others' choices wait until he has finished. Each policeman's Search here and Arrest here tokens are his own, so policemen beside the same circles never take each other's away.
+- **Search his remaining circles** searches the chosen policeman's circles one after another, in order, until a clue turns up.
+- **Search with every policeman left** does the same for every policeman who hasn't acted and can search; a policeman who can only arrest is left to choose.
+
 **Reviewing a night.**
 - When Jack reaches his hideout, the game stops at **The night is over**. The board keeps the night's policemen, crime scenes, clues, searches without a clue (dashed rings) and failed arrests (crossed rings).
 - The **case files** card shows the night's log in order: the murder and the Time of the Crime, where the policemen started and moved, each of Jack's moves by its move-track number (and coaches and alleys), every search and arrest, and his escape ([screenshot](images/night-review/after-review-card.jpg)).
@@ -113,7 +118,7 @@ Pieces that can be clicked have the `selectable` class, which gives them a point
 
 ## The class contract
 
-The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, `highlight-pieces`, `highlighting`, `undo-move`, `finish-moves`, `for-police-N`, `review`, `reviewing`, `review-night`, `review-log`, `begin-next-night`, `close-review`, `review-case`, `export-open`, `export-dialog`, `export-public`, `export-full`, `export-confirm`, `export-end-game`, `game-ended`, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
+The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, `highlight-pieces`, `highlighting`, `undo-move`, `finish-moves`, `search-rest`, `search-everyone`, `waiting`, `for-police-N`, `review`, `reviewing`, `review-night`, `review-log`, `begin-next-night`, `close-review`, `review-case`, `export-open`, `export-dialog`, `export-public`, `export-full`, `export-confirm`, `export-end-game`, `game-ended`, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
 
 Two of these behave in a way that matters:
 

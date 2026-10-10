@@ -1230,3 +1230,8 @@ h2 {
     .topbar { flex-wrap: wrap; }
     .topbar-button { margin-right: 0; }
 }
+
+/* Clues and suspicion: while one policeman searches or arrests, the others' Search and Arrest choices wait */
+.map .waiting {
+    display: none;
+}

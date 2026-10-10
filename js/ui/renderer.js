@@ -336,48 +336,112 @@ WC.ui = (function ($, _, board, rules, content) {
 		moveControls();
 	};
 
+	/* Clues and suspicion: one policeman acts at a time. Every token is tagged with its policeman (for-police-N), so
+	   when two policemen's circles overlap, one policeman's search or arrest never removes the other's tokens */
+	var clues = { active: null }; // The policeman who has chosen to search or arrest and not finished
+
+	function cluesBusy() {
+		var turn = state().turn;
+		return clues.active !== null && state().phase == 11 && !_.contains(turn.done, clues.active);
+	}
+
+	function searchRest(index) {
+		// Search this policeman's remaining circles in order, until a clue turns up or none are left
+		var list = rules.policeNight(state()).search[index];
+		for (var i = 0; i < list.length; i++) {
+			if (state().phase != 11 || _.contains(state().turn.done, index)) {
+				return;
+			}
+			if (list[i] !== undefined && game.search(index, list[i]) !== 'miss') {
+				return;
+			}
+		}
+	}
+
+	function cluesControls() {
+		// The faster ways to search: the active policeman's remaining circles, or every policeman still to act
+		var controls = $('.state.clues-and-suspicion .phase-actions');
+		if (controls.length == 0) {
+			controls = $('<div class="phase-actions"></div>').appendTo('.state.clues-and-suspicion');
+			$('<button type="button" class="button button-secondary search-rest"></button>').text('Search his remaining circles').click(function () {
+				if (cluesBusy() && state().turn.choice[clues.active] == 'search') {
+					searchRest(clues.active);
+				}
+			}).appendTo(controls);
+			$('<button type="button" class="button button-secondary search-everyone"></button>').text('Search with every policeman left').click(function () {
+				if (cluesBusy()) {
+					return;
+				}
+				// Each policeman still to act who can search searches all his circles; any who can only arrest are left
+				var night = rules.policeNight(state());
+				_.each(_.range(night.now.length), function (index) {
+					if (state().phase == 11 && !_.contains(state().turn.done, index) && !state().turn.choice[index] &&
+						_.some(night.search[index], function (c) { return c !== undefined; }) && game.chooseAction(index, 'search')) {
+						clues.active = index;
+						searchRest(index);
+					}
+				});
+			}).appendTo(controls);
+		}
+		var turn = state().turn;
+		var night = rules.policeNight(state());
+		var searching = cluesBusy() && turn.choice[clues.active] == 'search';
+		var waiting = !cluesBusy() && _.some(_.range(night.now.length), function (index) {
+			return !_.contains(turn.done || [], index) && !(turn.choice || {})[index] && _.some(night.search[index], function (c) { return c !== undefined; });
+		});
+		controls.find('.search-rest').prop('hidden', !searching);
+		controls.find('.search-everyone').prop('hidden', !waiting);
+	}
+
 	turns[11] = function cluesAndSuspicion() {
-		draw.phaseText('clues-and-suspicion', 'Each policeman either searches or arrests. A search checks the circles next to him one at a time until a clue turns up. An arrest checks one circle: if Jack is there, you win.');
+		draw.phaseText('clues-and-suspicion', 'Each policeman either searches or arrests. A search checks the circles next to him one at a time until a clue turns up. An arrest checks one circle: if Jack is there, you win. One policeman acts at a time.');
 		var police = rules.policeNight(state());
+		clues.active = null;
 		_.each(police.now, function (a, index) {
 			draw.createElement(a, 'policeman', 'label token token-pawn police-' + index).appendTo('.map');
 			if (police.search[index].length > 0) {
-				draw.createElement(a, 'Search', 'label label-info selectable token token-search-adjacent token-search-adjacent-' + a).appendTo('.map');
+				draw.createElement(a, 'Search', 'label label-info selectable token token-search-adjacent token-search-adjacent-' + a + ' for-police-' + index).appendTo('.map');
 			}
 			if (police.arrest[index].length > 0) {
-				draw.createElement(a, 'Arrest', 'label label-info selectable token token-arrest-adjacent token-arrest-adjacent-' + a).appendTo('.map');
+				draw.createElement(a, 'Arrest', 'label label-info selectable token token-arrest-adjacent token-arrest-adjacent-' + a + ' for-police-' + index).appendTo('.map');
 			}
 		});
 		draw.progress('Policemen acted: ' + state().turn.acted + ' of ' + police.now.length);
 
+		function choose(index, action) {
+			// The policeman's choice; the other policemen wait until he has finished
+			if (cluesBusy() || !game.chooseAction(index, action)) {
+				return false;
+			}
+			clues.active = index;
+			$('.token-search-adjacent.for-police-' + index + ', .token-arrest-adjacent.for-police-' + index).remove();
+			$('.token-search-adjacent, .token-arrest-adjacent').addClass('waiting');
+			cluesControls();
+			return true;
+		}
 		$('.token-arrest-adjacent').click(function () {
-			var mapid = $(this).data('mapid');
-			var index = _.indexOf(police.now, mapid);
-			if (!game.chooseAction(index, 'arrest')) {
+			var index = _.indexOf(police.now, $(this).data('mapid'));
+			if (!choose(index, 'arrest')) {
 				return;
 			}
 			_.each(police.arrest[index], function (circle) {
-				draw.createElement(circle, 'Arrest here', 'label label-info selectable token token-arrest').click(function () {
+				draw.createElement(circle, 'Arrest here', 'label label-info selectable token token-arrest for-police-' + index).click(function () {
 					game.arrest(index, circle);
 				}).appendTo('.map');
 			});
-			$('.token-search-adjacent-' + mapid).remove();
-			$(this).remove();
 		});
 		$('.token-search-adjacent').click(function () {
-			var mapid = $(this).data('mapid');
-			var index = _.indexOf(police.now, mapid);
-			if (!game.chooseAction(index, 'search')) {
+			var index = _.indexOf(police.now, $(this).data('mapid'));
+			if (!choose(index, 'search')) {
 				return;
 			}
 			_.each(police.search[index], function (circle) {
-				draw.createElement(circle, 'Search here', 'label label-info selectable token token-search token-search-' + circle).click(function () {
+				draw.createElement(circle, 'Search here', 'label label-info selectable token token-search token-search-' + circle + ' for-police-' + index).click(function () {
 					game.search(index, circle);
 				}).appendTo('.map');
 			});
-			$('.token-arrest-adjacent-' + mapid).remove();
-			$(this).remove();
 		});
+		cluesControls();
 	};
 
 	/* What the engine reports
@@ -503,26 +567,33 @@ WC.ui = (function ($, _, board, rules, content) {
 			moveControls();
 		},
 		searchMissed: function (data) {
-			$('.token-search-' + data.mapid).remove();
+			$('.token-search-' + data.mapid + '.for-police-' + data.index).remove();
 			draw.progress('No clue at ' + number(data.mapid) + '. Search another circle.');
 		},
 		searchFinished: function (data) {
 			var missed = _.map(data.missed, number).join(', ');
 			if (data.clue) {
 				draw.log((data.missed.length ? 'No clue at ' + missed + ', then a clue' : 'Clue') + ' found at ' + number(data.mapid) + '! Jack has been there tonight.', 'clue');
-				$('.token-search').remove();
+				$('.token-search.for-police-' + data.index).remove();
 				draw.clue(data.mapid);
 			} else {
-				$('.token-search-' + data.mapid).remove();
+				$('.token-search.for-police-' + data.index).remove();
 				draw.log('No clue at ' + missed + '.', 'police');
 			}
 		},
 		arrestFailed: function (data) {
 			draw.log('Arrest at ' + number(data.mapid) + ': Jack is not there.', 'police');
-			$('.token-arrest').remove();
+			$('.token-arrest.for-police-' + data.index).remove();
 		},
 		policemanActed: function (data) {
 			draw.progress('Policemen acted: ' + data.acted + ' of ' + data.total);
+			// He has finished: his tokens go, and the others may act
+			$('.token-search.for-police-' + data.index + ', .token-arrest.for-police-' + data.index).remove();
+			$('.token-search-adjacent.for-police-' + data.index + ', .token-arrest-adjacent.for-police-' + data.index).remove();
+			$('.token-search-adjacent, .token-arrest-adjacent').removeClass('waiting');
+			if (state().phase == 11) {
+				cluesControls();
+			}
 		},
 		gameOver: function (result) {
 			var message = endings[result.type](result);

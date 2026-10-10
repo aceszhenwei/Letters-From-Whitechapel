@@ -2,7 +2,13 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: play online
+## Unreleased: searching fixed, and faster
+
+- **Fixed a softlock in Clues and suspicion:** a policeman who had chosen to search could lose all his Search here tokens when another policeman found a clue (or another's failed arrest removed his Arrest here tokens), so the phase could never end. Policemen now act one at a time, and each token belongs to its policeman.
+- **Faster searching:** **Search his remaining circles** finishes the chosen policeman's search, and **Search with every policeman left** searches with every policeman still to act who can search. Both search in the same order a player would click, stopping each search at its first clue; no rule changed.
+- **Tests:** in `ui-flows.test.js`, the reported case, two policemen beside the same circle, and both buttons.
+
+## Play online ([aceszhenwei/Letters-From-Whitechapel#23](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/23))
 
 - **The game is on GitHub Pages:** https://aceszhenwei.github.io/Letters-From-Whitechapel/, linked at the top of the README.
 - **Deployment** ([Deployment](deployment.md)): `.github/workflows/pages.yml` runs the fast tests, stages only the game's files (`tools/site/build.js`, `npm run site`, which also checks every asset reference), and publishes on each push to `master` or by hand.
