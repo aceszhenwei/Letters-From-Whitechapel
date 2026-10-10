@@ -22,7 +22,7 @@ The [changelog](changelog.md) lists every change, pull request by pull request.
 
 **AIs** (details in each report's limitations section):
 - **Every result is AI against AI.** No level is a claim about how hard a person would find it. Exported human games ([Game records](game-records.md)) are the way to start measuring that.
-- **Jack AI v2 and Detective AI v3 have not been validated on unseen seeds.** Both were selected on development seeds; the validations are proposed below.
+- **Detective AI v3 has not been validated on unseen seeds**; the validation is proposed below. Jack AI v2's was run ([Jack AI v2 §9](jack-ai-v2.md#9-independent-validation)): confirmed against Detective AI v2, but 4.5 points behind Strategic Jack against the original police, and its edge over Detour Jack is not established.
 - **Strategic Jack** gives his hideout away with direct routes, and his escape and arrest estimates were measured against the original police ([Jack's AI §10](jack-ai.md#10-remaining-weaknesses)).
 - **Jack AI v2**'s gain depends on Detective AI v2's directness model; his detours always come first and lead away, so they are predictable in shape; once the hideout is walled off he still hovers near it ([Jack AI v2 §10](jack-ai-v2.md#10-limitations-and-future-work)).
 - **Detective AI v2** has no cordon planning or time-dependent reachability, and trades searching for blocking ([Detective AI v2 §9](detective-ai-v2.md#9-limitations-and-future-work)).
@@ -39,10 +39,10 @@ Proposals made by the reports. **None is approved or scheduled**; each would nee
 
 | Proposal | Proposed in | Status |
 |---|---|---|
-| Independent validation of Jack AI v2: 9,000 games on seeds 760001–761000 | [Jack AI v2 §9](jack-ai-v2.md#9-independent-validation-proposed-not-run) | Not approved |
+| Validation of `safe-skip` (Jack AI v2 whose detour steps avoid the policemen's reach): 400 games against v2, v3 and the original police on seeds 595001–595400; then whether Hard should use it | [Adaptive deception §11](jack-adaptive.md#11-recommendation) | Idea (kept as experimental) |
 | Independent validation of Detective AI v3: 8,000 games on seeds 480001–480500 | [Detective AI v3 §14](detective-ai-v3.md#14-conclusion) | Awaiting a decision |
 | Containment for two-move escapes and for earlier nights; a Jack that adapts to visible containment as a robustness opponent | [Detective AI v3 §14](detective-ai-v3.md#14-conclusion) | Idea |
-| Detectives that learn a Jack's habitual detour from earlier nights; then a Jack that varies his detours | [Human strategy literature §10](human-strategy-literature.md#10-prioritised-recommendations), [Jack AI v2 §10](jack-ai-v2.md#10-limitations-and-future-work) | Idea |
+| Detectives that learn a Jack's habitual detour from earlier nights (simple ones that forgive detours did not beat Jack AI v2, and a Jack that varies his detours at random or by the police's guarding lost: [Adaptive deception](jack-adaptive.md)) | [Human strategy literature §10](human-strategy-literature.md#10-prioritised-recommendations), [Jack AI v2 §10](jack-ai-v2.md#10-limitations-and-future-work) | Idea |
 | Coordinated containment: cordons from time-dependent reachability, policemen assigned to approaches (*not supported:* on the last night, coordination loses and missed cuts come from the hideout belief, not the decision; [Detective coordination and inference](detective-study.md)) | [Detective AI v2 §9](detective-ai-v2.md#9-limitations-and-future-work) | Not planned |
 | Hideout inference from new public evidence (routes relative to the policemen, coach and alley use), measured offline against the oracle ceiling first | [Detective coordination and inference §9](detective-study.md#9-recommendation) | Idea |
 | Recalibrating Jack's escape and arrest estimates against blocking police | [Jack AI v2 §10](jack-ai-v2.md#10-limitations-and-future-work) | Idea |
