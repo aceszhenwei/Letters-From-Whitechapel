@@ -2,7 +2,13 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: a simpler setup, and Developer Mode
+## Unreleased: play online
+
+- **The game is on GitHub Pages:** https://aceszhenwei.github.io/Letters-From-Whitechapel/, linked at the top of the README.
+- **Deployment** ([Deployment](deployment.md)): `.github/workflows/pages.yml` runs the fast tests, stages only the game's files (`tools/site/build.js`, `npm run site`, which also checks every asset reference), and publishes on each push to `master` or by hand.
+- No change to the game: every path was already relative.
+
+## A simpler setup, and Developer Mode ([aceszhenwei/Letters-From-Whitechapel#22](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/22))
 
 - **Setup:** players choose only Jack's difficulty, **Normal** (the default, Strategic Jack) or **Hard** (Jack AI v2), by name, with no description of how Jack plays. The player always leads the detectives.
 - **Developer Mode** (`index.html?dev=1`) shows every level with its AI:

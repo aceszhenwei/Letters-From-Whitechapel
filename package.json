@@ -11,6 +11,7 @@
     "eval:medium": "node tools/tiers/run-tier.js medium",
     "research:full": "node tools/tiers/run-tier.js full",
     "research:import": "node tools/game-log/import.js",
+    "site": "node tools/site/build.js",
     "tier": "node tools/tiers/run-tier.js"
   },
   "devDependencies": {

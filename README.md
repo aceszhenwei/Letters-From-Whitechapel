@@ -1,12 +1,14 @@
 # Letters From Whitechapel
 
+**[▶ Play online](https://aceszhenwei.github.io/Letters-From-Whitechapel/)**: https://aceszhenwei.github.io/Letters-From-Whitechapel/ (nothing to install)
+
 A browser version of the board game *Letters from Whitechapel*. You lead the five police detectives hunting Jack the Ripper through the streets of Whitechapel in 1888, and the computer plays Jack. Over four nights he kills, then tries to slip back to his secret hideout; you place patrols, follow his trail of clues and try to make the arrest.
 
 ![The game during Clues and suspicion: the board with policemen, search and arrest choices, and the sidebar with the current phase, Jack's status and the case log](docs/images/screenshot.jpg)
 
 ## Play
 
-Open `index.html` in a browser. There is nothing to install or build.
+[Play online](https://aceszhenwei.github.io/Letters-From-Whitechapel/), on a computer or a phone. To run it yourself, open `index.html` from the folder on a computer, or serve the folder with any static web server (`npx serve .`). There is nothing to install or build. On a phone, use the online version: a single downloaded `index.html` can't load the files it needs. See [Deployment](docs/deployment.md) for how the online version is published.
 
 You lead the five detectives; the computer plays Jack the Ripper. Before the first night, choose how hard Jack plays: **Normal** (the default) or **Hard**. The game remembers your choice for the next game. The difficulty only changes how Jack decides: the rules and what each side may know are the same.
 

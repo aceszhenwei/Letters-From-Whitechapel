@@ -4,6 +4,8 @@ A browser version of the board game *Letters from Whitechapel* (revised edition)
 
 ## Quick start
 
+Play online at https://aceszhenwei.github.io/Letters-From-Whitechapel/ ([Deployment](deployment.md)), or locally:
+
 ```
 open index.html          # or serve the folder with any static web server
 npm install && npm test  # run the automated tests (Node.js 22 or later)
@@ -34,6 +36,7 @@ The current description of the game and the code. Each topic has one page; the o
 | [Jack's AI](jack-ai.md) | The interface every Jack AI implements, what Jack may know, the difficulty levels, and the baseline and strategic Jacks with their evaluation |
 | [User interface](ui.md) | Layout, components, design tokens, the CSS class contract, accessibility and responsiveness |
 | [Game records](game-records.md) | Exporting a game (public or full record), the record format and its versions, hidden information, checking and replaying records, summaries, test fixtures, privacy |
+| [Deployment](deployment.md) | How the game is published on GitHub Pages, redeploying, running it locally, and browser limitations |
 | [Testing](testing.md) | Running the tests, the test tiers, seeds and reproducibility, the test helpers, and writing new tests |
 | [Contributing](contributing.md) | Setting up, code conventions, and the pull request checklist |
 
