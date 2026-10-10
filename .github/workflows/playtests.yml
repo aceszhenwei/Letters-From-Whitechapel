@@ -1,0 +1,54 @@
+# Checks the human playtest collection (research/human-playtests/, docs/playtests.md) whenever its records, its state or
+# the tools that read them change: every record must be a valid full record of a completed human game, named after its
+# game id, replaying exactly, with no duplicates or conflicts. It reports the research batch status (ready at 5 new
+# games) and the statistics, in the run's summary. Read-only: it never changes the repository, needs no secrets, and
+# doesn't deploy anything (pages.yml ignores changes to the collection).
+name: Human playtests
+
+on:
+  pull_request:
+    paths:
+      - 'research/human-playtests/**'
+      - 'tools/playtests/**'
+      - 'tools/game-log/**'
+      - 'js/core/**'
+      - '.github/workflows/playtests.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'research/human-playtests/**'
+      - 'tools/playtests/**'
+      - 'tools/game-log/**'
+      - 'js/core/**'
+      - '.github/workflows/playtests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Records added or changed
+        id: changed
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -n "$BASE" ] && git cat-file -e "$BASE" 2>/dev/null; then
+            git diff --name-only --diff-filter=AMR "$BASE" HEAD -- research/human-playtests/records/ > changed.txt
+          else
+            : > changed.txt
+          fi
+          echo "Changed records:"; cat changed.txt
+          echo "files=$(tr '\n' ' ' < changed.txt)" >> "$GITHUB_OUTPUT"
+      - name: Validate the collection
+        run: node tools/playtests/dataset.js --ci --changed ${{ steps.changed.outputs.files }}

@@ -8,6 +8,7 @@ This page keeps four things apart: what is **implemented**, its **known limitati
 - **Play online:** https://aceszhenwei.github.io/Letters-From-Whitechapel/, published from `master` ([Deployment](deployment.md)), playable on phones (zoom and pan).
 - **Computer players:** as the detectives, players choose Jack's difficulty, Normal (Strategic Jack) or Hard (Jack AI v2); as Jack, the detectives' difficulty, Easy (Detective AI v2) or Normal (Detective AI v3). Developer Mode (`?dev=1`) adds Baseline Jack, an experimental Jack with strategic waiting, and three computer police levels (original, Detective AI v2, Detective AI v3) to watch instead of playing ([AI overview](ai.md)).
 - **The detective's tools:** undoing a move, reviewing each night, faster searching, zooming the board ([User interface](ui.md#the-detectives-tools)).
+- **Human playtests:** games people finish are kept in the browser, exported in batches, collected in `research/human-playtests/` and checked by GitHub Actions, with research batches of five ([Human playtests](playtests.md)).
 - **Game records:** players can export a game (the police's record at any time, the full record once it is over), and `npm run research:import` checks, replays and summarises the files ([Game records](game-records.md)).
 - **Testing:** fast, smoke, medium and full tiers, with fixed seed ranges for every experiment ([Testing](testing.md)).
 

@@ -23,6 +23,7 @@
     </div>
     <div class="difficulty-badge" hidden></div>
     <button type="button" class="button button-secondary export-open topbar-button" hidden>Game log</button>
+    <button type="button" class="button button-secondary playtests-open topbar-button" hidden>Playtests</button>
     <div class="night-info" aria-live="polite">
         <div class="night-name">Night 1 of 4</div>
         <div class="night-date">31 August 1888</div>
@@ -177,6 +178,7 @@
             <p class="police-note difficulty-note"></p>
         </fieldset>
         <button type="button" class="button button-primary start-game">Begin the investigation</button>
+        <button type="button" class="button button-secondary playtests-open" hidden>Playtest records</button>
     </div>
 </div>
 
@@ -185,6 +187,7 @@
         <div class="dialog-kicker">The investigation is over</div>
         <h2 id="ending-title" class="game-over"></h2>
         <ul class="ending-summary" hidden></ul>
+        <p class="playtest-saved" hidden></p>
         <button type="button" class="button button-primary new-game">Play again</button>
         <button type="button" class="button button-secondary review-case">Review the case</button>
         <button type="button" class="button button-secondary export-open">Export game log</button>
@@ -223,6 +226,35 @@
     </div>
 </div>
 
+<div class="overlay playtests-dialog" role="dialog" aria-modal="true" aria-labelledby="playtests-title">
+    <div class="dialog dialog-wide">
+        <div class="dialog-kicker">Developer Mode</div>
+        <h2 id="playtests-title">Playtest records</h2>
+        <p>Every game a person finishes is kept here, in this browser, as its full game record: nothing is sent anywhere. Exporting saves files on this device; it does <strong>not</strong> upload them to GitHub. To add games to the research collection, upload the exported files as described in <code>docs/playtests.md</code>.</p>
+        <p class="playtests-count"></p>
+        <div class="playtests-actions">
+            <button type="button" class="button button-primary playtests-export-new">Export new playtests</button>
+            <button type="button" class="button button-secondary playtests-export-selected">Export selected</button>
+            <button type="button" class="button button-secondary playtests-export-all">Export all (again)</button>
+            <button type="button" class="button button-secondary playtests-import">Import JSON or ZIP</button>
+            <input type="file" class="playtests-file" accept=".json,.zip,application/json,application/zip" multiple hidden>
+        </div>
+        <p class="playtests-status" aria-live="polite"></p>
+        <p class="playtests-empty">No games kept yet. Finish a game and it appears here.</p>
+        <div class="playtests-scroll">
+            <table class="playtests-table" hidden>
+                <thead><tr><th><span class="visually-hidden">Select</span></th><th>Date</th><th>Role</th><th>Opponent</th><th>Difficulty</th><th>Outcome</th><th>Game ID</th><th>Exported</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+                <tbody class="playtests-rows"></tbody>
+            </table>
+        </div>
+        <div class="playtests-danger">
+            <label><input type="checkbox" class="playtests-clear-confirm"> Delete every record kept in this browser (exported files are not affected)</label>
+            <button type="button" class="button button-secondary playtests-clear" disabled>Clear all</button>
+        </div>
+        <button type="button" class="button button-secondary playtests-close">Close</button>
+    </div>
+</div>
+
 <!-- Data, then the game (no page access), then Jack's AI, then the interface. See docs/architecture.md -->
 <script src="js/data/map.js"></script>
 <script src="js/data/content.js"></script>
@@ -245,6 +277,9 @@
 <script src="js/ui/autopolice.js"></script>
 <script src="js/ui/jack-player.js"></script>
 <script src="js/ui/export.js"></script>
+<script src="js/ui/zip.js"></script>
+<script src="js/ui/playtest-store.js"></script>
+<script src="js/ui/playtests.js"></script>
 <script src="js/ui/setup.js"></script>
 <script src="js/main.js"></script>
 

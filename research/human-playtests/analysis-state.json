@@ -1,0 +1,22 @@
+{
+	"format": "whitechapel-playtest-analysis-state",
+	"version": 1,
+	"methodologyVersion": 1,
+	"methodology": {
+		"1": "2026-10-10: the procedure in docs/playtests.md#commissioning-an-analysis. Each report covers named games, compares only within a cohort (app version, rule set, role, opponent AI, difficulty), separates confirmed defects from plausible weaknesses, and makes no general claims from small, uncontrolled samples."
+	},
+	"batchThreshold": 5,
+	"reports": [],
+	"analysed": {},
+	"aiChanges": [],
+	"snapshot": {
+		"updated": "2026-10-10",
+		"validGames": 1,
+		"outstanding": [
+			"g91d4014f17ae09e6"
+		],
+		"awaitingReview": 1,
+		"status": "Collecting",
+		"reanalysis": []
+	}
+}
