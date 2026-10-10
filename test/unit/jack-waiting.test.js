@@ -139,9 +139,10 @@ test('the same seed plays the same game', () => {
 	assert.deepStrictEqual(again.state.result, games[0].state.result);
 });
 
-test('the difficulty levels are unchanged: none of them plays the waiting policy', () => {
+test('no player\'s difficulty level plays the waiting policy; only Developer Mode\'s experimental level does', () => {
 	for (const level of WC.difficulty.levels) {
 		const ai = level.create(WC);
-		assert.ok(!ai.waitingOptions, level.id);
+		assert.strictEqual(!!ai.waitingOptions, level.id === 'hard-waiting', level.id);
+		if (level.player) assert.ok(!ai.waitingOptions, level.id);
 	}
 });

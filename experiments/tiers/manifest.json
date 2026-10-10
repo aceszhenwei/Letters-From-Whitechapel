@@ -20,8 +20,8 @@
   "tier": "smoke",
   "inputs": "f18e659194f1bfd4",
   "ok": true,
-  "seconds": 36.3,
-  "finished": "2026-10-10T03:19:34.498Z",
+  "seconds": 40.2,
+  "finished": "2026-10-10T03:46:58.377Z",
   "node": "v22.22.0"
  },
  "medium-strategic": {

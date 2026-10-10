@@ -8,7 +8,9 @@ A browser version of the board game *Letters from Whitechapel*. You lead the fiv
 
 Open `index.html` in a browser. There is nothing to install or build.
 
-Before the first night, choose how hard Jack plays (**Easy**, the default; **Normal**; **Hard**) and who leads the detectives: **you** (the default), or Easy, Normal or Hard computer police, whom you then watch hunt Jack. The choices only change how each side decides: the rules and what each side may know are the same. The [AI overview](docs/ai.md) says which AI each level plays; for testing, `index.html?difficulty=hard&police=normal` fixes both.
+You lead the five detectives; the computer plays Jack the Ripper. Before the first night, choose how hard Jack plays: **Normal** (the default) or **Hard**. The game remembers your choice for the next game. The difficulty only changes how Jack decides: the rules and what each side may know are the same.
+
+For developers and researchers, **Developer Mode** (`index.html?dev=1`) also offers the Baseline Jack, an experimental Jack, and computer police to watch instead of playing. The [AI overview](docs/ai.md#difficulty-levels) says which AI each level plays; for testing, `index.html?difficulty=hard&police=normal` fixes both, with or without Developer Mode.
 
 While you lead the detectives you can undo a policeman's move until you choose Done. After each night the board stays as it was, with the night's log in the case files, until you begin the next night. Any earlier night can be looked at again, with walking distances from its crime scenes and clues. The women and the Wretched are ringed on the board, and **Highlight** makes them stand out. See [User interface](docs/ui.md#the-detectives-tools).
 

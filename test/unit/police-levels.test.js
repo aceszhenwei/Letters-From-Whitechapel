@@ -21,14 +21,15 @@ test('the player leads the detectives by default; Easy is the original police an
 test('where the police choice comes from: address, then dialog, then saved, then the player', () => {
 	const { WC } = loadCore({ seed: 1 });
 	const r = (s) => { const x = WC.policeLevels.resolve(s); return [x.id, x.source]; };
-	assert.deepStrictEqual(r({ saved: 'easy' }), ['easy', 'saved']);
-	assert.deepStrictEqual(r({ saved: 'easy', chosen: 'normal' }), ['normal', 'chosen']);
+	assert.deepStrictEqual(r({ saved: 'easy', dev: true }), ['easy', 'saved']);
+	assert.deepStrictEqual(r({ saved: 'easy', chosen: 'normal', dev: true }), ['normal', 'chosen']);
+	assert.deepStrictEqual(r({ saved: 'easy', chosen: 'normal' }), ['you', 'default'], 'outside Developer Mode, only the address sets computer police');
 	assert.deepStrictEqual(r({ search: '?police=you', chosen: 'normal' }), ['you', 'address']);
 	assert.deepStrictEqual(r({ search: '?police=nightmare' }), ['you', 'default']);
 	assert.deepStrictEqual(r({ search: '?police=hard' }), ['hard', 'address']);
 });
 
-function setupPage({ seed = 6, search = '', saved = {} } = {}) {
+function setupPage({ seed = 6, search = '?dev=1', saved = {} } = {}) {
 	const window = loadGame({ seed });
 	const store = Object.assign({}, saved);
 	const storage = { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); } };
@@ -46,15 +47,15 @@ const until = (check, ms = 120000) => new Promise((resolve, reject) => {
 	poll();
 });
 
-test('the dialog offers both choices; by default the player leads, and the board takes clicks', () => {
+test('Developer Mode offers both choices; by default the player leads, and the board takes clicks', () => {
 	const { window } = setupPage();
 	const $ = window.$;
 	assert.deepStrictEqual(Array.from($('input[name=police]').map(function () { return this.value; }).get()), ['you', 'easy', 'normal', 'hard']);
 	assert.strictEqual($('input[name=police]:checked').val(), 'you');
-	assert.strictEqual($('input[name=difficulty]:checked').val(), 'easy');
+	assert.strictEqual($('input[name=difficulty]:checked').val(), 'normal');
 	$('.start-game').click();
 	assert.ok(!$('body').hasClass('computer-police'));
-	assert.strictEqual($('.difficulty-badge').text(), 'Jack: Easy');
+	assert.strictEqual($('.difficulty-badge').text(), 'Jack: Normal');
 	assert.strictEqual(window.game.state.phase, 2, 'waiting for the player to place the patrols');
 });
 
@@ -75,16 +76,30 @@ for (const level of ['easy', 'normal', 'hard']) {
 			return window.game.state.over;
 		});
 		assert.ok(['jackWins', 'arrested', 'outOfMoves', 'trapped'].includes(window.game.state.result.type));
-		assert.strictEqual(store['whitechapel.police'], level);
+		assert.strictEqual(store['whitechapel.dev.police'], level);
 		assert.deepStrictEqual(window.errors, []);
 	});
 }
 
+test('without Developer Mode the choice is hidden, and an address still sets computer police (research and tests)', async () => {
+	const { window } = setupPage({ search: '?police=hard&difficulty=easy', seed: 9 });
+	const $ = window.$;
+	assert.ok($('.police-choice').prop('hidden'));
+	$('.start-game').click();
+	assert.ok($('body').hasClass('computer-police'));
+	assert.strictEqual(window.game.ai, window.WC.jackAI);
+	await until(() => {
+		if (window.game.state.phase === 12) $('.state.the-night-is-over .begin-next-night').click();
+		return window.game.state.over;
+	});
+	assert.deepStrictEqual(window.errors, []);
+});
+
 test('the address fixes the police choice and isn\'t saved', () => {
-	const { window, store } = setupPage({ search: '?police=normal', saved: { 'whitechapel.police': 'you' } });
+	const { window, store } = setupPage({ search: '?dev=1&police=normal', saved: { 'whitechapel.dev.police': 'you' } });
 	const $ = window.$;
 	assert.strictEqual($('input[name=police]:checked').val(), 'normal');
 	assert.ok($('input[name=police]').toArray().every((input) => input.disabled));
 	assert.ok(!$('input[name=difficulty]').toArray().some((input) => input.disabled), 'Jack\'s choice is unaffected');
-	assert.strictEqual(store['whitechapel.police'], 'you');
+	assert.strictEqual(store['whitechapel.dev.police'], 'you');
 });

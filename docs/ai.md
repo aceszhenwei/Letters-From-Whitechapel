@@ -10,8 +10,8 @@ Each Jack AI is an object with the same six decision functions ([the interface](
 
 | AI | Code | Made by | Level | What it adds | Report |
 |---|---|---|---|---|---|
-| Baseline Jack | `js/ai/jack.js` | `WC.jackAI` (the game's own instance), `WC.createJackAI(board, random, _)` | **Easy** (default) | Simple rules of thumb | [Jack's AI §1](jack-ai.md#1-the-baseline-ai) |
-| Strategic Jack | `js/ai/strategic-jack.js` | `WC.createStrategicJack(board, deduction, random, _, options)` | **Normal** | Values each move by the measured chance of surviving the police's next turn and of getting home in time; two-move lookahead | [Jack's AI §3–10](jack-ai.md#3-the-strategic-ai-design) |
+| Baseline Jack | `js/ai/jack.js` | `WC.jackAI` (the game's own instance), `WC.createJackAI(board, random, _)` | **Easy** (Developer Mode only) | Simple rules of thumb | [Jack's AI §1](jack-ai.md#1-the-baseline-ai) |
+| Strategic Jack | `js/ai/strategic-jack.js` | `WC.createStrategicJack(board, deduction, random, _, options)` | **Normal** (default) | Values each move by the measured chance of surviving the police's next turn and of getting home in time; two-move lookahead | [Jack's AI §3–10](jack-ai.md#3-the-strategic-ai-design) |
 | Jack AI v2 | `js/ai/jack-v2.js` | `WC.createJackV2(board, deduction, random, _, options)` | **Hard** | Strategic Jack, plus early detours away from his hideout on every night but the last | [Jack AI v2](jack-ai-v2.md) |
 
 **Options** (all on, or at their defaults, in the game; the comments in the code are the authoritative list):
@@ -19,7 +19,7 @@ Each Jack AI is an object with the same six decision functions ([the interface](
 - Strategic Jack: `path`, `risk`, `lookahead`, `hideout`, `hell` (each part can be switched off for ablations) and `beam` (6). `WC.strategicVariants` names the combinations measured in [Jack's AI §9](jack-ai.md#ablation-which-parts-help-1000-games-each-seeds-1-to-1000-deductive-police).
 - Jack AI v2: `detourMoves` (3), `detourSpare` (6), `detourLastNight` (false). See [Jack AI v2 §6](jack-ai-v2.md#6-jack-ai-v2).
 
-**Strategic waiting** (`js/ai/jack-waiting.js`, `WC.createWaitingJack(board, base, _, options)`) wraps any Jack AI with a `wantsToWait` that compares killing now with waiting, by measured escape chances (`options.table`: `'jack-v2'` or `'strategic'`; `options.info`). It is an option, played by no level. See [Strategic waiting](jack-waiting.md).
+**Strategic waiting** (`js/ai/jack-waiting.js`, `WC.createWaitingJack(board, base, _, options)`) wraps any Jack AI with a `wantsToWait` that compares killing now with waiting, by measured escape chances (`options.table`: `'jack-v2'` or `'strategic'`; `options.info`). It is an option, played by no player level; Developer Mode's experimental **Hard, waiting** level plays it on top of Jack AI v2. See [Strategic waiting](jack-waiting.md).
 
 **Research-only Jacks**, never played in the game: Detour Jack (`research/detective-v2/jacks.js`), the Jack v2 candidates (`research/jack-v2/policies/`), the BoardGameGeek schemes (`research/human-strategy/policies.js`) the short-return Jacks (`research/detective-v3/jacks.js`), and the forced-wait diagnostics (`research/jack-waiting/jacks.js`).
 
@@ -45,16 +45,16 @@ The research configurations built from them are in `research/detective-v2/config
 
 ## Difficulty levels
 
-The setup dialog asks for both levels before the first night. Neither changes the rules or what a side may know.
+Players choose only Jack's level, Normal or Hard, by name; the player always leads the detectives. **Developer Mode** (`index.html?dev=1`) shows every level of both, with the AI each plays. No level changes the rules or what a side may know.
 
-| Jack (`js/ai/difficulty.js`, `WC.difficulty`) | Detectives (`js/ai/police-levels.js`, `WC.policeLevels`) |
+| Jack (`js/ai/difficulty.js`, `WC.difficulty`) | Detectives (`js/ai/police-levels.js`, `WC.policeLevels`; Developer Mode, or the address) |
 |---|---|
-| Easy: Baseline Jack (default) | You (default) |
-| Normal: Strategic Jack | Easy police: the original police |
-| Hard: Jack AI v2 | Normal police: Detective AI v2 |
-| | Hard police: Detective AI v3 |
+| Normal: Strategic Jack (default) | You (default, and the only choice outside Developer Mode) |
+| Hard: Jack AI v2 ("Deceptive Jack v2") | Easy police: the original police |
+| Easy: Baseline Jack (Developer Mode) | Normal police: Detective AI v2 |
+| Hard, waiting: Jack AI v2 with strategic waiting (Developer Mode, experimental) | Hard police: Detective AI v3 |
 
-The labels name AIs; they are not claims about how hard a human opponent would find them. Where a choice comes from, strongest first: the address (`?difficulty=easy|normal|hard`, or the older `?jack=baseline|strategic`; `?police=you|easy|normal|hard`), the dialog, the choice saved from the last game, the default. To add a level, add an entry to `levels` in the matching file: the dialog lists the levels from there. More detail: [Jack's AI, Difficulty levels](jack-ai.md#difficulty-levels).
+The labels name AIs; they are not claims about how hard a human opponent would find them. Where a choice comes from, strongest first: the address (`?difficulty=easy|normal|hard|hard-waiting`, or the older `?jack=baseline|strategic`; `?police=you|easy|normal|hard`; any level, with or without Developer Mode, for tests and research), the dialog, the choice saved from the last game (Developer Mode keeps its own), the default. To add a level, add an entry to `levels` in the matching file: the dialog lists the levels from there. More detail: [Jack's AI, Difficulty levels](jack-ai.md#difficulty-levels).
 
 ## How each AI was chosen
 
