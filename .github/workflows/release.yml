@@ -1,0 +1,77 @@
+# Publishes a GitHub Release for a version tag (docs/releasing.md). It changes no code and doesn't touch the GitHub
+# Pages deployment (pages.yml), which still publishes the game from master.
+# - On a pushed tag vX.Y.Z: runs the tests on the tagged commit, then creates the release from
+#   docs/releases/vX.Y.Z.md, marked as the latest release (a pre-release for vX.Y.Z-something).
+# - By hand (Actions > Release > Run workflow, with the version): creates the annotated tag vX.Y.Z on the head of master
+#   if it doesn't exist yet, pushes it, then does the same.
+# Releases carry no build: GitHub's source archives are the downloads.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, for example v1.0.1 (tags the head of master if the tag does not exist)'
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'push' && github.ref || 'master' }}
+      - name: Work out the version
+        id: version
+        env:
+          INPUT: ${{ github.event.inputs.version }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then TAG="$GITHUB_REF_NAME"; else TAG="$INPUT"; fi
+          echo "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$' || { echo "Not a version tag: $TAG"; exit 1; }
+          test -f "docs/releases/$TAG.md" || { echo "Missing release notes: docs/releases/$TAG.md"; exit 1; }
+          VERSION="${TAG#v}"
+          PACKAGE=$(node -p "require('./package.json').version")
+          [ "${VERSION%%-*}" = "$PACKAGE" ] || { echo "package.json is $PACKAGE, the tag is $TAG"; exit 1; }
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Create the annotated tag (by hand only, if it doesn't exist)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "$TAG exists: releasing it as it is"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$TAG" -m "Letters From Whitechapel $TAG" master
+            git push origin "refs/tags/$TAG"
+          fi
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "The release $TAG exists already"
+            exit 0
+          fi
+          case "$TAG" in
+            *-*) gh release create "$TAG" --verify-tag --title "Letters From Whitechapel $TAG" --notes-file "docs/releases/$TAG.md" --prerelease ;;
+            *) gh release create "$TAG" --verify-tag --title "Letters From Whitechapel $TAG" --notes-file "docs/releases/$TAG.md" --latest ;;
+          esac

@@ -20,6 +20,10 @@ A newer push waits for a deployment in progress rather than cancelling it. Each 
 - **The same commit again:** **Actions → Deploy to GitHub Pages → Run workflow** on `master`.
 - **Going back to an earlier version:** revert the commit on `master`; the push deploys the reverted game.
 
+## Releases and the online game
+
+Releases ([Releasing](releasing.md)) are tags on `master` with notes; they don't deploy anything. The online game always follows `master`: each merged pull request is published, release or not. `release.yml` only creates the GitHub Release, and `pages.yml` doesn't run on tags.
+
 ## Running locally
 
 ```

@@ -11,7 +11,7 @@ This page keeps four things apart: what is **implemented**, its **known limitati
 - **Game records:** players can export a game (the police's record at any time, the full record once it is over), and `npm run research:import` checks, replays and summarises the files ([Game records](game-records.md)).
 - **Testing:** fast, smoke, medium and full tiers, with fixed seed ranges for every experiment ([Testing](testing.md)).
 
-The [changelog](changelog.md) lists every change, pull request by pull request.
+The [changelog](../CHANGELOG.md) lists every change, pull request by pull request.
 
 ## Known limitations
 
