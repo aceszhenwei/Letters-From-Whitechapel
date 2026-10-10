@@ -2,7 +2,18 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: waiting against containment
+## Unreleased: detective coordination and inference
+
+- **Study:** [Detective coordination and inference](detective-study.md) asks why Detective AI v3 loses, on the last night, from identical positions:
+  - **Hideout inference** is the one large gap: told the true hideout, v3 wins 119 more games and loses 5 (Jack AI v2: 28 of 30 instead of 7). No weighting the police could use recovers it, including one that learns the Jack's route style.
+  - **Coordinated blocking** loses (12 against 27 discordant games): it spreads the policemen away from the likeliest hideout.
+  - **Interception:** of 102 lost last nights, a cut the police knew enough to make was missed 3 times.
+  - No legal change beats v3; doubled blocking weight gains 1.5 points, not significant.
+- **Recommendation:** no Detective AI v4. A study of new public evidence about the hideout comes first.
+- **Tests:** `detective-study.test.js`.
+- **Scripts:** `research/detective-study/`.
+
+## Waiting against containment ([aceszhenwei/Letters-From-Whitechapel#19](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/19))
 
 - **Study:** [Waiting against containment](waiting-containment.md) tests why strategic waiting seemed to beat Detective AI v3 on the last night. It does not:
   - Jack AI v2's last-night murders are never one walk from his hideout, so v3's containment never acts against him.
