@@ -58,7 +58,6 @@ The track has 20 spaces: V, IV, III, II, I, then 1 to 15. The Time of the Crime 
 
 - **Optional rules:** Jack's Letters, False Clues, Rushing, Area Arrests, Catch Me If You Can, and I Know Your Address.
 - **Head of the Investigation tiles:** these only decide who places patrols when several people play the police.
-- **A human Jack:** the computer always plays Jack.
 
 ## Known differences from the physical board
 

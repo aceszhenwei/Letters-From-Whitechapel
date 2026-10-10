@@ -28,6 +28,7 @@ const scripts = [
 	'js/ui/renderer.js',
 	'js/ui/review.js',
 	'js/ui/autopolice.js',
+	'js/ui/jack-player.js',
 	'js/ui/export.js',
 	'js/ui/setup.js',
 	'js/main.js'

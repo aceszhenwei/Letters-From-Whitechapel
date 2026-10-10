@@ -44,6 +44,7 @@
                     <img src="images/vintage-map.jpg" class="vintage-map" alt="">
                 </div>
             </div>
+            <div class="jack-board-actions" hidden></div>
         </div>
 
         <div class="card track-card">
@@ -95,6 +96,10 @@
                 <li><span class="legend-icon legend-wretched"></span>Wretched</li>
                 <li><span class="legend-icon legend-crime"></span>Crime scene</li>
                 <li><span class="legend-icon legend-clue"></span>Clue</li>
+                <li class="legend-jack-only"><span class="legend-icon legend-hideout"></span>Your hideout</li>
+                <li class="legend-jack-only"><span class="legend-icon legend-jack"></span>You (Jack)</li>
+                <li class="legend-jack-only"><span class="legend-icon legend-trail">1</span>Your route tonight</li>
+                <li class="legend-jack-only"><span class="legend-icon legend-choice"></span>A choice you can make</li>
             </ul>
         </div>
     </section>
@@ -113,6 +118,8 @@
             <div class="state hunting-the-monster"></div>
             <div class="state clues-and-suspicion"></div>
             <div class="state the-night-is-over"></div>
+            <div class="state jack-turn" aria-live="polite"></div>
+            <div class="state jack-watch" aria-live="polite"></div>
             <div class="phase-progress" aria-live="polite"></div>
             <button type="button" class="button button-secondary highlight-pieces" aria-pressed="false" hidden>Highlight the women</button>
 
@@ -127,7 +134,7 @@
         </div>
 
         <div class="card">
-            <h2>Jack the Ripper</h2>
+            <h2 class="jack-card-title">Jack the Ripper</h2>
             <div class="jack-log"></div>
         </div>
 
@@ -143,14 +150,24 @@
     <div class="dialog">
         <div class="dialog-kicker">London, 1888</div>
         <h2 id="intro-title">Letters From Whitechapel</h2>
-        <p>Jack the Ripper is loose in Whitechapel. Over four nights he will kill and slip back to his secret hideout. You lead the five detectives who must catch him.</p>
-        <ul>
+        <p>Jack the Ripper is loose in Whitechapel. Over four nights he will kill and slip back to his secret hideout, while five detectives try to catch him.</p>
+        <fieldset class="difficulty role-choice">
+            <legend>Who do you play?</legend>
+            <div class="role-options"></div>
+            <p class="role-note difficulty-note"></p>
+        </fieldset>
+        <ul class="intro-detectives">
             <li>Place your patrols, then watch where the bodies are found.</li>
             <li>Move your policemen up to two crossings and search nearby circles for clues.</li>
             <li>When you know where Jack is, make the arrest.</li>
         </ul>
+        <ul class="intro-jack" hidden>
+            <li>Choose a secret hideout, then place the women and choose your victim.</li>
+            <li>After each murder, walk back to your hideout before your moves run out, using coaches and alleys to slip past the police.</li>
+            <li>The computer's detectives see only what detectives at the table would: never your hideout or your route.</li>
+        </ul>
         <fieldset class="difficulty">
-            <legend>Jack's difficulty</legend>
+            <legend class="difficulty-legend">Jack's difficulty</legend>
             <div class="difficulty-options"></div>
             <p class="difficulty-note"></p>
         </fieldset>
@@ -167,6 +184,7 @@
     <div class="dialog">
         <div class="dialog-kicker">The investigation is over</div>
         <h2 id="ending-title" class="game-over"></h2>
+        <ul class="ending-summary" hidden></ul>
         <button type="button" class="button button-primary new-game">Play again</button>
         <button type="button" class="button button-secondary review-case">Review the case</button>
         <button type="button" class="button button-secondary export-open">Export game log</button>
@@ -182,6 +200,10 @@
         <div class="export-choice">
             <button type="button" class="button button-primary export-public">Download the police's record</button>
             <p class="export-note">No spoilers: only what the police could see.</p>
+        </div>
+        <div class="export-choice export-jack-choice" hidden>
+            <button type="button" class="button button-secondary export-jack">Download Jack's record</button>
+            <p class="export-note">What you knew as Jack: your hideout and route, and the detectives' public moves.</p>
         </div>
         <div class="export-choice">
             <button type="button" class="button button-secondary export-full">Download the full record</button>
@@ -221,6 +243,7 @@
 <script src="js/ui/renderer.js"></script>
 <script src="js/ui/review.js"></script>
 <script src="js/ui/autopolice.js"></script>
+<script src="js/ui/jack-player.js"></script>
 <script src="js/ui/export.js"></script>
 <script src="js/ui/setup.js"></script>
 <script src="js/main.js"></script>

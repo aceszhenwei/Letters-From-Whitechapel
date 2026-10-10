@@ -1,6 +1,6 @@
 # Letters From Whitechapel: documentation
 
-A browser version of the board game *Letters from Whitechapel* (revised edition). You play the five police detectives, or watch the computer police; the computer plays Jack the Ripper. It is a static site: plain JavaScript with jQuery and Underscore, with no build step. The rules, the game engine and the AIs run without the page, so they can be tested and simulated in Node.
+A browser version of the board game *Letters from Whitechapel* (revised edition). You play the five police detectives against the computer's Jack the Ripper, or Jack against the computer's detectives (or, in Developer Mode, watch the computer police). It is a static site: plain JavaScript with jQuery and Underscore, with no build step. The rules, the game engine and the AIs run without the page, so they can be tested and simulated in Node.
 
 ## Quick start
 
@@ -16,6 +16,7 @@ npm install && npm test  # run the automated tests (Node.js 22 or later)
 | I want to… | Read |
 |---|---|
 | Know the rules as this game plays them | [Game rules](game-rules.md) |
+| Play as Jack, or know how that mode works | [Playing Jack](playing-jack.md) |
 | Find my way around the code | [Architecture](architecture.md) |
 | Know which AIs exist, which level plays each, and how they are configured | [AI overview](ai.md) |
 | Run the tests or reproduce an experiment | [Testing](testing.md) |
@@ -35,6 +36,7 @@ The current description of the game and the code. Each topic has one page; the o
 | [AI overview](ai.md) | Every Jack and police AI, the difficulty levels, their options, and the evidence behind each |
 | [Jack's AI](jack-ai.md) | The interface every Jack AI implements, what Jack may know, the difficulty levels, and the baseline and strategic Jacks with their evaluation |
 | [User interface](ui.md) | Layout, components, design tokens, the CSS class contract, accessibility and responsiveness |
+| [Playing Jack](playing-jack.md) | Playing Jack against the computer's detectives: the choices, the interface, how it is built, hidden information, records, tests and limitations |
 | [Game records](game-records.md) | Exporting a game (public or full record), the record format and its versions, hidden information, checking and replaying records, summaries, test fixtures, privacy |
 | [Deployment](deployment.md) | How the game is published on GitHub Pages, redeploying, running it locally, and browser limitations |
 | [Testing](testing.md) | Running the tests, the test tiers, seeds and reproducibility, the test helpers, and writing new tests |

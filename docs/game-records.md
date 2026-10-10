@@ -66,7 +66,7 @@ A record is one JSON object. In the files, each action is on its own line ([exam
 | `format` | ✓ | ✓ | Always `"whitechapel-game-log"` |
 | `schemaVersion` | ✓ | ✓ | `1`. Raised whenever a reader would misread the record otherwise (section 8) |
 | `disclosure` | ✓ | ✓ | `"public"` or `"full"` |
-| `role` | ✓ | | Whose view a public record shows: `"police"`, or `"jack"` (for a future human Jack; section 4). `null` in a full record |
+| `role` | ✓ | | Whose view a public record shows: `"police"`, or `"jack"` (section 4). `null` in a full record |
 | `app` | ✓ | ✓ | `{ name, version, commit }`. `version` is `package.json`'s; `commit` is `null`, since the page can't know it |
 | `ruleset` | ✓ | ✓ | `{ id, config, map }`: the rules' numbers (`rules.config`), a hash of the map, and an identifier made from both |
 | `game` | ✓ | ✓ | `{ id, exportedOn, status, nightsPlayed, players, settings, randomness }`, below |
@@ -86,9 +86,9 @@ A record is one JSON object. In the files, each action is on its own line ([exam
 | `exportedOn` | The date of the export (UTC, `YYYY-MM-DD`); no time of day |
 | `status` | `"completed"` (a rule ended it), `"inProgress"`, or `"abandoned"` (the player ended it) |
 | `nightsPlayed` | Nights begun, 0 to 4 |
-| `players` | `{ jack, police }`, each `{ type: "human" \| "ai", level?, ai? }`: the levels chosen in the setup dialog (for example `{ "type": "ai", "level": "hard", "ai": "Jack AI v2" }`) |
+| `players` | `{ jack, police }`, each `{ type: "human" \| "ai", level?, ai? }`: the levels chosen in the setup dialog (for example `{ "type": "ai", "level": "hard", "ai": "Jack AI v2" }`, or, when a person plays Jack, `{ "jack": { "type": "human" }, "police": { "type": "ai", "level": "normal", "ai": "Detective AI v3" } }`) |
 | `settings` | `{ confirmPoliceMoves, reviewNights }`: the engine's settings, which change when it waits for the player (the page sets both; replay needs them) |
-| `randomness` | `{ source: "unseeded" \| "seeded", seed }` |
+| `randomness` | `{ source: "unseeded" \| "seeded", seed }`. A human Jack game records the seed of the detectives' random numbers (they only break ties) and `uses` |
 
 **`outcome`:** `result` is the engine's `arrested`, `trapped`, `outOfMoves` or `jackWins`, or `abandoned`; `winner` is `"police"`, `"jack"` or `null` (abandoned); `night` is the night it ended on (1 to 4); `jackMove` is how many moves Jack had made that night; `mapid` is where the arrest was made.
 
@@ -124,7 +124,7 @@ Map ids are the code's (0 to 428); [the glossary](README.md#glossary) explains h
 
 **What the police's record never contains:** the hideout; Jack's route (where he moved, a coach's stop); which women are marked before the victims are chosen; the order of the double event's crime scenes; anything from Jack's AI beyond its decisions (no reasoning, no debug objects, no views). Its `nights` are the night review's records, already police-safe, and its `current` is a few fields of the police view.
 
-**The Jack side's record** (for a future human Jack mode; available through `exportPublic('jack')`) shows his own secrets but not which patrol tokens are real until the policemen take the board (phase 8), or until he reveals one.
+**The Jack side's record** (**Download Jack's record** when the player plays Jack; `exportPublic('jack')`) shows his own secrets but not which patrol tokens are real until the policemen take the board (phase 8), or until he reveals one.
 
 **What each side knew when it acted.** Every action's `known` is the number of entries of that night's public record (`nights[n].log`) that had been seen when it was taken: the crimes, Jack's moves, and the results of earlier searches and arrests. So a search can be judged on `log.slice(0, known)`, not on clues found later. With the earlier nights' records, that is everything the police knew. Nothing is stored twice for this: the deduction can rebuild the police's belief at any action from those entries (`WC.deduction.track(log.slice(0, known))`).
 
@@ -192,7 +192,7 @@ For deeper questions, read the records directly (for example, with `tools/game-l
 
 | Question | Where to look |
 |---|---|
-| Which hideouts do human Jacks prefer? | `actions[0].args.mapid` in full records (once a human Jack mode exists) |
+| Which hideouts do human Jacks prefer? | `actions[0].args.mapid` in full records where `game.players.jack.type` is `"human"` |
 | How often do humans wait? | `wait` actions, with `timeOfCrime` on the `victims` that follow |
 | Which routes do Jacks take? | Full records: `move` actions, or `nights[n].jack.route` |
 | Where do detectives search wrongly? | `search` actions with result `miss` or `none`, against `nights[n].jack.route` in full records |
@@ -228,7 +228,7 @@ From there a test can ask any police AI what it would do (`ai.turn(game, WC.rule
 - **`schemaVersion`** changes when the record's meaning changes (a field renamed, an action added, a meaning altered). The importer reads only the versions it lists (`supportedVersions` in `validate.js`). A newer schema should add a reader for older versions rather than reinterpret them.
 - **`ruleset.id`** changes when the rules' numbers or the map change. A record is replayed only against the same rule set; others are *incompatible*. To analyse old records after a rules or map change, check out the commit that matches their `app.version` and import them there, or keep them as their own dataset. Never mix rule sets in one summary; the summary lists the rule sets it counted.
 - **`app.version`** is `package.json`'s version, and a test keeps `record.js` equal to it. Raise it when a release changes behaviour. A different app version with the same rule set only gives a warning: the replay still decides.
-- **A human Jack mode** needs no new format: `players.jack.type` becomes `"human"`, and the Jack side's public record (`role: "jack"`) already exists.
+- **Human Jack games** ([Playing Jack](playing-jack.md#6-game-records)) needed no new format: `players.jack.type` is `"human"`, `players.police` names the detectives' AI, and `randomness` holds the seed of the detectives' tie-breaks. Schema version 1 is unchanged, so every existing record still reads and replays.
 
 ## 9. Privacy
 
@@ -240,7 +240,6 @@ From there a test can ask any police AI what it would do (`ai.turn(game, WC.rule
 
 ## 10. Limitations and future work
 
-- **A human Jack mode** doesn't exist yet. The format and the Jack side's export are ready for it, but the Jack side's export has been tested only with the computer Jack.
 - **`keepWretched`** (a Wretched with no legal move) is recorded and replayed by the same code as the other actions. It is rare and occurs in none of the example or test games.
 - **The interface's own mistakes** (clicks the engine refuses) are not recorded. Only actions taken back are, as interactions.
 - **No commit identifier** in browser records: the page can't know it. `app.version` and `ruleset.id` identify the code that matters for replay.

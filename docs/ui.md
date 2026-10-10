@@ -21,7 +21,7 @@ The page aims to feel like the board game on a table: a parchment board in a dar
 └───────────────────────────────────────────┴──────────────────┘
 ```
 
-The case files card appears once a night is over (see [The detective's tools](#the-detectives-tools)).
+The case files card appears once a night is over (see [The detective's tools](#the-detectives-tools)). When the player plays Jack the layout is the same; the phase card holds his choices, and the Jack card shows what he knows ([Playing Jack](playing-jack.md#3-the-two-interfaces-compared)).
 
 Below 1100 pixels wide the page becomes one column, in this order: the phase card (what to do now), the board, the move track, Jack and the case log, then the legend. Below 600 pixels the move track wraps onto two rows and the list of phases is hidden. At **Fit** the board scales to the width available (`WC.ui.draw.fit`); zoomed in, only the board scrolls, never the page (see [Zooming the board](#the-detectives-tools)). Touch screens start zoomed in.
 
@@ -89,7 +89,9 @@ The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't
 | Move track | `.move-tracker p span` (20 spans) | `tracker` | `timeOfCrime`, `jackWaited`, `murder`, `jackMoved` |
 | Dialogs | `.overlay.intro`, `.overlay.ending`, `.overlay.export-dialog` (shown with the `open` class) | Start-up code in `main.js`, the `gameOver` event | |
 | Who leads the detectives | `fieldset.police-choice` (hidden, and `.police-options` empty, outside Developer Mode), `.police-options`, `.police-note`; while the computer leads them, `body.computer-police` (the board takes no clicks) and the subtitle says the player is watching | `WC.ui.setup` and `WC.ui.autoPolice(game, police, { delay })` in `js/ui/autopolice.js` | Start button; then the engine's `policeTurn` and `phase` events |
-| Jack's difficulty | `.difficulty-options` (one radio button per offered level: Normal and Hard by name only; in Developer Mode every level with its AI), `.difficulty-note`, and `.difficulty-badge` in the top bar; `body.developer-mode` with `?dev=1` | `WC.ui.setup(game, { search, storage })` in `js/ui/setup.js` | Start button |
+| Role | `.role-options` (`input[name=role]`: `detectives`, `jack`), `.role-note`; `.intro-detectives` / `.intro-jack`; while the player plays Jack, `body.human-jack` and the subtitle says so | `WC.ui.setup` | Start button |
+| Opponent's difficulty | `.difficulty-options` (one radio button per offered level of the selected role: as the detectives, Jack's Normal and Hard; as Jack, the detectives' Easy and Normal; in Developer Mode every level with its AI), `.difficulty-legend`, `.difficulty-note`, and `.difficulty-badge` in the top bar; `body.developer-mode` with `?dev=1` | `WC.ui.setup(game, { search, storage })` in `js/ui/setup.js` | Start button; a change of role |
+| Jack's decisions (playing Jack) | `.state.jack-turn` (`.jack-turn-title`, `.jack-intro`, `.jack-move-kinds` with `.jack-kind-walk/-alley/-carriage`, `.jack-unavailable`, `.jack-status`, `.jack-confirm`, `.jack-cancel`, `.jack-wait`, `.jack-clear`); `.state.jack-watch` with `.skip-animations`; `.jack-animate-toggle`; `.jack-board-actions` under the board (the status and buttons again, shown only below 1101 pixels) | `WC.ui.jackPlayer` in `js/ui/jack-player.js` | `jackTurn`, `phase`, `policeTurn`; the engine's events for the board and the case log |
 | Women and Wretched | `.token-woman`, `.token-wretched`; `button.highlight-pieces` toggles `.board.highlighting` | `pieces` | Every `phase`; `wretchedMoved` |
 | Undo and Done | `.state.hunting-the-monster .undo-move`, `.finish-moves` | `moveControls` | `policeTurn` (10), `policemanMoved`, `policeMoveUndone` |
 | Export dialog | `.overlay.export-dialog`: `.export-status`, `.export-public`, `.export-full` (`.export-full-note`), `.export-end` (`.export-confirm`, `.export-end-game`), `.export-label`, `.export-comments`, `.export-close`; `.export-open` buttons open it (`.topbar-button` in the top bar); `body.game-ended` once the player ends the game (the board takes no clicks) | `WC.ui.exportLog(game, recorder, { stopWatching, save })` in `js/ui/export.js` | `started` (shows the top bar button); every event while open |
@@ -115,13 +117,18 @@ The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't
 | Disc with a magnifier or gavel | `token-search`, `token-arrest` | A circle to search or arrest at |
 | Translucent yellow disc | `token-clue` | Clue marker |
 | Translucent red disc | `token-murder crime-scene` | Crime scene marker |
+| Gold ring with a house badge | `jv-hideout` | Jack's hideout (playing Jack) |
+| Red pawn | `jv-jack` | Jack (playing Jack) |
+| Small numbered dot | `jv-trail` | Jack's route tonight, in order (playing Jack) |
+| Gold, blue or orange ring | `jv-choice` with `jv-target`, `jv-dest-walk`, `jv-dest-alley`, `jv-dest-carriage` (`jv-dest-home` on the hideout), `jv-via`, `jv-picked` once picked | A choice for Jack: a hideout, a woman, a victim, a patrol to reveal, a destination, a coach's stop |
+| Policeman that glides | `token-pawn jv-police police-N` (`.board.jv-still` or `.jv-hurry` stops the glide) | Policeman N, from Jack's side |
 | Review markers (only while a night is shown) | `review` with `review-crime` (`review-earlier`), `review-clue`, `review-searched`, `review-arrest`, `review-police`, `review-distance-N` | A night's crime scenes, clues, searches without a clue, failed arrests, where the policemen ended, and walking distances |
 
 Pieces that can be clicked have the `selectable` class, which gives them a pointer, a hover ring and (for pieces still to move) a gentle pulse.
 
 ## The class contract
 
-The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, `highlight-pieces`, `highlighting`, `undo-move`, `finish-moves`, `search-rest`, `search-everyone`, `waiting`, `front`, `zoomed`, `board-sizer`, `zoom-in`, `zoom-out`, `zoom-fit`, `for-police-N`, `review`, `reviewing`, `review-night`, `review-log`, `begin-next-night`, `close-review`, `review-case`, `export-open`, `export-dialog`, `export-public`, `export-full`, `export-confirm`, `export-end-game`, `game-ended`, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
+The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, `highlight-pieces`, `highlighting`, `undo-move`, `finish-moves`, `search-rest`, `search-everyone`, `waiting`, `front`, `zoomed`, `board-sizer`, `zoom-in`, `zoom-out`, `zoom-fit`, `for-police-N`, `review`, `reviewing`, `review-night`, `review-log`, `begin-next-night`, `close-review`, `review-case`, `export-open`, `export-dialog`, `export-public`, `export-jack`, `export-full`, `export-confirm`, `export-end-game`, `game-ended`, `human-jack`, `jack-turn`, `jack-watch`, `jack-confirm`, `jack-cancel`, `jack-wait`, `jack-clear`, `jack-kind`, `skip-animations`, the `jv-` classes above, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
 
 Two of these behave in a way that matters:
 

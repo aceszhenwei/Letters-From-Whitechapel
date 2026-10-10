@@ -2,6 +2,25 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
+## Unreleased: play as Jack
+
+- **Play as Jack** against the computer's detectives, from the ordinary setup dialog: **Play as the Detectives** (the default, unchanged) or **Play as Jack**. As Jack the opponent is **Easy** (Detective AI v2) or **Normal** (Detective AI v3, the default); each role keeps its own saved difficulty. The address can fix both: `?role=jack&detectives=easy`. See [Playing Jack](playing-jack.md).
+- **Jack's interface:**
+  - Choose a hideout, place the women (marked or decoys), kill or wait, and reveal a patrol token.
+  - Walk, take a coach (choosing its stop) or slip through an alley.
+  - Every choice is drawn from the rules and confirmed before it counts. Cancel and switching the kind of move cost nothing, and a move that isn't available says why.
+  - The board shows the hideout, Jack, his route tonight and his choices; the Jack card shows everything he knows.
+  - The case log is in his words, and the ending has a summary.
+  - The detectives' turns are paced so they can be followed (policemen glide one after another), with **Skip to my turn** and a setting to turn the pacing off.
+  - On phones, the choices are large enough to tap and always on top.
+- **Engine:**
+  - One setting, `humanJack`: the engine waits for each of Jack's decisions (`jackTurn`) and takes them through `jackHideout`, `jackWomen`, `jackWait`, `jackVictims`, `jackReveal` and `jackMove`. They share their code with the AI's decisions, so both play by the same rules: a test makes an AI's decisions by hand and gets exactly the AI's game.
+  - `policeActions()` gives a computer police player the police's methods alone. The page's computer police now get only these and the police view, never the game or its state.
+- **Fairness:** tests check that Detective AI v2 and v3 make exactly the same moves whatever Jack's hideout and route, and that Jack's screen shows none of their reasoning.
+- **Game records:** unchanged format. A human Jack game records `players.jack.type: "human"`, the detectives' AI, and the seed of their tie-breaks. The record replays exactly. The export dialog adds **Download Jack's record**.
+- **Unchanged:** Strategic Jack, Jack AI v2, Detective AI v2 and v3, the waiting policy, the research harnesses, and the detectives' mode (apart from the role choice in the dialog).
+- **Tests:** `human-jack.test.js` (11) and `human-jack-ui.test.js`, with `test/helpers/jack.js` playing Jack through the page. Whole games were also played by real clicks and taps in Chromium on a desktop and an emulated iPhone 13.
+
 ## Unreleased: adaptive deception (Study J3)
 
 - **Study:** [Adaptive deception under opponent uncertainty](jack-adaptive.md) asks whether Jack can choose how much to deceive from what he sees of the police. It was pre-registered, with development, selection and held-out seeds (21,200 games) and six detectives, two held out. Two of the detectives were built for the study to forgive Jack AI v2's detours.
