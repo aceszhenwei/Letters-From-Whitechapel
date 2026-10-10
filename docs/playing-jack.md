@@ -29,6 +29,14 @@ In the setup dialog choose **Play as Jack**, then the detectives' difficulty, an
 
 The phase card and the **You: Jack the Ripper** card always show where you are, your hideout, the moves left, the coaches and alleys left, your victims, and your route tonight. A kind of move that isn't available says why: "No alleys left tonight.", "A coach takes two moves, and you have only 1 left.", "Policemen block every walk from here."
 
+| Desktop | Phone (iPhone 13) |
+|---|---|
+| ![Choosing the role: Play as Jack, with the detectives' difficulty Easy or Normal](images/playing-jack/setup.jpg) | ![A walk chosen on the board, with the status line and Confirm under the board](images/playing-jack/mobile-move.jpg) |
+| ![Choosing the hideout: every legal circle ringed, the chosen one in gold](images/playing-jack/hideout.jpg) | ![A coach whose destination has several stops: the via choices](images/playing-jack/mobile-coach-via.jpg) |
+| ![A coach move chosen, with the moves left after it, and the Jack card and case log](images/playing-jack/coach.jpg) | ![The ending, with the summary](images/playing-jack/mobile-ending.jpg) |
+
+More: [placing the women](images/playing-jack/women.jpg), [kill or wait](images/playing-jack/kill-or-wait.jpg), [the detectives' turn](images/playing-jack/detectives-turn.jpg), [the ending on a desktop](images/playing-jack/ending.jpg). The screenshots are made with `tools/screenshots/play-jack.js` (section 7).
+
 You win by escaping on all four nights. You lose if a detective arrests you, if your last move doesn't reach the hideout, or if you can't move at all.
 
 ## 2. Choosing a role and a difficulty
@@ -103,7 +111,24 @@ Human Jack games are recorded by the existing recorder ([Game records](game-reco
 | `test/regression/human-jack-ui.test.js` | The role and difficulty choices (defaults, switching, saved choices per role, the address, Developer Mode); the hideout, women, kill, coach, alley and walk through the board; cancelling and switching moves changing nothing; a double tap making one move; the case log from Jack's side; Skip and pacing playing the same game; the detectives never overlapping or acting after the end; whole games against both difficulties; the record validating and replaying; the same seed giving the same game |
 | `test/helpers/jack.js` | Plays Jack through the page as a person would (tapping the board and the buttons), for these tests |
 
-**Playtesting.** Whole four-night games were played in Chromium by real clicks on a desktop (1280 × 900) and real taps on an emulated iPhone 13 (390 × 844, touch). The driver was a Playwright script that chose like a cautious player. It covered both difficulties and every step: the hideout, women, waiting and revealing, killing (with the double event), walks, coaches with a chosen stop, alleys, the detectives' turns, night transitions, walking home, and the ending. Three problems were found and fixed. Confirming a decision cleared the choices only after the engine had already drawn the next prompt, which emptied that prompt's state, so a victim couldn't be picked after a reveal; choices are now cleared before the decision is sent. A redrawn choice could be left under its old copy. And a static Wretched marker redrawn after an event could cover the victim choice; choices are now always drawn on top. The phone playthrough also showed that confirming meant scrolling back up past the board, hence the buttons under it.
+**Playtesting.** Whole games were played in Chromium by real clicks on a desktop (1280 × 900) and real taps on an emulated iPhone 13 (390 × 844, touch), with `tools/screenshots/play-jack.js`, which plays like a simple, cautious player:
+
+The driver's seed fixes its own choices and the page's `Math.random`, but not the detectives' tie-breaks, which are seeded afresh for each game in the browser. So a run doesn't repeat exactly: two runs with seed 4 against Easy on the phone ended on the fourth and the third night.
+
+| Screen | Detectives | Driver seed | How it ended |
+|---|---|---:|---|
+| iPhone 13 | Easy | 4 | Arrested on the fourth night; again, on the third |
+| Desktop | Normal | 11 | Arrested on the fourth night |
+| Desktop | Normal | 3, 12–16 | Arrested on nights 1–3, or out of moves on the third |
+| Desktop | Easy | 3 | Arrested on the second night |
+| iPhone 13 | Normal | 6 | Arrested on the second night |
+
+- **Coverage.** Between them the runs covered both difficulties and every step: the hideout, the women, waiting and revealing, killing (with the double event), walks, coaches with a chosen stop, the detectives' turns, night transitions, walking home, and the ending. Alleys and a win were covered in the page (jsdom): the test helper's player won a four-night game against Easy (seed 3), and was arrested on the fourth night against Normal (seed 3).
+- **Errors.** No run had a page error.
+- **Three problems found and fixed:**
+  - Confirming a decision cleared the choices only after the engine had already drawn the next prompt. That emptied the new prompt's state, so a victim couldn't be picked after a reveal. Choices are now cleared before the decision is sent.
+  - A redrawn choice could be left under its old copy, and a static Wretched marker redrawn after an event could cover the victim choice. Choices are now always drawn on top.
+  - On the phone, confirming meant scrolling back up past the board, hence the buttons under it.
 
 ## 8. Known limitations
 

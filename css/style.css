@@ -1526,7 +1526,11 @@ h2 {
 
 /* Playing Jack on a narrow screen: his status and buttons again under the board, where he makes his choices */
 .jack-board-actions {
-    padding: 10px 2px 0;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--ink-raised);
+    color: var(--text);
 }
 
 .jack-board-actions .jack-status {
@@ -1543,4 +1547,9 @@ h2 {
     .jack-board-actions {
         display: none;
     }
+}
+
+/* Once the player ends the game (export dialog), Jack's buttons under the board go too */
+.game-ended .jack-board-actions {
+    display: none;
 }
