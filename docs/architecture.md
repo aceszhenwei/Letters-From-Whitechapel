@@ -53,7 +53,8 @@ The same in plain text, reading down from what depends on nothing:
 | `data/content.js` | Words for the 12 phases and 4 nights | Nothing | |
 | `core/board.js` | Map queries: walking between circles, police steps, adjacent circles, alleys, distances, straight-line distance | The map | Know about a game, a state, or a turn |
 | `core/rules.js` | Legality and derived facts about a state: patrol placement, Wretched moves, police destinations, Jack's legal moves, escaping, threats, and the **view** of what Jack knows | Board, a state passed in | Change the state |
-| `core/engine.js` | The state; the phases of a night; every change to the state (effects); police actions; events | Rules; the AI only through its six functions | Touch the page; decide anything for Jack |
+| `core/engine.js` | The state; the phases of a night; every change to the state (effects); police actions; events (including an `action` event for each decision it accepts) | Rules; the AI only through its six functions | Touch the page; decide anything for Jack |
+| `core/record.js` | The game's record: listens to the engine's `action` events, keeps the actions that stand, builds the public and full exports, and replays a full record through the engine (see [Game records](game-records.md)) | Rules, engine, the map (for a hash) | Change a game's state, draw random numbers, or put a secret in a public export |
 | `core/deduction.js` | What can be worked out from a night's public record: where Jack could be (and how likely each circle is), where his route may have passed, where the hideout could be | Board, a public record passed in | Read the state |
 | `ai/jack.js` | The baseline AI: Jack's six decisions | Board, random, the view it is given | Read the state directly, change it, or touch the page |
 | `ai/strategic-jack.js` | The strategic AI: the same six decisions, valuing moves by the chance of surviving and getting home (see [Jack's AI](jack-ai.md)) | Board, deduction, random, the baseline (for decisions it leaves alone), the view | As `ai/jack.js` |
@@ -67,6 +68,7 @@ The same in plain text, reading down from what depends on nothing:
 | `ai/police-levels.js` | Who leads the detectives: the player, or the original, v2 or v3 computer police (`WC.policeVariants`) | The police AI constructor | Play, or touch the page or the rules |
 | `ui/review.js` | The night review: keeps each night's public record (`rules.nightRecord`) when it ends, and shows it on the board and in the case files, with walking distances | Board, rules, content, the game it is attached to | Change the state (only `beginNextNight`, when the player asks), or show anything outside the public record |
 | `ui/autopolice.js` | Plays a computer police through the engine's police actions, a pause apart, for the player to watch | The police AI, the police view, the engine | Change the rules, or see Jack's secrets |
+| `ui/export.js` | The export dialog: saves the police's record or, once the game is over or ended on purpose, the full record, as a file on the device | The recorder, the board (the hideout's number after ending), the page | Send anything anywhere, or offer the full record of a game still being played |
 | `ui/setup.js` | The setup dialog: Jack's difficulty, who leads the detectives, and starting the game (sets `game.ai`; starts `autoPolice`) | Difficulty, police levels, the page | Change the rules |
 | `main.js` | Creating the game (Easy until the setup dialog applies a level) and attaching the interface; opening the setup dialog | Everything above | |
 
@@ -195,15 +197,15 @@ A policeman moving, from click to screen:
 | `index.html` | The page and the script load order |
 | `css/style.css` | All styling (see [User interface](ui.md)) |
 | `js/data/` | Map and content data |
-| `js/core/` | Board, rules, engine, random: no page access |
+| `js/core/` | Board, rules, engine, random, deduction, the game record: no page access |
 | `js/ai/jack.js` | The baseline Jack AI |
 | `js/ai/strategic-jack.js` | The strategic Jack AI |
 | `js/ai/jack-v2.js` | Jack AI v2 (the Hard level) |
 | `js/ai/police.js`, `js/ai/containment.js` | Computer police (the original, v2 and v3), and v3's containment model |
 | `js/ai/difficulty.js`, `js/ai/police-levels.js`, `js/ui/setup.js`, `js/ui/autopolice.js` | Jack's difficulty, who leads the detectives, the setup dialog, and computer police in the page |
-| `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)) |
+| `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)); `game-log/`, which checks, replays and summarises exported game records (see [Game records](game-records.md)) |
 | `experiments/` | Recorded simulation results |
-| `js/ui/renderer.js`, `js/ui/review.js` | The interface, and the night review |
+| `js/ui/renderer.js`, `js/ui/review.js`, `js/ui/export.js` | The interface, the night review, and exporting the game log |
 | `js/main.js` | Start-up |
 | `js/vendor/` | jQuery 1.11, Underscore 1.8.3 |
 | `generate-svg-map.html` | Developer tool: prints the streets as SVG |
@@ -218,7 +220,7 @@ A policeman moving, from click to screen:
 | Change how Jack plays | `ai/jack.js`, or write a new object with the six decision functions and pass it to `WC.engine.create({ ai })` (see [Jack's AI](jack-ai.md)) |
 | Let Jack's AI know something new | Add it to `rules.jackView`, keeping to what Jack would know at the table |
 | Show something new, or change wording | `ui/renderer.js` and `css/style.css` |
-| Add a police action | An action method in `core/engine.js` that checks a rule from `core/rules.js`; then a click in `ui/renderer.js` |
+| Add a police action | An action method in `core/engine.js` that checks a rule from `core/rules.js` and reports itself with `action(...)`; then a click in `ui/renderer.js`; then teach the game record about it (`core/record.js`: its phase, what each side sees, how to replay it; `tools/game-log/validate.js`: its arguments) and raise `schemaVersion` (see [Game records §8](game-records.md#8-versions-and-compatibility)) |
 | Change the map | `data/map.js` (see [Map data](map-data.md)) |
 | Play without a page (simulations, AI evaluation) | `node tools/simulate.js`, or `WC.engine.create` and the police actions, as `tools/sim/run-game.js` and `test/helpers/headless.js` do |
 | Tell the police (or Jack's AI) something new that is public | Record it in the engine with `recordPublic`, and teach `core/deduction.js` to read it |

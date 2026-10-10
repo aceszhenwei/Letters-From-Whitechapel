@@ -22,6 +22,7 @@
         </div>
     </div>
     <div class="difficulty-badge" hidden></div>
+    <button type="button" class="button button-secondary export-open topbar-button" hidden>Game log</button>
     <div class="night-info" aria-live="polite">
         <div class="night-name">Night 1 of 4</div>
         <div class="night-date">31 August 1888</div>
@@ -162,6 +163,35 @@
         <h2 id="ending-title" class="game-over"></h2>
         <button type="button" class="button button-primary new-game">Play again</button>
         <button type="button" class="button button-secondary review-case">Review the case</button>
+        <button type="button" class="button button-secondary export-open">Export game log</button>
+    </div>
+</div>
+
+<div class="overlay export-dialog" role="dialog" aria-modal="true" aria-labelledby="export-title">
+    <div class="dialog">
+        <div class="dialog-kicker">Case records</div>
+        <h2 id="export-title">Export the game log</h2>
+        <p class="export-status" aria-live="polite"></p>
+        <p class="export-privacy">The file is made on this device and saved where your browser saves downloads. Nothing is sent anywhere: share it only if you choose to.</p>
+        <div class="export-choice">
+            <button type="button" class="button button-primary export-public">Download the police's record</button>
+            <p class="export-note">No spoilers: only what the police could see.</p>
+        </div>
+        <div class="export-choice">
+            <button type="button" class="button button-secondary export-full">Download the full record</button>
+            <p class="export-note export-full-note"></p>
+        </div>
+        <div class="export-end" hidden>
+            <p>To save the full record of a game in progress, end the game first. This reveals Jack's hideout and route, and the game can't be continued.</p>
+            <label class="export-confirm-label"><input type="checkbox" class="export-confirm"> I understand: end this game and reveal Jack's secrets</label>
+            <button type="button" class="button button-secondary export-end-game" disabled>End the game</button>
+        </div>
+        <details class="export-feedback">
+            <summary>Add a note to the file (optional)</summary>
+            <label>A label for yourself, not your name <input type="text" class="export-label" maxlength="60" autocomplete="off"></label>
+            <label>Comments <textarea class="export-comments" maxlength="2000" rows="3"></textarea></label>
+        </details>
+        <button type="button" class="button button-secondary export-close">Close</button>
     </div>
 </div>
 
@@ -172,6 +202,7 @@
 <script src="js/core/board.js"></script>
 <script src="js/core/rules.js"></script>
 <script src="js/core/engine.js"></script>
+<script src="js/core/record.js"></script>
 <script src="js/core/deduction.js"></script>
 <script src="js/ai/jack.js"></script>
 <script src="js/ai/strategic-jack.js"></script>
@@ -184,6 +215,7 @@
 <script src="js/ui/renderer.js"></script>
 <script src="js/ui/review.js"></script>
 <script src="js/ui/autopolice.js"></script>
+<script src="js/ui/export.js"></script>
 <script src="js/ui/setup.js"></script>
 <script src="js/main.js"></script>
 

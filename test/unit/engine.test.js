@@ -129,5 +129,6 @@ test('another AI can replace Jack\'s strategy without touching anything else', (
 test('the engine reports what happens, in order', () => {
 	const { game, events } = newGame(5);
 	game.start();
-	assert.deepStrictEqual(events, ['started', 'phase', 'nightStarted', 'phase', 'phase', 'policeTurn']);
+	// Each decision the engine accepts is reported as an 'action' (for the game record), before it takes effect
+	assert.deepStrictEqual(events, ['action', 'started', 'phase', 'nightStarted', 'phase', 'action', 'phase', 'policeTurn']);
 });

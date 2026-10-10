@@ -52,6 +52,8 @@ Three tools help a player keep track of the investigation. None changes the rule
 - During later nights, and after the game, the night buttons show any earlier night on the board, read-only, as the police saw it then ([screenshot](images/night-review/after-history.jpg)). Then **Back to the current night**. At the end of the game, **Review the case** in the ending dialog opens the case files.
 - The log and the board are drawn from `rules.nightRecord`: a frozen copy of the night's public record, kept when the night ends. It never holds Jack's route, position or hideout.
 
+**Exporting the game log.** **Game log** in the top bar (once the game has begun) and **Export game log** in the ending dialog open the export dialog: the police's record at any time, the full record once the game is over or after the player ends it, ticking that it reveals Jack's secrets. The file is saved on the device; nothing is sent ([Game records](game-records.md#1-for-players)).
+
 On a phone the same tools appear in one column ([screenshot](images/night-review/after-mobile.jpg)). Screenshots are made with `tools/screenshots/capture.js`.
 
 ## How the interface works
@@ -77,11 +79,12 @@ The interface is `js/ui/renderer.js` (`WC.ui`). It displays the game; it doesn't
 | Case log | `.event-log` | `log(text, kind)`, where `kind` is `night`, `crime`, `clue`, `jack`, `police` or `end` | Most events |
 | Board | `.board` > `.map` | `streets`, `map`, `createElement` | `started` |
 | Move track | `.move-tracker p span` (20 spans) | `tracker` | `timeOfCrime`, `jackWaited`, `murder`, `jackMoved` |
-| Dialogs | `.overlay.intro`, `.overlay.ending` (shown with the `open` class) | Start-up code in `main.js`, the `gameOver` event | |
+| Dialogs | `.overlay.intro`, `.overlay.ending`, `.overlay.export-dialog` (shown with the `open` class) | Start-up code in `main.js`, the `gameOver` event | |
 | Who leads the detectives | `.police-options`, `.police-note`; while the computer leads them, `body.computer-police` (the board takes no clicks) and the subtitle says the player is watching | `WC.ui.setup` and `WC.ui.autoPolice(game, police, { delay })` in `js/ui/autopolice.js` | Start button; then the engine's `policeTurn` and `phase` events |
 | Jack's difficulty | `.difficulty-options` (one radio button per level), `.difficulty-note`, and `.difficulty-badge` in the top bar | `WC.ui.setup(game, { search, storage })` in `js/ui/setup.js` | Start button |
 | Women and Wretched | `.token-woman`, `.token-wretched`; `button.highlight-pieces` toggles `.board.highlighting` | `pieces` | Every `phase`; `wretchedMoved` |
 | Undo and Done | `.state.hunting-the-monster .undo-move`, `.finish-moves` | `moveControls` | `policeTurn` (10), `policemanMoved`, `policeMoveUndone` |
+| Export dialog | `.overlay.export-dialog`: `.export-status`, `.export-public`, `.export-full` (`.export-full-note`), `.export-end` (`.export-confirm`, `.export-end-game`), `.export-label`, `.export-comments`, `.export-close`; `.export-open` buttons open it (`.topbar-button` in the top bar); `body.game-ended` once the player ends the game (the board takes no clicks) | `WC.ui.exportLog(game, recorder, { stopWatching, save })` in `js/ui/export.js` | `started` (shows the top bar button); every event while open |
 | Case files | `.review-card`: `.review-nights` (one `.review-night` button per night), `.review-body` (`.review-log`, `.review-radius`, `.begin-next-night` or `.close-review`); `.board.reviewing` while a night is shown | `WC.ui.review` | `nightOver`, `gameOver`, `.review-case` in the ending dialog |
 
 ## Tokens on the board
@@ -110,7 +113,7 @@ Pieces that can be clicked have the `selectable` class, which gives them a point
 
 ## The class contract
 
-The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, `highlight-pieces`, `highlighting`, `undo-move`, `finish-moves`, `for-police-N`, `review`, `reviewing`, `review-night`, `review-log`, `begin-next-night`, `close-review`, `review-case`, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
+The game code and the tests find elements by class name, so keep these classes when restyling: `token`, `selectable`, `token-police`, `marked`, `unmarked`, `selected`, `required`, `token-woman`, `token-wretched`, `token-move-wretched`, `token-move-police`, `token-pawn`, `token-search-adjacent`, `token-arrest-adjacent`, `token-search`, `token-arrest`, `token-clue`, `token-murder`, `location`, `location-number`, `state`, `game-over`, `jack-log`, `move-tracker`, `highlight-pieces`, `highlighting`, `undo-move`, `finish-moves`, `for-police-N`, `review`, `reviewing`, `review-night`, `review-log`, `begin-next-night`, `close-review`, `review-case`, `export-open`, `export-dialog`, `export-public`, `export-full`, `export-confirm`, `export-end-game`, `game-ended`, and the `carriage`, `alley`, `murder` and `active` classes on track spaces.
 
 Two of these behave in a way that matters:
 

@@ -8,7 +8,7 @@ const read = (file) => fs.readFileSync(path.join(__dirname, '..', '..', file), '
 	.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, ''); // Code only, not comments
 
 test('the core (board, rules, engine) never touches the page', () => {
-	for (const file of ['js/core/board.js', 'js/core/rules.js', 'js/core/engine.js', 'js/core/random.js', 'js/core/deduction.js']) {
+	for (const file of ['js/core/board.js', 'js/core/rules.js', 'js/core/engine.js', 'js/core/random.js', 'js/core/deduction.js', 'js/core/record.js']) {
 		assert.ok(!/\$\(|jQuery|document\.|window\./.test(read(file)), file);
 	}
 });

@@ -1133,3 +1133,100 @@ h2 {
     .move-tracker p { grid-template-columns: repeat(10, minmax(0, 1fr)); }
     .phase-steps { display: none; }
 }
+
+/* The game log: exporting the record of a game (js/ui/export.js) */
+.topbar-button {
+    padding: 6px 12px;
+    font-size: 13px;
+    margin-right: 16px;
+    white-space: nowrap;
+}
+
+.export-choice {
+    margin: 0 0 14px;
+}
+
+.export-choice .button {
+    margin-left: 0;
+}
+
+.export-note, .export-privacy {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #5d4d3e;
+}
+
+.export-privacy {
+    margin: 0 0 16px;
+}
+
+.export-end {
+    margin: 0 0 16px;
+    padding: 12px;
+    border: 1px solid var(--blood);
+    border-radius: 8px;
+}
+
+.export-end[hidden] {
+    display: none;
+}
+
+.export-end p {
+    margin: 0 0 8px;
+    font-size: 14px;
+}
+
+.export-confirm-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.export-confirm {
+    accent-color: var(--blood);
+}
+
+.export-end .button {
+    margin-left: 0;
+}
+
+.export-feedback {
+    margin: 0 0 16px;
+    font-size: 14px;
+}
+
+.export-feedback summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.export-feedback label {
+    display: block;
+    margin-top: 8px;
+}
+
+.export-feedback input, .export-feedback textarea {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.dialog .export-close {
+    margin-left: 0;
+}
+
+/* A game the player ended: the board takes no more moves */
+.game-ended .board, .game-ended .phase-card .button {
+    pointer-events: none;
+}
+
+.game-ended .phase-card .button {
+    opacity: 0.45;
+}
+
+@media (max-width: 600px) {
+    .topbar { flex-wrap: wrap; }
+    .topbar-button { margin-right: 0; }
+}

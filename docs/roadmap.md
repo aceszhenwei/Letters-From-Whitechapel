@@ -6,6 +6,7 @@ This page keeps four things apart: what is **implemented**, its **known limitati
 
 - **The game:** the revised edition's standard rules for one police player against a computer Jack ([Game rules](game-rules.md)), on a map verified against the physical board ([Map data](map-data.md#verified-against-the-board)).
 - **Computer players:** three Jack levels (Baseline, Strategic, Jack AI v2) and three computer police levels (original, Detective AI v2, Detective AI v3) that the player can watch instead of playing ([AI overview](ai.md)).
+- **Game records:** players can export a game (the police's record at any time, the full record once it is over), and `npm run research:import` checks, replays and summarises the files ([Game records](game-records.md)).
 - **Testing:** fast, smoke, medium and full tiers, with fixed seed ranges for every experiment ([Testing](testing.md)).
 
 The [changelog](changelog.md) lists every change, pull request by pull request.
@@ -14,11 +15,11 @@ The [changelog](changelog.md) lists every change, pull request by pull request.
 
 **Rules** (details in [Game rules](game-rules.md#not-implemented)):
 - The optional rules (Jack's Letters, False Clues, Rushing, Area Arrests, Catch Me If You Can, I Know Your Address) and the Head of the Investigation tiles are not implemented.
-- A person can't play Jack.
+- A person can't play Jack. (The game record already has a Jack side's public export for when they can: [Game records §8](game-records.md#8-versions-and-compatibility).)
 - The map has 7 yellow-bordered crossings, exactly the number of patrol tokens; they have not been checked against a printed board ([Known differences](game-rules.md#known-differences-from-the-physical-board)).
 
 **AIs** (details in each report's limitations section):
-- **Every result is AI against AI.** No level is a claim about how hard a person would find it.
+- **Every result is AI against AI.** No level is a claim about how hard a person would find it. Exported human games ([Game records](game-records.md)) are the way to start measuring that.
 - **Jack AI v2 and Detective AI v3 have not been validated on unseen seeds.** Both were selected on development seeds; the validations are proposed below.
 - **Strategic Jack** gives his hideout away with direct routes, and his escape and arrest estimates were measured against the original police ([Jack's AI §10](jack-ai.md#10-remaining-weaknesses)).
 - **Jack AI v2**'s gain depends on Detective AI v2's directness model; his detours always come first and lead away, so they are predictable in shape; once the hideout is walled off he still hovers near it ([Jack AI v2 §10](jack-ai-v2.md#10-limitations-and-future-work)).
