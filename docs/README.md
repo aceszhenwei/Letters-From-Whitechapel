@@ -65,7 +65,8 @@ The studies behind the AIs, oldest first. They are kept as the evidence for the 
 | Document | What it covers |
 |---|---|
 | [Roadmap](roadmap.md) | What is implemented, known limitations, potential research (not approved) and other ideas |
-| [Changelog](changelog.md) | What changed, pull request by pull request |
+| [Changelog](../CHANGELOG.md) | What changed in each release, pull request by pull request |
+| [Releasing](releasing.md) | The versioning convention (patch, minor, major), the changelog, and how to make a release; [release notes](releases/) |
 | [Archive](archive/README.md) | Superseded plans and earlier rounds of results, kept for the record |
 
 ## Glossary
