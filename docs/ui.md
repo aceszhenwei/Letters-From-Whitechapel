@@ -6,9 +6,10 @@ The page aims to feel like the board game on a table: a parchment board in a dar
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ Top bar: title                         Night · date           │
+│ Top bar: title        Jack: level · Game log   Night · date   │
 ├───────────────────────────────────────────┬──────────────────┤
-│ Board (scaled to fit)                     │ Phase card        │
+│ − Fit +                                   │ Phase card        │
+│ Board (fit, or zoomed in and scrolling)   │                   │
 │                                           │  part, title,     │
 │                                           │  instructions,    │
 │                                           │  progress, phases │
@@ -22,11 +23,11 @@ The page aims to feel like the board game on a table: a parchment board in a dar
 
 The case files card appears once a night is over (see [The detective's tools](#the-detectives-tools)).
 
-Below 1100 pixels wide the page becomes one column, in this order: the phase card (what to do now), the board, the move track, Jack and the case log, then the legend. Below 600 pixels the move track wraps onto two rows and the list of phases is hidden. The board always scales to the width available (`WC.ui.draw.fit`), so there is no horizontal scrolling.
+Below 1100 pixels wide the page becomes one column, in this order: the phase card (what to do now), the board, the move track, Jack and the case log, then the legend. Below 600 pixels the move track wraps onto two rows and the list of phases is hidden. At **Fit** the board scales to the width available (`WC.ui.draw.fit`); zoomed in, only the board scrolls, never the page (see [Zooming the board](#the-detectives-tools)). Touch screens start zoomed in.
 
 ## The detective's tools
 
-Three tools help a player keep track of the investigation. None changes the rules or shows anything the police wouldn't see at the table.
+These tools help a player keep track of the investigation and play on any screen. None changes the rules or shows anything the police wouldn't see at the table. **Game log** (in the top bar, and at the end) saves the game as a file: see [Game records](game-records.md#1-for-players).
 
 | Before | After |
 |---|---|

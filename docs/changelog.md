@@ -2,7 +2,13 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: playable on phones
+## Unreleased: repository clean-up
+
+- **Removed files nothing used** (all still in the git history): `construction/whitechapel.ai` (the board's Illustrator source, 5.9 MB), `svg/` (three street drawings; the game draws the streets from the map data), `images/whitechapel-numbers.jpg`, `css/font-awesome.css` (the page loads the minified copy) and `fonts/FontAwesome.otf` (the stylesheet loads the web fonts). The published site is 1.5 MB instead of 2.6.
+- **Moved** `generate-svg-map.html` to `tools/`.
+- **Documents brought up to date:** the roadmap (what is implemented now, ideas done), the architecture (the game record, the workflows, the files), the interface's layout, contributing (the online game, `npm run site`), and notes in two reports that no Detective AI v4 was built; [Historical plans](archive/plans.md) records what became of those plans.
+
+## Playable on phones ([aceszhenwei/Letters-From-Whitechapel#25](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/25))
 
 - **Zooming the board:** **−**, **Fit** and **+** above the board; zoomed in, the board scrolls with a finger instead of shrinking. Touch screens start zoomed in, so numbered circles are about 21 pixels across (4–6 before, on a phone) and every tap target at least 20. After each step the board scrolls to what can be tapped. Desktop starts at Fit, as before.
 - **Fixes:** the Stay pill could cover a destination ring, which then couldn't be clicked; destination rings are now drawn above it. In Clues and suspicion, tapping a policeman brings his Search and Arrest pills to the front where neighbours' pills overlap. Watching the computer police, the board can now be scrolled.

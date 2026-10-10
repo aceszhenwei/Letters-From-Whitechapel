@@ -12,6 +12,7 @@ flowchart TD
     engine["core/engine.js<br/>state, phases, effects, events"]
     ai["ai/jack.js, ai/strategic-jack.js, ai/jack-v2.js<br/>Jack's decisions"]
     deduction["core/deduction.js<br/>what public information implies"]
+    record["core/record.js<br/>the game's record: export, replay"]
     police["ai/police.js<br/>computer police (simulations)"]
     random["core/random.js<br/>biased random choices"]
     ui["ui/renderer.js<br/>draws the state, takes clicks"]
@@ -30,6 +31,7 @@ flowchart TD
     engine -. "asks for decisions (game.ai)" .-> ai
     engine -- "events" --> ui
     ui -- "police actions" --> engine
+    engine -- "action events" --> record
     rules --> ui
     main --> engine
     main --> ai
@@ -69,7 +71,7 @@ The same in plain text, reading down from what depends on nothing:
 | `ui/review.js` | The night review: keeps each night's public record (`rules.nightRecord`) when it ends, and shows it on the board and in the case files, with walking distances | Board, rules, content, the game it is attached to | Change the state (only `beginNextNight`, when the player asks), or show anything outside the public record |
 | `ui/autopolice.js` | Plays a computer police through the engine's police actions, a pause apart, for the player to watch | The police AI, the police view, the engine | Change the rules, or see Jack's secrets |
 | `ui/export.js` | The export dialog: saves the police's record or, once the game is over or ended on purpose, the full record, as a file on the device | The recorder, the board (the hideout's number after ending), the page | Send anything anywhere, or offer the full record of a game still being played |
-| `ui/setup.js` | The setup dialog: Jack's difficulty, who leads the detectives, and starting the game (sets `game.ai`; starts `autoPolice`) | Difficulty, police levels, the page | Change the rules |
+| `ui/setup.js` | The setup dialog: Jack's difficulty, and in Developer Mode (`?dev=1`) every level and who leads the detectives; starting the game (sets `game.ai`; starts `autoPolice`) | Difficulty, police levels, the page | Change the rules |
 | `main.js` | Creating the game (Easy until the setup dialog applies a level) and attaching the interface; opening the setup dialog | Everything above | |
 
 The core (`board`, `rules`, `engine`, `random`) and the AI run without a page. The tests load them into a bare JavaScript context to prove it (`test/helpers/core.js`).
@@ -188,14 +190,16 @@ A policeman moving, from click to screen:
 - **`Math.random` is shared by default.** The default AI's random numbers come from `Math.random`, which jQuery's selector engine also uses (Sizzle draws a random number when it filters a set with some selectors). In normal play this doesn't matter. In seeded tests, it means a different jQuery call in the interface could change Jack's choices; the renderer avoids such selectors, and a comment says why. Experiments that need reproducible AI choices should give the AI its own source: `WC.createJackAI(WC.board, WC.random.create(seededSource), _)`. The default stays on `Math.random` so the recorded golden traces stay valid.
 - **The board reads the global `map`.** It is static data, loaded once.
 - **Police phases keep a little progress state in `state.turn`.** For example, who has already moved, so the engine can refuse a second move. It lives in the state, not the interface, so the rules of a turn are enforced in one place.
-- **Phase numbers are shared.** The engine, the renderer and `content.js` all use the rulebook's phase numbers (0 to 11). Names would read better, but the numbers are the rulebook's own, and every module agrees on them.
+- **Phase numbers are shared.** The engine, the renderer and `content.js` all use the rulebook's phase numbers (0 to 11, plus 12, The night is over, which only the page's night review uses). Names would read better, but the numbers are the rulebook's own, and every module agrees on them.
 
 ## Files
 
 | Path | Purpose |
 |---|---|
 | `index.html` | The page and the script load order |
-| `css/style.css` | All styling (see [User interface](ui.md)) |
+| `css/style.css` | All styling (see [User interface](ui.md)); `css/font-awesome.min.css` and `fonts/` are the icon font |
+| `images/vintage-map.jpg` | The old map under the board |
+| `.github/workflows/` | `test.yml` runs the tests on every push and pull request; `pages.yml` publishes the game (see [Deployment](deployment.md)) |
 | `js/data/` | Map and content data |
 | `js/core/` | Board, rules, engine, random, deduction, the game record: no page access |
 | `js/ai/jack.js` | The baseline Jack AI |
@@ -208,7 +212,7 @@ A policeman moving, from click to screen:
 | `js/ui/renderer.js`, `js/ui/review.js`, `js/ui/export.js` | The interface, the night review, and exporting the game log |
 | `js/main.js` | Start-up |
 | `js/vendor/` | jQuery 1.11, Underscore 1.8.3 |
-| `generate-svg-map.html` | Developer tool: prints the streets as SVG |
+| `tools/generate-svg-map.html` | Developer tool: prints the streets as SVG |
 | `test/` | Tests (see [Testing](testing.md)) |
 
 ## Where should new behaviour go?

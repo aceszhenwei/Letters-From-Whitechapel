@@ -66,4 +66,4 @@ The topology (which numbered circles Jack can walk or take an alley between) com
 1. Change `js/data/map.js`. Keep connections two-way: if `a` lists `b` in `adjacent`, `b` must list `a`.
 2. In a browser console on `index.html`, run `map.debug()`. It should return `"0 errors"`.
 3. Run `npm test`. The map tests check connections, numbering, planarity and alleys, and `map-topology.test.js` checks the board-verified connections. A street edit that changes which circles are linked fails that test; update it only after checking the physical board.
-4. The game draws streets from the data, so nothing else needs regenerating. `generate-svg-map.html` still prints SVG markup if you need it for other tools.
+4. The game draws streets from the data, so nothing else needs regenerating. `tools/generate-svg-map.html` still prints SVG markup if you need it for other tools.
