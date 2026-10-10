@@ -33,7 +33,13 @@
 
     <section class="board-column" aria-label="Game board">
         <div class="card board-card">
+            <div class="board-tools" role="group" aria-label="Zoom the board">
+                <button type="button" class="board-tool zoom-out" aria-label="Zoom out" title="Zoom out">&minus;</button>
+                <button type="button" class="board-tool zoom-fit" title="Show the whole board">Fit</button>
+                <button type="button" class="board-tool zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+            </div>
             <div class="board">
+                <div class="board-sizer"></div>
                 <div class="map">
                     <img src="images/vintage-map.jpg" class="vintage-map" alt="">
                 </div>
