@@ -16,6 +16,16 @@
                          policeman has moved, so a move can be undone (undoPoliceMove) until then
      reviewNights        After Jack escapes on nights 1-3, the engine waits in phase 12 until beginNextNight, so the
                          police can look over the night before the board is cleared */
+/* Actions: every decision the engine accepts is also reported as an 'action' event, before it takes effect:
+     { side: 'jack' | 'police', type, args, result }
+   Jack's: hideout { mapid }, women { marked, unmarked }, wait {}, victims { scenes }, reveal { mapid } -> { fake },
+           move { type, mapid, via } -> { escaped }
+   The police's: patrol { mapid, kind } -> { placed }, wretched { from, to }, keepWretched { mapid },
+           policeman { index, to } -> { from }, undo {} -> { index, from, to }, finishMoves {}, beginNight {},
+           choose { index, action }, search { index, mapid } -> 'clue' | 'miss' | 'none',
+           arrest { index, mapid } -> 'arrested' | 'missed'
+   Refused actions are not reported. The events carry Jack's secrets, like jackMoved does: what may be shown to whom
+   is decided by whoever listens (js/core/record.js). */
 var WC = WC || {};
 
 WC.engine = (function (rules, _) {
@@ -97,6 +107,10 @@ WC.engine = (function (rules, _) {
 			}
 		}
 
+		function action(side, type, args, result) {
+			emit('action', { side: side, type: type, args: args, result: result });
+		}
+
 		function view() {
 			return rules.jackView(game.state, { debug: game.debug });
 		}
@@ -108,6 +122,7 @@ WC.engine = (function (rules, _) {
 		game.start = function () {
 			var hideout = game.ai.chooseHideout(rules.hideoutChoices());
 			check(rules.isLegalHideout(hideout), 'hideout ' + hideout);
+			action('jack', 'hideout', { mapid: hideout });
 			game.state.base = hideout;
 			emit('started');
 			game.enter(0);
@@ -147,6 +162,7 @@ WC.engine = (function (rules, _) {
 			var state = game.state;
 			var women = game.ai.placeWomen(view());
 			check(rules.isLegalWomen(state, women.marked, women.unmarked), 'women ' + women.marked + ' / ' + women.unmarked);
+			action('jack', 'women', { marked: women.marked.slice(), unmarked: women.unmarked.slice() });
 			state.womenMarked = women.marked.slice();
 			state.womenUnmarked = women.unmarked.slice();
 			game.enter(2);
@@ -170,10 +186,12 @@ WC.engine = (function (rules, _) {
 				return;
 			}
 			if (!rules.mustKill(state) && game.ai.wantsToWait(view())) {
+				action('jack', 'wait', {});
 				game.enter(5);
 			} else {
 				var scenes = game.ai.chooseVictims(view());
 				check(rules.isLegalVictims(state, scenes), 'victims ' + scenes);
+				action('jack', 'victims', { scenes: scenes.slice() });
 				game.murder(scenes);
 				game.enter(8);
 			}
@@ -202,6 +220,7 @@ WC.engine = (function (rules, _) {
 			if (hidden.length > 0) {
 				var mapid = game.ai.choosePatrolToReveal(view(), hidden);
 				check(_.contains(hidden, mapid), 'reveal ' + mapid);
+				action('jack', 'reveal', { mapid: mapid }, { fake: rules.isFakePatrol(state, mapid) });
 				game.reveal(mapid);
 			}
 			game.enter(4);
@@ -228,6 +247,8 @@ WC.engine = (function (rules, _) {
 			}
 			var move = game.ai.chooseMove(view());
 			check(rules.isLegalJackMove(state, move), 'move ' + JSON.stringify(move));
+			action('jack', 'move', move.type == 'carriage' ? { type: move.type, mapid: move.mapid, via: move.via } : { type: move.type, mapid: move.mapid },
+				{ escaped: rules.escapes(state, move) });
 			game.moveJack(move);
 
 			if (rules.escapes(state, move)) {
@@ -344,8 +365,10 @@ WC.engine = (function (rules, _) {
 			var mine = kind == 'real' ? 'start' : 'fake';
 			var other = kind == 'real' ? 'fake' : 'start';
 			if (_.contains(police[mine], mapid)) {
+				action('police', 'patrol', { mapid: mapid, kind: kind == 'real' ? 'real' : 'fake' }, { placed: false });
 				police[mine] = _.without(police[mine], mapid);
 			} else if (rules.canPlacePatrol(state, mapid, kind)) {
+				action('police', 'patrol', { mapid: mapid, kind: kind == 'real' ? 'real' : 'fake' }, { placed: true });
 				police[mine].push(mapid);
 				police[other] = _.without(police[other], mapid);
 			} else {
@@ -379,6 +402,7 @@ WC.engine = (function (rules, _) {
 			if (index === -1 || !_.contains(rules.wretchedMoves(state, from), to)) {
 				return false;
 			}
+			action('police', 'wretched', { from: from, to: to });
 			state.womenMarked[index] = to;
 			emit('wretchedMoved', { from: from, to: to, moved: state.turn.total - state.turn.pending.length + 1, total: state.turn.total });
 			wretchedDone(index);
@@ -392,6 +416,7 @@ WC.engine = (function (rules, _) {
 			if (index === -1 || rules.wretchedMoves(state, mapid).length > 0) {
 				return false;
 			}
+			action('police', 'keepWretched', { mapid: mapid });
 			emit('wretchedStays', { mapid: mapid, moved: state.turn.total - state.turn.pending.length + 1, total: state.turn.total });
 			wretchedDone(index);
 			return true;
@@ -405,6 +430,7 @@ WC.engine = (function (rules, _) {
 			}
 			var police = rules.policeNight(state);
 			var from = police.now[index];
+			action('police', 'policeman', { index: index, to: to }, { from: from });
 			police.route[index].push(to);
 			police.now[index] = to;
 			state.turn.moved.push(index);
@@ -437,6 +463,7 @@ WC.engine = (function (rules, _) {
 			var police = rules.policeNight(state);
 			var last = state.turn.history.pop();
 			var to = police.now[last.index];
+			action('police', 'undo', {}, { index: last.index, from: to, to: last.from });
 			police.route[last.index].pop();
 			police.now[last.index] = last.from;
 			state.turn.moved = _.without(state.turn.moved, last.index);
@@ -450,6 +477,7 @@ WC.engine = (function (rules, _) {
 			if (state.phase != 10 || state.over || state.turn.moved.length < rules.policeNight(state).now.length) {
 				return false;
 			}
+			action('police', 'finishMoves', {});
 			game.enter(11);
 			return true;
 		};
@@ -459,6 +487,7 @@ WC.engine = (function (rules, _) {
 			if (game.state.phase != 12 || game.state.over) {
 				return false;
 			}
+			action('police', 'beginNight', {});
 			game.enter(0);
 			return true;
 		};
@@ -471,6 +500,7 @@ WC.engine = (function (rules, _) {
 			if (state.phase != 11 || _.contains(state.turn.done, index) || state.turn.choice[index] || !list || list.length == 0) {
 				return false;
 			}
+			emit('action', { side: 'police', type: 'choose', args: { index: index, action: action } });
 			state.turn.choice[index] = action;
 			return true;
 		};
@@ -495,8 +525,11 @@ WC.engine = (function (rules, _) {
 				return false;
 			}
 			var missed = state.turn.missed[index] = state.turn.missed[index] || new Array();
-			recordPublic(state, { type: 'search', mapid: mapid, clue: _.contains(rules.jackNight(state).route, mapid) });
-			if (_.contains(rules.jackNight(state).route, mapid)) {
+			var clue = _.contains(rules.jackNight(state).route, mapid);
+			var rest = _.reject(list, function (id) { return id === undefined || id === mapid; });
+			action('police', 'search', { index: index, mapid: mapid }, clue ? 'clue' : rest.length ? 'miss' : 'none');
+			recordPublic(state, { type: 'search', mapid: mapid, clue: clue });
+			if (clue) {
 				police.clue.push(mapid);
 				emit('searchFinished', { index: index, mapid: mapid, clue: true, missed: missed.slice() });
 				actionDone(index); // Finding a clue ends the search
@@ -520,6 +553,7 @@ WC.engine = (function (rules, _) {
 			if (state.phase != 11 || state.turn.choice[index] != 'arrest' || _.contains(state.turn.done, index) || !_.contains(police.arrest[index], mapid)) {
 				return false;
 			}
+			action('police', 'arrest', { index: index, mapid: mapid }, mapid == rules.jackPosition(state) ? 'arrested' : 'missed');
 			if (mapid == rules.jackPosition(state)) {
 				game.end('arrested', { mapid: mapid });
 				return 'arrested';

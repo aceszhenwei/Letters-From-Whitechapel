@@ -17,6 +17,7 @@ npm install && npm test  # run the automated tests (Node.js 22 or later)
 | Find my way around the code | [Architecture](architecture.md) |
 | Know which AIs exist, which level plays each, and how they are configured | [AI overview](ai.md) |
 | Run the tests or reproduce an experiment | [Testing](testing.md) |
+| Export a game I played, or check and analyse exported games | [Game records](game-records.md) |
 | Make a change | [Contributing](contributing.md) |
 | Know why an AI is the way it is | [Research reports](#research-reports), below |
 
@@ -32,6 +33,7 @@ The current description of the game and the code. Each topic has one page; the o
 | [AI overview](ai.md) | Every Jack and police AI, the difficulty levels, their options, and the evidence behind each |
 | [Jack's AI](jack-ai.md) | The interface every Jack AI implements, what Jack may know, the difficulty levels, and the baseline and strategic Jacks with their evaluation |
 | [User interface](ui.md) | Layout, components, design tokens, the CSS class contract, accessibility and responsiveness |
+| [Game records](game-records.md) | Exporting a game (public or full record), the record format and its versions, hidden information, checking and replaying records, summaries, test fixtures, privacy |
 | [Testing](testing.md) | Running the tests, the test tiers, seeds and reproducibility, the test helpers, and writing new tests |
 | [Contributing](contributing.md) | Setting up, code conventions, and the pull request checklist |
 

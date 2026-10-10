@@ -2,7 +2,19 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: detective coordination and inference
+## Unreleased: game records
+
+- **Export the game log:** **Game log** in the top bar, or **Export game log** at the end, saves the game as a JSON file on the device. The police's record (no spoilers) is available at any time. The full record (Jack's hideout and route) is available once the game is over, or after the player ends it and confirms. Nothing is sent anywhere.
+- **A versioned record** ([Game records](game-records.md)):
+  - every action that stands, Jack's and the police's, in order, with its night, phase, Jack's move count and how much of the night's public record had been seen;
+  - undone moves and patrol tokens taken back are kept apart;
+  - the rule set, the levels played, the settings and the outcome.
+- **The engine** reports each decision it accepts as an `action` event. No rule, AI or difficulty level changed.
+- **Importer:** `npm run research:import` checks records (structure, hidden information, consistency with each night's public record), replays full records exactly through the engine, rejects malformed, tampered and incompatible ones, summarises many games, and cuts test fixtures from a full record.
+- **Examples:** four synthetic records in `docs/examples/game-records/`.
+- **Tests:** `game-records.test.js`, `game-export-ui.test.js`.
+
+## Detective coordination and inference ([aceszhenwei/Letters-From-Whitechapel#20](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/20))
 
 - **Study:** [Detective coordination and inference](detective-study.md) asks why Detective AI v3 loses, on the last night, from identical positions:
   - **Hideout inference** is the one large gap: told the true hideout, v3 wins 119 more games and loses 5 (Jack AI v2: 28 of 30 instead of 7). No weighting the police could use recovers it, including one that learns the Jack's route style.

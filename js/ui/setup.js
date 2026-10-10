@@ -60,6 +60,15 @@ WC.ui.setup = function (game, options) {
 			$('.brand-subtitle').text('London, 1888 · You are watching the police');
 		}
 		$('.difficulty-badge').text(badge).prop('hidden', false);
+		if (options.recorder) {
+			// Who played, for the game log: the levels chosen, never anything about the player
+			var jackInfo = WC.difficulty.level(jackLevel);
+			var policeInfo = WC.policeLevels.level(policeLevel);
+			options.recorder.describePlayers({
+				jack: { type: 'ai', level: jackLevel, ai: jackInfo.ai },
+				police: computer ? { type: 'ai', level: policeLevel, ai: policeInfo.ai } : { type: 'human' }
+			});
+		}
 		$('.intro').removeClass('open');
 		game.start();
 		if (computer) {

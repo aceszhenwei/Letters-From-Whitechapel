@@ -14,6 +14,7 @@ const scripts = [
 	'js/core/board.js',
 	'js/core/rules.js',
 	'js/core/engine.js',
+	'js/core/record.js',
 	'js/core/deduction.js',
 	'js/ai/jack.js',
 	'js/ai/strategic-jack.js',
