@@ -5,7 +5,7 @@
  "role": null,
  "app": {"name":"letters-from-whitechapel","version":"1.0.0","commit":null},
  "ruleset": {"id":"whitechapel-fff8e378d715","config":{"trackLength":20,"carriages":[3,2,2,1],"alleys":[2,2,1,1],"women":[8,7,6,4],"wretched":[5,4,3,1],"victims":[1,1,2,1],"police":5,"fakePolice":2,"nights":4},"map":"480664f56dc7fabc"},
- "game": {"id":"example-211003","exportedOn":"2026-10-10","status":"abandoned","nightsPlayed":3,"players":{"jack":{"type":"ai","level":"hard","ai":"Jack AI v2"},"police":{"type":"ai","level":"hard","ai":"Detective AI v3"}},"settings":{"confirmPoliceMoves":true,"reviewNights":true},"randomness":{"source":"seeded","seed":211003}},
+ "game": {"id":"example-211003","exportedOn":"2026-10-10","status":"abandoned","nightsPlayed":3,"players":{"jack":{"type":"ai","level":"hard","ai":"Deceptive Jack v2, Jack AI v2"},"police":{"type":"ai","level":"hard","ai":"Detective AI v3"}},"settings":{"confirmPoliceMoves":true,"reviewNights":true},"randomness":{"source":"seeded","seed":211003}},
  "outcome": {"result":"abandoned","winner":null,"night":3,"jackMove":0},
  "actions": [
   {"seq":1,"side":"jack","type":"hideout","night":null,"phase":0,"jackMove":0,"timeOfCrime":1,"remainingMoves":15,"known":0,"args":{"mapid":212}},

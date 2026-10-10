@@ -1,6 +1,6 @@
 # Jack's AI
 
-This page covers two AIs for Jack: the **baseline** (`js/ai/jack.js`, played at Easy, the default) and the **strategic AI** (`js/ai/strategic-jack.js`, played at Normal), which wins 97.2% of games against a deductive computer police player where the baseline wins 25.0%. This page describes the interface they share, both strategies, how they were compared, and what the strategic AI still does badly. [Jack AI v2](jack-ai-v2.md), played at Hard, builds on the strategic AI; the [AI overview](ai.md) lists every AI.
+This page covers two AIs for Jack: the **baseline** (`js/ai/jack.js`, played at Easy, in Developer Mode) and the **strategic AI** (`js/ai/strategic-jack.js`, played at Normal, the default), which wins 97.2% of games against a deductive computer police player where the baseline wins 25.0%. This page describes the interface they share, both strategies, how they were compared, and what the strategic AI still does badly. [Jack AI v2](jack-ai-v2.md), played at Hard, builds on the strategic AI; the [AI overview](ai.md) lists every AI.
 
 | Section | |
 |---|---|
@@ -71,26 +71,27 @@ Nothing outside `js/ai/` needs to change, unless the new strategy needs to know 
 
 ## Difficulty levels
 
-The player chooses which AI plays Jack in the setup dialog. `js/ai/difficulty.js` maps each level to an AI that already exists; it doesn't play itself.
+The player chooses which AI plays Jack in the setup dialog. `js/ai/difficulty.js` maps each level to an AI that already exists; it doesn't play itself. Players see only Normal and Hard, by name, with no description of how Jack plays; Developer Mode (`index.html?dev=1`) shows every level and its AI.
 
-| Level | AI | Made by |
-|---|---|---|
-| Easy (default) | Baseline Jack | `WC.jackAI`: the very object the game has always used, so recorded games replay exactly |
-| Normal | Strategic Jack | `WC.createStrategicJack(WC.board, WC.deduction, WC.random, _)` |
-| Hard | Jack AI v2 | `WC.createJackV2(WC.board, WC.deduction, WC.random, _)`: the strategic Jack plus early detours (see [Jack AI v2](jack-ai-v2.md)) |
+| Level | Offered to | AI | Made by |
+|---|---|---|---|
+| Easy | Developer Mode | Baseline Jack | `WC.jackAI`: the very object the game has always used, so recorded games replay exactly |
+| Normal (default) | Everyone | Strategic Jack | `WC.createStrategicJack(WC.board, WC.deduction, WC.random, _)` |
+| Hard | Everyone | Jack AI v2 ("Deceptive Jack v2") | `WC.createJackV2(WC.board, WC.deduction, WC.random, _)`: the strategic Jack plus early detours (see [Jack AI v2](jack-ai-v2.md)) |
+| Hard, waiting (`hard-waiting`) | Developer Mode | Jack AI v2 with strategic waiting (experimental) | `WC.createWaitingJack(WC.board, <Jack AI v2>, _, { table: 'jack-v2' })` (see [Strategic waiting](jack-waiting.md)) |
 
-The page creates the game with Easy; when the player starts it, `js/ui/setup.js` sets `game.ai` to the chosen level's AI, before Jack's first decision (the hideout). Every level's AI gets the same view and is checked by the same rules, so a level changes only how Jack decides.
+The page creates the game with Easy (so the golden traces, which start the game without the dialog, are unchanged); when the player starts it, `js/ui/setup.js` sets `game.ai` to the chosen level's AI, before Jack's first decision (the hideout). Every level's AI gets the same view and is checked by the same rules, so a level changes only how Jack decides.
 
 **Where the choice comes from**, strongest first (`WC.difficulty.resolve`):
 
-1. The address: `index.html?difficulty=easy`, `?difficulty=normal` or `?difficulty=hard`. The older `?jack=baseline` and `?jack=strategic` mean the same. The dialog then shows the level and doesn't let it change, and the choice isn't saved.
+1. The address: `index.html?difficulty=easy`, `normal`, `hard` or `hard-waiting`, any level, with or without Developer Mode (for tests and research). The older `?jack=baseline` and `?jack=strategic` mean the same. The dialog then doesn't let it change (outside Developer Mode a developer-only level isn't shown at all), and the choice isn't saved.
 2. The level selected in the dialog when the game starts.
-3. The level saved from the last game (in the browser's local storage), which pre-selects the dialog.
-4. Easy.
+3. The level saved from the last game (in the browser's local storage), which pre-selects the dialog, if the dialog offers it. Developer Mode saves under its own keys (`whitechapel.dev.difficulty`, `whitechapel.dev.police`), so a developer's choice never carries into an ordinary game.
+4. Normal.
 
 Unknown levels are ignored. The detectives have their own levels (`js/ai/police-levels.js`; see the [AI overview](ai.md#difficulty-levels)). A person can't play Jack, so Jack's level always applies.
 
-**Adding a level**: add an entry to `levels` in `js/ai/difficulty.js` with an `id`, `label`, `ai`, `description` and a `create(WC)` that returns an object with the six decision functions. The dialog lists the levels from there, so the page needs no change.
+**Adding a level**: add an entry to `levels` in `js/ai/difficulty.js` with an `id`, `label`, `ai`, `player` (true to offer it outside Developer Mode), `description` and a `create(WC)` that returns an object with the six decision functions. The dialog lists the levels from there, so the page needs no change.
 
 ## 1. The baseline AI
 

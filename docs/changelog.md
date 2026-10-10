@@ -2,7 +2,19 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: game records
+## Unreleased: a simpler setup, and Developer Mode
+
+- **Setup:** players choose only Jack's difficulty, **Normal** (the default, Strategic Jack) or **Hard** (Jack AI v2), by name, with no description of how Jack plays. The player always leads the detectives.
+- **Developer Mode** (`index.html?dev=1`) shows every level with its AI:
+  - Easy (Baseline Jack);
+  - an experimental **Hard, waiting** level (Jack AI v2 with strategic waiting);
+  - who leads the detectives, the player or the computer police.
+
+  Its choices are saved under their own keys, and a saved choice the ordinary dialog doesn't offer is ignored, so developer settings never carry into an ordinary game.
+- **Addresses** (`?difficulty=…`, `?police=…`) still select any level, with or without Developer Mode, for tests and research.
+- No AI or rule changed.
+
+## Game records ([aceszhenwei/Letters-From-Whitechapel#21](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/21))
 
 - **Export the game log:** **Game log** in the top bar, or **Export game log** at the end, saves the game as a JSON file on the device. The police's record (no spoilers) is available at any time. The full record (Jack's hideout and route) is available once the game is over, or after the player ends it and confirms. Nothing is sent anywhere.
 - **A versioned record** ([Game records](game-records.md)):
