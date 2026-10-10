@@ -175,16 +175,85 @@ WC.ui = (function ($, _, board, rules, content) {
 			}).prependTo('.event-log');
 		},
 		fit: function () {
-			// Scale the 1000 by 663 board to the space available
-			var width = $('.board').width();
+			// Scale the 1000 by 663 board: to the space available ('fit'), or larger, to pan with a finger or the
+			// scroll bars. On a touch screen the board starts large enough to tap (numbered circles about 21 pixels)
+			var board = $('.board');
+			var width = board.width();
 			if (!width) {
 				return;
 			}
-			var scale = Math.min(1, width / 1000);
+			var fitScale = Math.min(1, width / 1000);
+			if (zoom.level === null) {
+				var touch = typeof window.matchMedia == 'function' && window.matchMedia('(pointer: coarse)').matches;
+				zoom.level = touch && fitScale < zoom.touch ? zoom.touch : 'fit';
+			}
+			var scale = zoom.level == 'fit' ? fitScale : Math.max(fitScale, zoom.level);
+			var zoomed = scale > fitScale + 0.001;
 			$('.map').css('transform', 'scale(' + scale + ')');
-			$('.board').css('height', Math.round(663 * scale) + 'px');
+			board.toggleClass('zoomed', zoomed);
+			board.find('.board-sizer').css({ width: Math.round(1000 * scale) + 'px', height: Math.round(663 * scale) + 'px' });
+			// Zoomed in, the board is a window onto the map, at most most of the screen's height
+			var tall = Math.round(663 * scale);
+			var room = Math.max(320, Math.round(($(window).height() || 800) * 0.65));
+			board.css('height', (zoomed ? Math.min(tall, room) : tall) + 'px');
+			$('.zoom-out').prop('disabled', !zoomed);
+			$('.zoom-fit').prop('disabled', !zoomed);
+			$('.zoom-in').prop('disabled', scale >= zoom.steps[zoom.steps.length - 1] - 0.001);
+			draw.reveal();
+		},
+		zoomBy: function (direction) {
+			// One step in or out among the zoom steps, keeping the middle of the view where it was
+			var board = $('.board');
+			var width = board.width();
+			if (!width) {
+				return;
+			}
+			var fitScale = Math.min(1, width / 1000);
+			var current = zoom.level == 'fit' ? fitScale : Math.max(fitScale, zoom.level);
+			var steps = _.filter(zoom.steps, function (s) { return s > fitScale + 0.001; });
+			var next = direction > 0 ? _.find(steps, function (s) { return s > current + 0.001; }) :
+				_.last(_.filter(steps, function (s) { return s < current - 0.001; }));
+			var element = board[0];
+			var centre = [(element.scrollLeft + element.clientWidth / 2) / current, (element.scrollTop + element.clientHeight / 2) / current];
+			zoom.level = next === undefined ? (direction > 0 ? current : 'fit') : next;
+			draw.fit();
+			var scale = zoom.level == 'fit' ? fitScale : zoom.level;
+			element.scrollLeft = centre[0] * scale - element.clientWidth / 2;
+			element.scrollTop = centre[1] * scale - element.clientHeight / 2;
+		},
+		zoomFit: function () {
+			zoom.level = 'fit';
+			draw.fit();
+		},
+		reveal: function () {
+			// Zoomed in, bring what the player can click into view, unless some of it already is
+			var board = $('.board');
+			var element = board[0];
+			if (!element || !board.hasClass('zoomed')) {
+				return;
+			}
+			var view = element.getBoundingClientRect();
+			var targets = board.find('.map .selectable').filter(function () { return !$(this).hasClass('waiting'); }).toArray();
+			if (!targets.length) {
+				return;
+			}
+			var boxes = _.map(targets, function (t) { return t.getBoundingClientRect(); });
+			var visible = _.some(boxes, function (b) {
+				return b.right > view.left && b.left < view.right && b.bottom > view.top && b.top < view.bottom;
+			});
+			if (visible) {
+				return;
+			}
+			var left = _.min(_.pluck(boxes, 'left'));
+			var top = _.min(_.pluck(boxes, 'top'));
+			var right = _.max(_.pluck(boxes, 'right'));
+			var bottom = _.max(_.pluck(boxes, 'bottom'));
+			element.scrollLeft += (left + right) / 2 - (view.left + view.right) / 2;
+			element.scrollTop += (top + bottom) / 2 - (view.top + view.bottom) / 2;
 		}
 	};
+	// The board's zoom: 'fit', or a scale; null until the board is first drawn. Steps for the zoom buttons
+	var zoom = { level: null, touch: 1.4, steps: [1, 1.4, 2] };
 
 	function number(mapid) {
 		return board.number(mapid);
@@ -398,7 +467,11 @@ WC.ui = (function ($, _, board, rules, content) {
 		var police = rules.policeNight(state());
 		clues.active = null;
 		_.each(police.now, function (a, index) {
-			draw.createElement(a, 'policeman', 'label token token-pawn police-' + index).appendTo('.map');
+			draw.createElement(a, 'policeman', 'label token token-pawn police-' + index).attr('title', 'The ' + policeNames[index] + ' policeman: tap to bring his choices to the front').click(function () {
+				// Policemen side by side can have overlapping Search and Arrest pills
+				$('.map .front').removeClass('front');
+				$('.token-search-adjacent.for-police-' + index + ', .token-arrest-adjacent.for-police-' + index).addClass('front');
+			}).appendTo('.map');
 			if (police.search[index].length > 0) {
 				draw.createElement(a, 'Search', 'label label-info selectable token token-search-adjacent token-search-adjacent-' + a + ' for-police-' + index).appendTo('.map');
 			}
@@ -612,7 +685,13 @@ WC.ui = (function ($, _, board, rules, content) {
 			if (events[type]) {
 				events[type](data);
 			}
+			if (type == 'policeTurn' || type == 'phase' || type == 'policemanActed' || type == 'nightOver') {
+				setTimeout(draw.reveal, 0); // Once the new choices are drawn
+			}
 		});
+		$('.zoom-in').click(function () { draw.zoomBy(1); });
+		$('.zoom-out').click(function () { draw.zoomBy(-1); });
+		$('.zoom-fit').click(draw.zoomFit);
 		$('button.highlight-pieces').click(function () {
 			// Make the women or the Wretched stand out from everything else on the board, or stop
 			var on = !$('.board').hasClass('highlighting');

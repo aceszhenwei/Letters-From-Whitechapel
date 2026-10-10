@@ -2,7 +2,13 @@
 
 Newest first. Each entry is one pull request; the reports it links hold the full results.
 
-## Unreleased: searching fixed, and faster
+## Unreleased: playable on phones
+
+- **Zooming the board:** **−**, **Fit** and **+** above the board; zoomed in, the board scrolls with a finger instead of shrinking. Touch screens start zoomed in, so numbered circles are about 21 pixels across (4–6 before, on a phone) and every tap target at least 20. After each step the board scrolls to what can be tapped. Desktop starts at Fit, as before.
+- **Fixes:** the Stay pill could cover a destination ring, which then couldn't be clicked; destination rings are now drawn above it. In Clues and suspicion, tapping a policeman brings his Search and Arrest pills to the front where neighbours' pills overlap. Watching the computer police, the board can now be scrolled.
+- **Checked** on emulated iPhone SE, Galaxy S8, iPhone 13, Pixel 7 and iPad Mini, tapping real elements: whole games reach a legal ending.
+
+## Searching fixed, and faster ([aceszhenwei/Letters-From-Whitechapel#24](https://github.com/aceszhenwei/Letters-From-Whitechapel/pull/24))
 
 - **Fixed a softlock in Clues and suspicion:** a policeman who had chosen to search could lose all his Search here tokens when another policeman found a clue (or another's failed arrest removed his Arrest here tokens), so the phase could never end. Policemen now act one at a time, and each token belongs to its policeman.
 - **Faster searching:** **Search his remaining circles** finishes the chosen policeman's search, and **Search with every policeman left** searches with every policeman still to act who can search. Both search in the same order a player would click, stopping each search at its first clue; no rule changed.

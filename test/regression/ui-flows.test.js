@@ -240,3 +240,49 @@ test('Search with every policeman left: each who can search does; one who can on
 	}
 	assert.deepStrictEqual(window.errors, []);
 });
+
+// Zooming the board (js/ui/renderer.js, draw.fit): jsdom has no layout, so the board's width is set by hand
+test('the board zooms in and out, and zoomed in it scrolls instead of shrinking', () => {
+	const window = startGame({ seed: 3 });
+	const $ = window.$;
+	const realWidth = $.fn.width;
+	$.fn.width = function () { return this.is('.board') ? 360 : realWidth.apply(this, arguments); }; // A phone
+	try {
+		window.WC.ui.draw.zoomFit();
+		assert.ok(!$('.board').hasClass('zoomed'));
+		assert.match($('.map').attr('style'), /scale\(0\.36\)/);
+		assert.ok($('.zoom-out').prop('disabled') && !$('.zoom-in').prop('disabled'));
+		$('.zoom-in').click();
+		assert.ok($('.board').hasClass('zoomed'), 'larger than the space: the board scrolls');
+		assert.match($('.map').attr('style'), /scale\(1\)/);
+		assert.strictEqual($('.board-sizer').css('width'), '1000px');
+		$('.zoom-in').click();
+		$('.zoom-in').click();
+		assert.match($('.map').attr('style'), /scale\(2\)/);
+		assert.ok($('.zoom-in').prop('disabled'), 'the largest step');
+		$('.zoom-fit').click();
+		assert.ok(!$('.board').hasClass('zoomed'));
+		assert.deepStrictEqual(window.errors, []);
+	} finally {
+		$.fn.width = realWidth;
+	}
+});
+
+test('watching the computer police, the board can still be scrolled: only the map ignores clicks', () => {
+	const css = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'css', 'style.css'), 'utf8');
+	assert.match(css, /\.computer-police \.board \.map \{\s*pointer-events: none;/);
+	assert.doesNotMatch(css, /\.computer-police \.board \{\s*pointer-events: none;/);
+	// Destination rings are drawn above the Stay pill, so the pill never hides a destination
+	const z = (selector) => Number(new RegExp(selector.replace(/[.[\]^"()]/g, '\\$&') + ' \\{[^}]*z-index: (\\d+)').exec(css)[1]);
+	assert.ok(z('.map .token-move-police, .map .token-move-wretched') > z('.map .token-move-police[title^="Stay"]'));
+});
+
+test('in Clues and suspicion, tapping a policeman brings his Search and Arrest choices to the front', () => {
+	const window = atClues(4);
+	const $ = window.$;
+	const police = last(gameState(window).police);
+	const index = police.now.findIndex((c, i) => police.search[i].length > 0);
+	$('.map .token-pawn.police-' + index).click();
+	assert.ok($('.token-search-adjacent.for-police-' + index).hasClass('front'));
+	assert.strictEqual($('.map .front').not('.for-police-' + index).length, 0);
+});

@@ -157,6 +157,52 @@ h2 {
     background: var(--paper-dim);
 }
 
+/* Zooming the board: zoomed in, the board scrolls (a finger pans it) */
+.board.zoomed {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+.board-sizer {
+    width: 1px;
+    height: 1px;
+}
+
+.board-tools {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    margin: 0 0 8px;
+}
+
+.board-tool {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid #3b2a1e;
+    border-radius: 8px;
+    background: rgba(255, 250, 240, 0.92);
+    color: #2b2119;
+    font: 700 18px var(--font-body);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.board-tool.zoom-fit {
+    font-size: 14px;
+}
+
+.board-tool:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.board-tool:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+}
+
 .board {
     position: relative;
     width: 100%;
@@ -368,7 +414,7 @@ h2 {
     height: 14px;
     border: 2px solid var(--police-green);
     background: rgba(46, 125, 79, 0.25);
-    z-index: 4;
+    z-index: 6; /* Above the Stay pill and other pills, so no destination is ever covered */
 }
 
 .map .token-move-police[title^="Stay"] {
@@ -377,6 +423,12 @@ h2 {
     border: 0;
     background: #4a4440;
     transform: translate(-50%, 70%);
+    z-index: 5;
+}
+
+/* Clues and suspicion: the pills of the policeman last tapped come to the front */
+.map .token-search-adjacent.front, .map .token-arrest-adjacent.front {
+    z-index: 7;
 }
 
 /* Women and Wretched: a ring around the circle, so its number stays readable, with a badge above it */
@@ -1100,7 +1152,7 @@ h2 {
 }
 
 /* While the computer leads the police, the player watches: the board takes no clicks */
-.computer-police .board {
+.computer-police .board .map {
     pointer-events: none;
 }
 
@@ -1218,7 +1270,7 @@ h2 {
 }
 
 /* A game the player ended: the board takes no more moves */
-.game-ended .board, .game-ended .phase-card .button {
+.game-ended .board .map, .game-ended .phase-card .button {
     pointer-events: none;
 }
 
