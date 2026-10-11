@@ -313,3 +313,26 @@ test('the pull request step refuses to commit anything outside the records and t
 		assert.ok(!git.calls.some((c) => /commit|push|pr create/.test(c)), bad);
 	}
 });
+
+test('changed paths are read intact from a real git repository, modified files included (the leading space of " M")', () => {
+	// The second import run failed: trimming git's output turned " M research/…" into "esearch/…"
+	const { execFileSync } = require('child_process');
+	const os = require('os');
+	const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'import-pr-'));
+	const git = (...args) => execFileSync('git', args, { cwd: repo, encoding: 'utf8' });
+	git('init', '-q');
+	fs.mkdirSync(path.join(repo, 'research', 'human-playtests', 'records'), { recursive: true });
+	fs.writeFileSync(path.join(repo, 'research', 'human-playtests', 'analysis-state.json'), '{}\n');
+	git('add', '.');
+	git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-q', '-m', 'base');
+	fs.writeFileSync(path.join(repo, 'research', 'human-playtests', 'analysis-state.json'), '{"snapshot":{}}\n');
+	fs.writeFileSync(path.join(repo, 'research', 'human-playtests', 'records', 'g0123456789abcdef.json'), '{}\n');
+	const cwd = process.cwd();
+	process.chdir(repo);
+	try {
+		assert.deepStrictEqual(importPr.changedPaths(importPr.defaultExec).sort(), [
+			'research/human-playtests/analysis-state.json', 'research/human-playtests/records/g0123456789abcdef.json']);
+	} finally {
+		process.chdir(cwd);
+	}
+});

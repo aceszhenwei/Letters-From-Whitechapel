@@ -38,7 +38,8 @@ function option(args, name, fallback) {
 }
 
 function defaultExec(cmd, args, options = {}) {
-	return execFileSync(cmd, args, Object.assign({ encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }, options)).trim();
+	// Only trailing whitespace is removed: `git status --porcelain` lines start with a significant space (" M path")
+	return execFileSync(cmd, args, Object.assign({ encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }, options)).replace(/\s+$/, '');
 }
 
 function changedPaths(exec) {
@@ -129,4 +130,4 @@ if (require.main === module) {
 	}
 }
 
-module.exports = { main, changedPaths, allowed, onlySnapshot };
+module.exports = { main, changedPaths, defaultExec, allowed, onlySnapshot };
