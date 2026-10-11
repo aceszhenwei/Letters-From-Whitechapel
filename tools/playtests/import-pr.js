@@ -3,7 +3,8 @@
 //
 //   node tools/playtests/import-pr.js --summary <file.md> [--date YYYY-MM-DD] [--base master] [--branch playtest-import]
 //
-// - Refuses to commit anything but research/human-playtests/records/<game id>.json and research/human-playtests/intake.json.
+// - Refuses to commit anything but research/human-playtests/records/<game id>.json, research/human-playtests/intake.json,
+//   and research/human-playtests/analysis-state.json when only its snapshot changed (never which games are analysed).
 // - The branch is rebuilt from the base branch on every run (the Worker keeps every submission, so the same records
 //   come back while they are not merged): the result is the same whether a previous run finished, failed half-way
 //   or ran twice. A push happens only when the content changed; the push is --force-with-lease on the bot's branch.
@@ -14,7 +15,22 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const allowed = [/^research\/human-playtests\/records\/g[0-9a-f]{16}\.json$/, /^research\/human-playtests\/intake\.json$/];
+const allowed = [/^research\/human-playtests\/records\/g[0-9a-f]{16}\.json$/, /^research\/human-playtests\/intake\.json$/,
+	/^research\/human-playtests\/analysis-state\.json$/];
+const statePath = 'research/human-playtests/analysis-state.json';
+
+function onlySnapshot(before, after) {
+	// analysis-state.json may change only in its snapshot: reports, analysed games and methodology stay as they were
+	try {
+		const a = JSON.parse(before);
+		const b = JSON.parse(after);
+		delete a.snapshot;
+		delete b.snapshot;
+		return JSON.stringify(a) === JSON.stringify(b);
+	} catch (error) {
+		return false;
+	}
+}
 
 function option(args, name, fallback) {
 	const i = args.indexOf(name);
@@ -47,6 +63,13 @@ function main(argv, deps = {}) {
 	if (outside.length) {
 		log(`::error title=Playtest import::refusing to commit files outside the collection's records: ${outside.slice(0, 5).join(', ')}`);
 		return 1;
+	}
+	if (changed.includes(statePath)) {
+		const readFile = deps.readFile || ((p) => fs.readFileSync(path.join(process.cwd(), p), 'utf8'));
+		if (!onlySnapshot(exec('git', ['show', `HEAD:${statePath}`]), readFile(statePath))) {
+			log(`::error title=Playtest import::refusing to commit ${statePath}: only its snapshot may change in an import`);
+			return 1;
+		}
 	}
 	const records = changed.filter((p) => allowed[0].test(p));
 	const remote = (() => {
@@ -106,4 +129,4 @@ if (require.main === module) {
 	}
 }
 
-module.exports = { main, changedPaths, allowed };
+module.exports = { main, changedPaths, allowed, onlySnapshot };

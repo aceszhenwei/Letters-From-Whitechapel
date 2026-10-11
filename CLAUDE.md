@@ -160,7 +160,7 @@ Reference: [docs/automatic-playtest-collection.md](docs/automatic-playtest-colle
 - **Import:**
   - `playtest-import.yml` runs daily or by hand;
   - `tools/playtests/intake.js` downloads new submissions and runs `dataset.checkRecord` (full replay), writing `records/<id>.json` byte for byte and the ledger `research/human-playtests/intake.json`;
-  - `import-pr.js` updates ONE pull request from the bot branch `playtest-import`. Its path guard allows only records and the ledger.
+  - `import-pr.js` updates ONE pull request from the bot branch `playtest-import`. Its path guard allows only records, the ledger, and `analysis-state.json` when only its `snapshot` changed (the import refreshes it).
   - Importing never marks a game analysed. `dataset.js` checks that imported files still match their SHA-256.
 - **Trust:** a replay-verified record is not proof a person played. Stages: submission → structurally accepted → replay-verified (PR) → merged evidence.
 - **Deploy:** `playtest-worker.yml` (by hand: deploy/pause/resume; dry-run on PRs) → `worker/scripts/deploy.mjs`, which pins `wrangler@4.140.0`.
