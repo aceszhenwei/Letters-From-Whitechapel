@@ -2,7 +2,7 @@
 
 A browser version of the board game *Letters from Whitechapel* (revised edition), with researched computer opponents and a pipeline for studying games people play. This file is a map, not the documentation. The details are in `docs/`, whose index ([docs/README.md](docs/README.md)) links every reference page and research report.
 
-**Status:** v2.0.0 (2026-10-11): human playtest collection and research; v1.0.0 was 2026-10-10. Work since then is under **Unreleased** in [CHANGELOG.md](CHANGELOG.md). New records carry app version 2.0.0, so they form new playtest cohorts.
+**Status:** v1.1.0 (2026-10-11): human playtest collection and research; v1.0.0 was 2026-10-10. Work since then is under **Unreleased** in [CHANGELOG.md](CHANGELOG.md). New records carry app version 1.1.0, so they form new playtest cohorts.
 
 ## Ground rules for agents
 

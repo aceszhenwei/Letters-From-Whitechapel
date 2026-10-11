@@ -6,14 +6,14 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 Nothing yet.
 
-## v2.0.0 (2026-10-11)
+## v1.1.0 (2026-10-11)
 
-A milestone release: games people play now reach the research collection by themselves, and the first human games have been studied. Release notes: [docs/releases/v2.0.0.md](docs/releases/v2.0.0.md).
+A minor release: games people play now reach the research collection by themselves, and the first human games have been studied. Release notes: [docs/releases/v1.1.0.md](docs/releases/v1.1.0.md).
 
-**Why a major version.** The owner chose to mark this milestone as 2.0.0. Under the [convention](docs/releasing.md#versioning) its changes would make a minor release: nothing breaks.
+**Nothing breaks** (a minor release under the [convention](docs/releasing.md#versioning)):
 - **Records:** game records keep schema version 1 and rule set `whitechapel-fff8e378d715`, so 1.0.0 records still replay.
 - **The game:** the rules, levels and AIs are unchanged.
-- **What the new number does:** records now carry app version `2.0.0`, so new playtests start a new research cohort (games are compared only within a cohort).
+- **Cohorts:** records now carry app version `1.1.0`, so new playtests start a new research cohort (games are compared only within a cohort).
 
 ### Highlights
 

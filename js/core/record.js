@@ -20,7 +20,7 @@ WC.record = (function (rules, engine, map, _) {
 
 	var format = 'whitechapel-game-log';
 	var schemaVersion = 1;
-	var appVersion = '2.0.0'; // package.json's version (a test keeps them equal)
+	var appVersion = '1.1.0'; // package.json's version (a test keeps them equal)
 
 	// The phase each action is taken in
 	var phaseOf = {
