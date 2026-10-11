@@ -32,7 +32,8 @@ A static site: ES5 JavaScript with jQuery 1.11 and Underscore 1.8, with no build
 | Data | `js/data/map.js` (map ids 0–428; printed numbers 1–195 via `map[id].number`) | Code uses map ids; numbers are only for text the player sees |
 | Core | `js/core/board.js`, `rules.js` (legality, `jackView`/`policeView`), `engine.js` (the only writer of `game.state`; phases 0–12), `deduction.js`, `random.js`, `record.js` | No page access; runs in Node |
 | AI | `js/ai/` (Jacks, police, `containment.js`, level tables) | Decides only from its side's view; the engine validates every decision |
-| UI | `js/ui/` (renderer, setup, autopolice, jack-player, review, export, playtests) and `js/main.js` | Never decides legality |
+| UI | `js/ui/` (renderer, setup, autopolice, jack-player, review, export, playtests, submission, research), `js/config.js` and `js/main.js` | Never decides legality |
+| Intake | `worker/` (Cloudflare Worker, ES modules, deployed separately) | Untrusted input; structural checks only; never replays |
 
 - **Boundaries are enforced** by `test/unit/architecture.test.js`.
 - **Code style** ([docs/contributing.md](docs/contributing.md)):
@@ -96,10 +97,7 @@ Reference: [docs/playtests.md](docs/playtests.md).
   - import JSON or ZIP files, each checked by full replay;
   - delete one game, or clear all after confirming.
 - **Code:** `js/ui/playtest-store.js` (`WC.playtests`), `playtests.js` and `zip.js`, a dependency-free ZIP writer and reader that Node uses too.
-- **Nothing is sent anywhere:**
-  - exporting doesn't upload;
-  - a record is marked "exported" once its download starts;
-  - the docs and UI promise local-only storage.
+- **Exporting sends nothing:** a record is marked "exported" once its download starts. Online submission (below) is a separate, independent status.
 
 **In the repository:** `research/human-playtests/`:
 - `records/<game id>.json`: unchanged full records. Never edit them, and never delete them because newer games exist. They must be named after their game ID, and the workflow fails otherwise.
@@ -138,31 +136,35 @@ Reference: [docs/playtests.md](docs/playtests.md).
 - **Finding:** v3 never arrested because no arrest was likely. That was not a defect.
 - **Pattern to watch:** v3's belief stayed diffuse against this player.
 
-### Planned, NOT implemented: automatic public playtest submission
+### Automatic public playtest submission (implemented; awaiting owner setup)
 
-This is the next major extension. None of it exists yet, and its exact design will be settled in its assignment. Intended shape:
+Reference: [docs/automatic-playtest-collection.md](docs/automatic-playtest-collection.md).
 
-- **Submission:**
-  - after a qualifying game, the page POSTs the full record to a **Cloudflare Worker**;
-  - the Worker stores it in a **private R2 bucket**, which is never publicly readable.
-- **Default-on, with a persistent opt-out:**
-  - collection is on by default, with a clear notice;
-  - the opt-out is a visible setting, remembered in the browser, and honoured before anything is sent;
-  - local saving and manual export keep working either way.
-- **Security protections expected:**
-  - **Validate before storing:** the Worker checks size, schema, format and rule set; ideally it replays the record or applies the same checks as `WC.playtests.check`, and rejects anything else.
-  - **Limit abuse:** rate limiting, CORS restricted to the Pages origin, and an idempotent key by game ID or fingerprint.
-  - **Keep personal data out:** no IP addresses or identifiers stored with records.
-  - **Keep secrets server-side:** no secrets in the client; Worker and R2 credentials live only in Cloudflare and in GitHub Actions secrets.
-  - **Defend against tampering and spam:** treat every submission as untrusted.
-- **Import:** a **scheduled GitHub Actions workflow** pulls new objects from R2, validates them with `tools/playtests/dataset.js`, and opens a **pull request** adding `records/<id>.json`.
-  - It never commits to `master` directly; a person reviews and merges.
-  - Research tracking and the triage workflow stay as they are.
-- **Precautions when building it:**
-  - **Revise the privacy promise.** Today's "nothing is sent anywhere" appears in `docs/playtests.md` §9, `docs/game-records.md` §9, the UI text and the tests. Rewrite it everywhere rather than leaving it contradicted.
-  - **Keep the Pages deployment static.** The Worker is a separate deployment.
-  - **Don't let records break the site.** Imported records must not trigger Pages redeploys; `pages.yml` already ignores `research/human-playtests/**`.
-  - **Respect the gameplay boundaries.** Gameplay, AI and record format stay unchanged unless the assignment says so.
+- **Status:**
+  - implemented, unit/e2e-tested in `npm test`, and checked once by hand in `wrangler dev`;
+  - **not deployed:** the owner must create the Cloudflare resources and secrets (§11 of the guide);
+  - until the repository variable `PLAYTEST_API_URL` is set, the site sends nothing and shows no setting (`js/config.js` is committed empty; `tools/site/build.js` fills it in).
+- **Browser:**
+  - `WC.submission` (`js/ui/submission.js`) queues each kept game, using the `submission` field of its IndexedDB entry;
+  - it sends the record unchanged to `POST /api/v1/playtests`, with bounded backoff and `Retry-After`;
+  - statuses: `not-submitted`, `pending`, `submitting`, `submitted`, `retry`, `rejected`, independent of `exportedAt`;
+  - **Anonymous Gameplay Research** (`js/ui/research.js`): on by default, a persistent opt-out (`localStorage` `whitechapel.research.submit`), off by default under GPC/DNT, no retroactive sending. UI code must not use `Math.random`.
+- **Worker** (`worker/`):
+  - `src/index.js` may export only `default`; the logic is in `src/app.js` and `src/validate.js`;
+  - storage is D1, not R2: R2 needs a payment card. One row per game with `UNIQUE game_id` (`INSERT … RETURNING`), never overwritten;
+  - limits: a rate-limit binding, daily/count/size caps, `INTAKE_PAUSED`;
+  - a 365-day retention cron;
+  - read-only import endpoints behind `IMPORT_TOKEN`;
+  - no IP or header is stored, and Workers Logs are off.
+  - `ACCEPTED_RULESETS` in `worker/wrangler.toml` must list the current `ruleset.id`: a test fails otherwise.
+- **Import:**
+  - `playtest-import.yml` runs daily or by hand;
+  - `tools/playtests/intake.js` downloads new submissions and runs `dataset.checkRecord` (full replay), writing `records/<id>.json` byte for byte and the ledger `research/human-playtests/intake.json`;
+  - `import-pr.js` updates ONE pull request from the bot branch `playtest-import`. Its path guard allows only records and the ledger.
+  - Importing never marks a game analysed. `dataset.js` checks that imported files still match their SHA-256.
+- **Trust:** a replay-verified record is not proof a person played. Stages: submission → structurally accepted → replay-verified (PR) → merged evidence.
+- **Deploy:** `playtest-worker.yml` (by hand: deploy/pause/resume; dry-run on PRs) → `worker/scripts/deploy.mjs`, which pins `wrangler@4.140.0`.
+- **Tests:** `test/helpers/d1.js` stands in for D1 using `node:sqlite` with the real migrations and D1's change counting. Never send test records to a real service.
 
 ## Commands
 
@@ -174,6 +176,8 @@ npm run eval:medium         # algorithmic AI changes (~13 min); results in exper
 npm run research:full       # research milestones only (~4 h); never routine
 npm run research:import -- <files>   # validate/replay/summarise exported records
 npm run playtests           # the human playtest collection (see above)
+npm run playtests:intake -- --check-config --api <url>   # with PLAYTEST_IMPORT_TOKEN: is the intake configured?
+npm run playtests:worker-check                            # bundle-check the Worker (no account needed)
 npm run site                # stage _site/ exactly as the Pages workflow does, and check references
 ```
 
@@ -212,12 +216,13 @@ Reference: [docs/testing.md](docs/testing.md).
   - Bump `package.json`, `package-lock.json` and `appVersion` in `js/core/record.js`. Records carry `app.version`, so a release starts new cohorts.
   - Where tag pushes are refused, run **Actions › Release › Run workflow** (`release.yml`) instead.
   - Releases don't deploy.
-- **Workflows:** `test.yml` (tests plus smoke on pushes and PRs), `pages.yml`, `playtests.yml`, `release.yml`.
+- **Workflows:** `test.yml` (tests plus smoke on pushes and PRs), `pages.yml` (passes `vars.PLAYTEST_API_URL` to the build), `playtests.yml`, `release.yml`, `playtest-import.yml` (daily import PR), `playtest-worker.yml` (Worker deploy, by hand).
 
 ## Known limitations and precautions
 
 - **Rules not implemented:** the optional rules and the Head of the Investigation tiles. Playing Jack has no undo or night review ([docs/roadmap.md](docs/roadmap.md#known-limitations)).
-- **Browser playtest storage is per browser and per device;** clearing site data loses it. ZIPs re-compressed by other tools import only where `DecompressionStream` exists.
+- **Browser playtest storage is per browser and per device;** clearing site data loses it (games already submitted online are safe in the intake).
+- **Automatic collection is live-unverified** until the owner deploys it; PRs made by the import workflow's token don't trigger other workflows (it dispatches `playtests.yml` itself). ZIPs re-compressed by other tools import only where `DecompressionStream` exists.
 - **Phases are numbered (0–12), not named.** Page tests are slow, because most of their time is jsdom.
 - **`docs/roadmap.md` lags behind:** under "Other ideas" it still lists playing Jack against the computer police, which is now implemented.
 - **Replay depends on the rule set:** records from another rule set can only be replayed by checking out the release that made them.

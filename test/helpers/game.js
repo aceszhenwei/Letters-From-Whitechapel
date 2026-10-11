@@ -9,6 +9,7 @@ const root = path.join(__dirname, '..', '..');
 const scripts = [
 	'js/vendor/jquery-1.11.0.min.js',
 	'js/vendor/underscore-min.js',
+	'js/config.js',
 	'js/data/map.js',
 	'js/data/content.js',
 	'js/core/random.js',
@@ -33,6 +34,8 @@ const scripts = [
 	'js/ui/zip.js',
 	'js/ui/playtest-store.js',
 	'js/ui/playtests.js',
+	'js/ui/submission.js',
+	'js/ui/research.js',
 	'js/ui/setup.js',
 	'js/main.js'
 ];

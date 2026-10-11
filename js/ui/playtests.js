@@ -3,7 +3,8 @@
    ZIPs, each checked and replayed first), deleting and clearing.
    Exporting saves files on this device only; it never uploads anything. A record is marked as exported once its ZIP has
    been made and the browser's download started: whether the download finished, or the files reached GitHub, can't be
-   known here. Records are never deleted by exporting. */
+   known here. Records are never deleted by exporting. The Online column is each game's research submission status
+   (js/ui/submission.js), independent of exporting; Submit sends one game on the player's request. */
 var WC = WC || {};
 WC.ui = WC.ui || {};
 
@@ -14,6 +15,7 @@ WC.ui.playtests = function (storePromise, options) {
 	var store = null;
 	var entries = [];
 	var selected = {};
+	var submitter = options.submitter || null;
 
 	function save(name, data, type) {
 		// Through a link to the file, as the browser downloads one. options.save replaces it (tests)
@@ -72,7 +74,20 @@ WC.ui.playtests = function (storePromise, options) {
 			$('<td></td>').text(outcome(entry)).appendTo(row);
 			$('<td class="playtests-id"></td>').text(entry.id).appendTo(row);
 			$('<td></td>').text(entry.exportedAt ? entry.exportedAt.slice(0, 10) : 'No').appendTo(row);
-			$('<td class="playtests-row-actions"></td>').append(
+			$('<td class="playtests-online"></td>').text(WC.submission.label(entry.submission)).attr('title', (entry.submission && entry.submission.lastError) || '').appendTo(row);
+			var actions = $('<td class="playtests-row-actions"></td>').appendTo(row);
+			var s = entry.submission || {};
+			if (submitter && submitter.configured() && (!s.status || s.status == 'not-submitted' || (s.status == 'retry' && !s.nextAttemptAt))) {
+				actions.append($('<button type="button" class="button button-secondary playtests-submit"></button>').text('Submit')
+					.attr('title', 'Submit ' + entry.id + ' for research now').click(function () {
+						status('Submitting ' + entry.id + '…');
+						submitter.submitNow(entry.id).then(function () {
+							status('Submission of ' + entry.id + ' finished: see the Online column.');
+							return refresh();
+						}, failed);
+					}));
+			}
+			actions.append(
 				$('<button type="button" class="button button-secondary playtests-download"></button>').text('JSON').attr('title', 'Download ' + entry.id + '.json').click(function () {
 					save(WC.playtests.fileName(entry.id), WC.record.stringify(entry.record), 'application/json');
 					status('Saved ' + WC.playtests.fileName(entry.id) + ' on this device.');
@@ -82,7 +97,7 @@ WC.ui.playtests = function (storePromise, options) {
 						store.remove(entry.id).then(refresh, failed);
 					}
 				})
-			).appendTo(row);
+			);
 		});
 		buttons();
 	}
@@ -203,6 +218,12 @@ WC.ui.playtests = function (storePromise, options) {
 			status(lines.join(' '), out.conflicts.length || out.rejected.length ? 'error' : 'info');
 			return refresh();
 		}, failed);
+	}
+
+	if (submitter) {
+		submitter.onChange(function () {
+			if (dialog.hasClass('open') && store) refresh();
+		});
 	}
 
 	return Promise.resolve(storePromise).then(function (s) {

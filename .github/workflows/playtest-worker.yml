@@ -1,0 +1,63 @@
+# The playtest intake Worker (docs/automatic-playtest-collection.md).
+# - On pull requests that touch worker/: bundles it and checks its configuration (no account, no secrets).
+# - By hand (Actions > Deploy playtest Worker > Run workflow): deploys it to Cloudflare, or pauses or resumes intake.
+#   Needs the repository secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID and PLAYTEST_IMPORT_TOKEN. It never runs
+#   on its own: nothing is deployed unless the owner starts it.
+name: Deploy playtest Worker
+
+on:
+  pull_request:
+    paths:
+      - 'worker/**'
+      - '.github/workflows/playtest-worker.yml'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'deploy (keeps a paused intake paused), pause (emergency stop: refuse submissions), or resume'
+        type: choice
+        options: [deploy, pause, resume]
+        default: deploy
+
+permissions:
+  contents: read
+
+concurrency:
+  group: playtest-worker
+  cancel-in-progress: false
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node worker/scripts/deploy.mjs --dry-run
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PLAYTEST_IMPORT_TOKEN: ${{ secrets.PLAYTEST_IMPORT_TOKEN }}
+          PLAYTEST_API_URL: ${{ vars.PLAYTEST_API_URL }}
+          PLAYTEST_ALLOWED_ORIGINS: ${{ vars.PLAYTEST_ALLOWED_ORIGINS }}
+          ACTION: ${{ inputs.action }}
+        run: |
+          case "$ACTION" in
+            pause) node worker/scripts/deploy.mjs --pause ;;
+            resume) node worker/scripts/deploy.mjs --resume ;;
+            *) node worker/scripts/deploy.mjs ;;
+          esac

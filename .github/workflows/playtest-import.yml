@@ -1,0 +1,57 @@
+# Imports human playtests submitted online (docs/automatic-playtest-collection.md#the-import-workflow): once a day, or
+# by hand (Actions > Import human playtests > Run workflow). It downloads new submissions from the intake Worker with a
+# read-only import token, replays each one with the collection's own checks (tools/playtests/intake.js ->
+# tools/game-log/validate.js), and opens or updates ONE pull request, "Import human playtests — <date>", adding the
+# eligible records to research/human-playtests/records/. It never commits to master and never merges: a person reviews.
+# Nothing happens until the repository variable PLAYTEST_API_URL is set (the job is skipped).
+name: Import human playtests
+
+on:
+  schedule:
+    - cron: '41 5 * * *' # Daily, 05:41 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Check only: download and replay, but open no pull request'
+        type: boolean
+        default: false
+
+# The narrowest the job needs: write its own branch, open a pull request, start the collection's check on that branch
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+# One import at a time; a second waits instead of racing the first for the branch
+concurrency:
+  group: playtest-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    if: vars.PLAYTEST_API_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0 # The import branch too, to compare with it
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Download, replay and write new records
+        env:
+          PLAYTEST_API_URL: ${{ vars.PLAYTEST_API_URL }}
+          PLAYTEST_IMPORT_TOKEN: ${{ secrets.PLAYTEST_IMPORT_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run == true && '--dry-run' || '' }}
+        run: node tools/playtests/intake.js --summary "$RUNNER_TEMP/import-summary.md" $DRY_RUN
+      - name: Check the collection as it would be merged
+        run: node tools/playtests/dataset.js --ci
+      - name: Open or update the import pull request
+        if: inputs.dry_run != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node tools/playtests/import-pr.js --summary "$RUNNER_TEMP/import-summary.md" --base master --branch playtest-import

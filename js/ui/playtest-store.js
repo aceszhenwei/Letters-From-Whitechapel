@@ -1,19 +1,21 @@
 /* Playtest records in the browser (docs/playtests.md): every completed game a person played is kept, as its full game
    record (js/core/record.js, unchanged), in this browser's IndexedDB, so it survives closing the page and can be exported
    later in batches.
-   - open({ indexedDB }) -> a store: list, get, add, markExported, remove, clear. Every call returns a promise. When the
-     browser has no IndexedDB, or refuses it (private browsing, blocked storage, full disk), the store says so
-     (available() is false, calls reject) and the game goes on unaffected.
+   - open({ indexedDB }) -> a store: list, get, add, markExported, setSubmission, remove, clear. Every call returns a
+     promise. When the browser has no IndexedDB, or refuses it (private browsing, blocked storage, full disk), the store
+     says so (available() is false, calls reject) and the game goes on unaffected.
    - Each entry: { id (the game's id), savedAt, date, role ('jack' or 'detectives'), opponent, level, result, winner,
      appVersion, ruleset, actions, fingerprint, source ('auto' or 'import'), exportedAt (null until exported), exportCount,
-     record (the full record exactly as exported) }.
+     submission (online research submission, js/ui/submission.js: { status, attempts, ... }; independent of exporting,
+     and absent from games kept before it existed), record (the full record exactly as exported) }.
    - A game is kept once: adding the same game again is a 'duplicate' (skipped), and a different record with the same
      id is a 'conflict' (reported, never overwritten). The fingerprint is a hash of the record without its export date
      and the player's note, which change between two exports of the same game.
    - check(record) is what an import must pass: a full record of a completed game a person played, in this version's
      format and rule set, that replays exactly through the engine.
-   - autoSave(game, recorder, store, onSaved) saves a game when it ends by a rule (never one ended by hand or unfinished).
-   Nothing here sends anything anywhere. */
+   - autoSave(game, recorder, store, onSaved, { submission }) saves a game when it ends by a rule (never one ended by
+     hand or unfinished), with the submission status options.submission() gives it.
+   Nothing here sends anything anywhere: sending is js/ui/submission.js's, and only for games kept here first. */
 var WC = WC || {};
 
 WC.playtests = (function (record) {
@@ -48,7 +50,7 @@ WC.playtests = (function (record) {
 		return record.hash(JSON.stringify(record.normalise(copy)));
 	}
 
-	function describe(full, source, now) {
+	function describe(full, source, now, opts) {
 		var who = opponent(full);
 		return {
 			id: full.game.id,
@@ -66,6 +68,7 @@ WC.playtests = (function (record) {
 			source: source || 'auto',
 			exportedAt: null,
 			exportCount: 0,
+			submission: opts && opts.submission ? opts.submission : { status: 'not-submitted', reason: source == 'import' ? 'imported' : 'not-configured', attempts: 0 },
 			record: full
 		};
 	}
@@ -132,7 +135,7 @@ WC.playtests = (function (record) {
 	function unavailable(reason) {
 		var error = new Error('Playtest storage is not available in this browser' + (reason ? ' (' + reason + ')' : ''));
 		var fail = function () { return Promise.reject(error); };
-		return { available: function () { return false; }, reason: error.message, list: fail, get: fail, add: fail, markExported: fail, remove: fail, clear: fail };
+		return { available: function () { return false; }, reason: error.message, list: fail, get: fail, add: fail, markExported: fail, setSubmission: fail, remove: fail, clear: fail };
 	}
 
 	function open(options) {
@@ -211,7 +214,7 @@ WC.playtests = (function (record) {
 			add: function (full, opts) {
 				// -> { status: 'saved' | 'duplicate' | 'conflict', entry }
 				opts = opts || {};
-				var entry = describe(full, opts.source, opts.now);
+				var entry = describe(full, opts.source, opts.now, opts);
 				return run('readwrite', function (objects, done) {
 					var request = objects.get(entry.id);
 					request.onsuccess = function () {
@@ -243,6 +246,21 @@ WC.playtests = (function (record) {
 					done(0);
 				});
 			},
+			setSubmission: function (id, submission) {
+				// The game's online submission status; nothing else in the entry changes
+				return run('readwrite', function (objects, done) {
+					var request = objects.get(id);
+					request.onsuccess = function () {
+						if (request.result) {
+							request.result.submission = submission;
+							objects.put(request.result);
+							done(true);
+						} else {
+							done(false);
+						}
+					};
+				});
+			},
 			remove: function (id) {
 				return run('readwrite', function (objects) { objects.delete(id); });
 			},
@@ -254,10 +272,11 @@ WC.playtests = (function (record) {
 
 	/* Saving finished games
 	   --------------------- */
-	function autoSave(game, recorder, storePromise, onSaved) {
+	function autoSave(game, recorder, storePromise, onSaved, options) {
 		// When a game a person played ends by a rule, keep its full record. A failure is reported, never thrown: the
-		// game has ended normally whatever happens here
+		// game has ended normally whatever happens here. options.submission() -> its online submission status
 		onSaved = onSaved || function () {};
+		options = options || {};
 		game.on(function (type) {
 			if (type != 'gameOver') {
 				return;
@@ -274,7 +293,13 @@ WC.playtests = (function (record) {
 				return; // The computer played both sides (Developer Mode's watching): not a playtest
 			}
 			Promise.resolve(storePromise).then(function (store) {
-				return store.add(full, { source: 'auto' });
+				var submission;
+				try {
+					submission = options.submission ? options.submission() : null;
+				} catch (error) {
+					submission = null;
+				}
+				return store.add(full, { source: 'auto', submission: submission });
 			}).then(function (result) {
 				onSaved(result);
 			}, function (error) {

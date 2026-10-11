@@ -4,6 +4,31 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 ## Unreleased
 
+#### Automatic playtest collection
+
+- **Anonymous Gameplay Research** ([Automatic playtest collection](docs/automatic-playtest-collection.md)): when the site is built with a playtest intake, the full record of each game a person finishes, in either role, is submitted automatically after it is kept in the browser.
+  - **The setting:** on by default, with a clear notice in the setup dialog before play and a **Research** button in the top bar. Turning it off is remembered, cancels waiting games and stops retries, and never sends games played while it was off. Global Privacy Control and Do Not Track start it off.
+  - **Sending:** in the background, one game at a time, with bounded exponential backoff that honours `Retry-After`; offline games wait. No cookie, referrer or identifier is sent. The game never waits for it.
+  - **Status:** each kept game has a submission status (not submitted, pending, submitting, submitted, will retry or retry required, permanently rejected), independent of its export status. The ending dialog shows it with the game ID, and Developer Mode's playtest records gain an **Online** column and a **Submit** button.
+  - **Off unless configured:** without the repository variable `PLAYTEST_API_URL`, the site sends nothing and shows none of this.
+- **The intake** (`worker/`, a separate Cloudflare Worker on the free plan, with a private D1 database):
+  - **Checks:** structural checks only (format, schema, rule set, a completed game one person played, a safe game ID, no extra fields or notes), plus size limits;
+  - **Abuse limits:** a per-address rate limit, daily, count and size caps, and an emergency pause;
+  - **Storage:** atomic, never-overwriting storage by game ID, with duplicates told from conflicts;
+  - **Import:** read-only import endpoints behind a token;
+  - **Retention:** a daily job deletes submissions after 365 days.
+
+  Nothing about the sender is stored. D1 was chosen over R2 because R2 needs a payment method and bills past its allowance; the Free plan cannot bill.
+- **Daily import** (`playtest-import.yml`, `tools/playtests/intake.js`, `import-pr.js`):
+  - downloads new submissions and replays each with the collection's existing checks;
+  - writes eligible records byte for byte with a provenance ledger (`research/human-playtests/intake.json`);
+  - opens or updates one **Import human playtests — date** pull request, never commits to master, and never marks a game as analysed.
+- **Deployment** (`playtest-worker.yml`, `worker/scripts/deploy.mjs`): deploy, pause or resume by hand. The Pages build writes the intake address from `PLAYTEST_API_URL`.
+- **`npm run playtests`** also counts games by source and checks that imported records are unchanged.
+- **Privacy text revised** wherever it said nothing is sent: the UI, `docs/playtests.md`, `docs/game-records.md` and the README.
+- **Tests:** the Worker (against Node's SQLite running the real migrations), the browser queue, the importer and pull request, the site build, and an end-to-end test from a Human Jack game in the page to the five-game counter. Also checked once by hand in Cloudflare's local runtime (`wrangler dev`), which found two bugs now fixed and guarded by tests.
+- **Gameplay, AIs and the record format are unchanged.**
+
 #### Human playtest collection
 
 - **Games are kept automatically:** every game a person finishes, as Jack or as the detectives, is saved as its full game record in the browser's IndexedDB.

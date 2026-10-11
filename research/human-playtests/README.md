@@ -7,9 +7,11 @@ The permanent collection of games people have played, kept as research evidence.
 | `records/<game id>.json` | One full game record per completed game a person played, exactly as the game exported it. Never edited, renamed or deleted because newer games exist |
 | `reports/` | Dated research reports, each naming exactly the game IDs it covers |
 | `analysis-state.json` | Which games each report covered, the methodology version, AI and rule changes that affect records, and a snapshot of the games awaiting review |
+| `intake.json` | Created by the first automatic import: every online submission the import workflow examined, with its submission number, date received, SHA-256 and verdict (imported, duplicate, conflict, rejected, excluded). Provenance for records that arrived online ([docs/automatic-playtest-collection.md](../../docs/automatic-playtest-collection.md)) |
 
 **Adding games:**
 - Upload the `.json` files from an exported batch ZIP's `records/` folder into `records/`, in a pull request. Or, with a clone, run `npm run playtests:add -- <the ZIP>`.
+- Games submitted online arrive in an **Import human playtests** pull request, already replayed; review and merge it.
 - The **Human playtests** workflow checks every record by full replay.
 
 **Status:** `npm run playtests` prints:
