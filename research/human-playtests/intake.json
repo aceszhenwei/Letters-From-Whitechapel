@@ -2,11 +2,29 @@
 	"format": "whitechapel-playtest-intake",
 	"version": 1,
 	"submissions": {
+		"g2358629abcf5b51d": {
+			"seq": 3,
+			"receivedOn": "2026-10-11",
+			"sha256": "2afb0de26cf03719d547e90d827b11c86ac7f3c8c5d2ea1f7dbfd55755969c05",
+			"bytes": 128036,
+			"examinedOn": "2026-10-11",
+			"verdict": "imported",
+			"cohort": "1.0.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)"
+		},
 		"g98c41370f7344474": {
 			"seq": 1,
 			"receivedOn": "2026-10-11",
 			"sha256": "b4cc3cde6b63b744691325b5062d92c05c85d9a0d0cfdcf86ef187c947924a30",
 			"bytes": 106795,
+			"examinedOn": "2026-10-11",
+			"verdict": "imported",
+			"cohort": "1.0.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)"
+		},
+		"gcdf6409ed736eaf5": {
+			"seq": 2,
+			"receivedOn": "2026-10-11",
+			"sha256": "e88a43c66ae3bba700c6fa39ead31db9660033f9ae59acdeabc15a640cfbb7fe",
+			"bytes": 113204,
 			"examinedOn": "2026-10-11",
 			"verdict": "imported",
 			"cohort": "1.0.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)"
