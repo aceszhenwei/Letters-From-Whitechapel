@@ -15,7 +15,7 @@
 //   every      the same on every night (the humans coached early on later nights too)
 // A forced coach is a random legal one (its own seeded stream) that ends at most one walk farther from home than he
 // stands, and leaves at least 2 moves more than the walk home needs; when none qualifies, or a walk reaches home, the
-// computer Jack plays. The humans' 21 night-1 coaches: 10 ended closer to home, 6 as far, 5 farther (one or two walks).
+// computer Jack plays. The humans' 21 night-1 coaches: 12 ended closer to home, 5 as far, 4 farther (one or two walks).
 // Results: one JSON file per run in results/coaches/. Read-only for the game: it changes no AI.
 const fs = require('fs');
 const os = require('os');

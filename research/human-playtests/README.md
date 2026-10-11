@@ -26,3 +26,7 @@ The permanent collection of games people have played, kept as research evidence.
 - **The diffuse-belief pattern recurs.**
 - **New patterns to watch:** coin-flip arrests on the double event, and a last-night escape next to home.
 - **Recommendation:** an investigation.
+
+Two investigations followed it, both of games already analysed (they record no games):
+- [2026-10-11-investigation-coaches](reports/2026-10-11-investigation-coaches.md): the habit of spending all three coaches early on night 1 doesn't make Detective AI v3 lose track of Jack (1,800 computer games). v3 tracks people worse for another, unknown reason, which stays a pattern to watch.
+- [2026-10-11-investigation-night4](reports/2026-10-11-investigation-night4.md): the night-4 escape in `g6b7af2a30b071ae6` came from v3 itself moving the waited-for Wretched next to Jack's hideout, ignoring its own threat model. This is a confirmed decision-level flaw, but it costs no measurable games, even against a Jack who lures on purpose. No AI was changed.

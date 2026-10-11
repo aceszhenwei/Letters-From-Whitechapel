@@ -6,6 +6,18 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 #### Human playtest research
 
+- **Two investigations of batch 1's recommendations.** No AI was changed; neither met the bar for one.
+  - **Coaches** ([report](research/human-playtests/reports/2026-10-11-investigation-coaches.md)):
+    - **The test:** the human habit of spending all three coaches at the start of night 1, against Detective AI v3, with Jack AI v2 and Strategic Jack. That is 1,800 paired games, on seeds 612001–612300.
+    - **Night 1:** the habit widens where Jack could be, but doesn't make v3 rank him worse.
+    - **Not the cause:** it doesn't explain why v3 tracks people worse (5% in its top 10 on night 1, against 31–41%).
+    - **Coaching early every night:** this hides a computer Jack's hideout about as well as people hide theirs. It lifts Strategic Jack from 26% to 53%, and costs Jack AI v2 11 points.
+  - **The night-4 escape** ([report](research/human-playtests/reports/2026-10-11-investigation-night4.md)):
+    - **Reasonable:** v3's night-3 positioning and patrol tokens, given 8 nearly equal hideouts.
+    - **Avoidable:** after Jack waited, v3 moved his Wretched next to the hideout, the option its own threat model rated worst. In replayed counterfactuals, the safe moves let Jack home in 1–6 of 25 runs, against 25 of 25.
+    - **No game-level cost:** against a Jack built to lure on purpose (seeds 614001–614200), `containWretched` cut first-move escapes from 65 to 11 but changed Jack's wins by only −2.5 points (95% CI −6.3 to +1.3).
+  - **New seed ranges** are in `docs/testing.md`. Per-game simulation results are kept out of git.
+
 - **Batch 1 triage** ([report](research/human-playtests/reports/2026-10-11-batch-1.md), reproducible with `research/human-playtests/reports/2026-10-11-batch-1.js`): the first five online submissions, all a person as Jack against Detective AI v3 (Normal). Jack won 4; the police won once, with an arrest on the double event.
   - **No defect candidates.**
   - **Recurring:** v3's belief stays diffuse, and all three coaches are spent on night 1.

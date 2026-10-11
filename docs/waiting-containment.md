@@ -142,6 +142,8 @@ The checks below are positions set up by hand (`test/unit/waiting-containment.te
 ## 8. Limitations
 
 - **AI opponents only:** the short-return Jacks with waiting are artificial (the policy's table was calibrated for Jack AI v2). A Jack designed to exploit the police's Wretched moves on purpose was not built; the built positions show such a Jack could find openings in about half of them.
+
+> **Since this study:** a human game exploited this on its last night, and a later investigation built that Jack ([the night-4 escape](../research/human-playtests/reports/2026-10-11-investigation-night4.md)). Against a Jack who lures on purpose, v3 opened a first-move escape on 65 of 177 last nights and `containWretched` on 11, but Jack's wins changed by −2.5 points (95% CI −6.3 to +1.3, 200 paired games). The recommendation above stands.
 - **Samples:** 50–250 paired games per comparison. Differences under about 5 points are not resolved, and none is claimed.
 - **The pooled +3.7 points** for waiting comes from seed sets that disagree, and PR #17's first set also chose its validation. It is not a pre-registered result.
 - **The 7 stations are unverified** ([Known differences](game-rules.md#known-differences-from-the-physical-board)). Different stations could change which positions the police can hold.

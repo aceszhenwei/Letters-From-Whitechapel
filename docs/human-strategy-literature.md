@@ -279,6 +279,8 @@ The claim is correct as stated.
   - Against v2, the 147 Wretched was moved onto 134 on night 2, so Jack killed at home and stepped off and back.
   - v2's belief in the true hideout is one sixth on night 2 and 9–22% after that; in the v2-wretched-away variant (E2b) it is certain from night 3. Either way, with 1–2 moves a night, the police never get the turns to use that knowledge.
 - **E3:** with a coach first, Jack ran out of moves more often (21 games against 8). A coach spends two moves and replaces Jack AI v2's first detour. Against an exact deduction, the extra possible positions buy little.
+
+> **Since this study:** against Detective AI v3, the human habit of spending every coach at the start of the night was tested on both computer Jacks ([the coach investigation](../research/human-playtests/reports/2026-10-11-investigation-coaches.md), 300 paired games per arm). It again cost Jack AI v2 (−11 points when used every night), but it lifted Strategic Jack from 26% to 50–53%, by hiding his hideout rather than his position.
 - **The hideout matters on its own.** Jack AI v2 with hideout 134 but without the scheme is much *worse* (40%). The scheme, not the hideout, is what wins.
 
 **E2b: the forum's Wretched counter.** In v2-wretched-away, Detective AI v2 moves each Wretched as far as it can from the hideouts it thinks likely, instead of towards its patrols. The 134 scheme still won every game, now with a 2-move night 2. Jack AI v2's games were identical to its games against v2, so the change costs nothing. On its own, though, it is not a counter.
