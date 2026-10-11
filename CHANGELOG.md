@@ -32,6 +32,7 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
   - It is collected and awaiting review: no analysis has been done.
 - **Not changed:** the rules, the AIs, the difficulty levels, and the game record format (schema version 1).
 - **Tests:** `playtests-store.test.js`, `playtests-dataset.test.js` and `playtests-ui.test.js`, with `fake-indexeddb` as the browsers' storage (a development dependency only).
+- **Research process** in two tiers: a 1–2-page triage report for each batch of five games, and separate, targeted investigations only when triage, a recurring pattern or an alarming game gives a reason; cumulative reviews after about 20 games look at trends. Findings are labelled as patterns to watch, defect candidates, confirmed defects or confirmed strategic weaknesses. With a batch-report template and assignment prompts ([Commissioning an analysis](docs/playtests.md#commissioning-an-analysis)).
 - **Docs:** see [Human playtests](docs/playtests.md).
 
 ## v1.0.0 (2026-10-10)

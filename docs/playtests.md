@@ -4,7 +4,8 @@ How games played by people are collected, checked and kept as research evidence,
 
 ```
 Play → saved automatically in the browser → export a batch (ZIP) → upload the records to GitHub by hand
-     → GitHub Actions checks them → five new games make a research batch → an analysis is commissioned by hand
+     → GitHub Actions checks them → five new games make a research batch → a short triage report, commissioned by hand
+     → targeted investigations only where triage finds a reason
 ```
 
 ## Contents
@@ -113,21 +114,111 @@ The research collection is `research/human-playtests/records/` in the repository
 
 ## Commissioning an analysis
 
-When a batch is ready, or a single game looks suspicious enough to investigate at once, give the coding agent an assignment like this:
+Research runs in two tiers, so the routine cost stays low and the close, forensic work goes only where something looks wrong.
 
-> Analyse the human playtest research batch. Follow docs/playtests.md#commissioning-an-analysis.
-> 1. Run `npm run playtests` and list the games awaiting review (status Collected, and any Eligible for reanalysis you choose to include), by game ID and cohort.
-> 2. Validate them: every one must be verified by full replay (`npm run research:import -- research/human-playtests/records`).
-> 3. Examine each game for patterns in human and AI behaviour: Jack's routes, waiting, coaches and alleys, hideout exposure; the detectives' patrols, movement, searches and arrests. Use the replay (`WC.record.replay`), the full record's nights, and the research tools in `research/`.
-> 4. Compare with earlier findings: earlier reports in `research/human-playtests/reports/`, and the AI studies in the documentation index. Compare games only within a cohort.
-> 5. Investigate anything suspicious: ineffective searches, missed interception or arrest opportunities, repeated tactical mistakes, or an AI acting on information it shouldn't have. Reproduce it from the record.
-> 6. Keep confirmed defects (reproducible, with a failing scenario) apart from plausible strategic weaknesses (patterns that need more games). Propose fixes; do not change an AI in the same assignment.
-> 7. Write a dated report, `research/human-playtests/reports/YYYY-MM-DD-<topic>.md`, listing exactly the game IDs it covers, its methodology version, the cohorts, and the limitations of the sample.
-> 8. Only once the report is complete, run `npm run playtests -- --record-analysis --report reports/<file>.md --outstanding` (or `--games <id,id,…>`), and include the updated `analysis-state.json` in the same pull request.
+| Tier | When | What it is | Length |
+|---|---|---|---|
+| **Batch triage** | Each research batch (5 games awaiting review) | A summary of the batch: outcomes, notable behaviour, recurring patterns, possible defects. No turn-by-turn analysis | 1–2 pages |
+| **Investigation** | When triage or a single game gives a reason (below) | A targeted study of one issue, reproduced from the records | As long as the issue needs |
+| **Cumulative review** | After about 20 games in total, then occasionally | Trends across batches and cohorts | A few pages |
 
-**Rules for analyses:**
-- **Don't repeat analyses:** an analysed game isn't re-examined in detail unless there is new evidence or a methodology change.
-- **Cumulative review:** after about 20 games in total, a cumulative review across batches is worthwhile. Even then, the sample is small and uncontrolled: describe it, don't generalise.
+Nothing runs automatically: you commission each one by hand, as a separate assignment.
+
+### Findings: four kinds
+
+Every finding is labelled with one of these. A finding moves up only on the evidence named here, never on how it looks.
+
+| Kind | Meaning | Evidence | Where it goes |
+|---|---|---|---|
+| **Pattern to watch** | Something seen in one or a few games that might matter | An observation, with the game IDs | Noted in the triage report; looked for again in later batches |
+| **Defect candidate** | Behaviour that looks wrong: a rule broken, information the AI shouldn't have, an obvious move missed | Specific games and moments that point to a defect | Flagged in the triage report; an investigation decides |
+| **Confirmed defect** | The code does something it shouldn't | Reproduced from a record, with a failing scenario or test | An investigation report; a fix proposed as its own assignment |
+| **Confirmed strategic weakness** | The AI plays legally but predictably badly in a situation | Seen across several games, preferably more than one batch, and reproduced in a targeted test or simulation | An investigation or cumulative review; an improvement proposed as its own assignment |
+
+A defect candidate that doesn't reproduce is closed, with the reason, in the investigation report. A pattern that doesn't recur stays a pattern to watch; it isn't dropped silently.
+
+### Batch triage (every 5 games)
+
+The routine report. It records what the batch shows and decides whether anything needs an investigation; it doesn't try to settle every question itself.
+
+- **Read each game once, at the level of the night summaries:** who won and how, the nights, Jack's routes and hideout exposure, the detectives' searches and arrests. Follow a moment more closely only when it looks like a defect candidate.
+- **Compare with earlier reports:** is a pattern recurring? Has a pattern to watch now appeared in enough games to justify an investigation?
+- **No exhaustive turn-by-turn analysis,** no new tools, and no AI changes.
+- **"Nothing new" is a valid result.** A batch that only confirms earlier patterns gets a short report saying so.
+
+**Template** (`research/human-playtests/reports/YYYY-MM-DD-batch-N.md`):
+
+```markdown
+# Playtest batch N: triage
+
+- **Date:** YYYY-MM-DD · **Methodology version:** 1
+- **Games:** g…, g…, g…, g…, g… (5)
+- **Cohorts:** e.g. 1.0.0 · whitechapel-fff8e378d715 · jack · Detective AI v3 · normal (3); …
+
+## Outcomes
+| Game | Cohort | Winner | How it ended | Nights |
+|---|---|---|---|---|
+
+## Notable behaviour
+One to three lines per game, only where something stood out.
+
+## Patterns
+- **Recurring** (seen before, with the earlier reports):
+- **New patterns to watch:**
+
+## Defect candidates
+Each with the game ID, night and move, and why it looks wrong. "None" if none.
+
+## Recommendation
+None / an investigation of … / a cumulative review.
+
+## Limitations
+The sample: its size, cohorts, and that the players' experience isn't recorded.
+```
+
+**Assignment prompt:**
+
+> Triage the human playtest research batch, following docs/playtests.md#commissioning-an-analysis.
+> 1. Run `npm run playtests` and list the games awaiting review (Collected, plus any Eligible for reanalysis you include), by game ID and cohort.
+> 2. Validate them: `npm run research:import -- research/human-playtests/records` must verify every one.
+> 3. Read each game at the level of its night summaries and write a 1–2-page triage report from the batch template: outcomes, notable behaviour, recurring patterns and new patterns to watch, and defect candidates. Compare with earlier reports in `research/human-playtests/reports/`, within cohorts.
+> 4. Recommend an investigation only where the triggers in the docs apply. Do not investigate in depth, write tools, or change an AI in this assignment.
+> 5. Once the report is complete, run `npm run playtests -- --record-analysis --report reports/<file>.md --outstanding` and include the updated `analysis-state.json` in the same pull request.
+
+### Investigations (targeted)
+
+The forensic tier: one issue, followed to a conclusion. Commission one when:
+- a triage report flags a **defect candidate**;
+- a **pattern to watch recurs** across batches, or a cumulative review finds a trend worth testing as a strategic weakness;
+- a **single game is alarming** enough not to wait for a batch: an AI that seems to know Jack's hideout or route, an impossible move, or a result the rules shouldn't allow.
+
+An investigation:
+- states its question and the games it uses;
+- reproduces the behaviour from the records (`WC.record.replay`, the full record's nights, and the research tools in `research/`), down to the turn where needed;
+- concludes with one of the four kinds: a **confirmed defect** with a failing scenario or test, a **confirmed strategic weakness** with the games and the targeted test that show it, or not confirmed (the finding stays a pattern to watch, or is closed with the reason);
+- proposes a fix or improvement, but **doesn't change an AI** in the same assignment;
+- is written up as `research/human-playtests/reports/YYYY-MM-DD-investigation-<topic>.md`.
+
+**Recording it:** an investigation of games already analysed doesn't run `--record-analysis`; they keep the triage report that covered them. An urgent investigation of a game still awaiting review may record it with `--games <id>`, so it isn't counted in the next batch.
+
+**Assignment prompt:**
+
+> Investigate <the issue> in the human playtest records, following docs/playtests.md#investigations-targeted. Games: <ids>, from <report>.
+> Reproduce it from the records, and conclude whether it is a confirmed defect (with a failing test), a confirmed strategic weakness (with the evidence), or not confirmed. Propose a fix; do not change an AI. Write the dated investigation report.
+
+### Cumulative reviews (about every 20 games)
+
+A look across batches, not a repeat of them: it reads the triage and investigation reports and the statistics from `npm run playtests`, not each game again.
+- **Trends:** results by cohort, how games end, and whether they change between app or AI versions.
+- **Patterns:** which patterns to watch keep recurring, which have faded, and whether any now justify an investigation.
+- **Status of earlier findings:** defects fixed since (with `aiChanges`), weaknesses still open, conclusions that no longer describe current behaviour.
+- It covers no new games, so it doesn't run `--record-analysis`. Write it as `reports/YYYY-MM-DD-cumulative-review.md`.
+
+### Rules for every tier
+
+- **Don't repeat analyses:** an analysed game isn't re-examined unless an investigation needs it, there is new evidence, or the methodology changes.
+- **Keep the tiers apart:** a triage report flags; an investigation confirms; a cumulative review looks for trends. A finding is confirmed only by an investigation, or for a strategic weakness, a cumulative review backed by a targeted test.
+- **The sample is small and uncontrolled:** describe it, don't generalise.
 - **Who played:** players differ in experience, and nothing records it.
   - Never exclude a game because the person played badly or lost quickly.
   - Never conclude the AI is "superhuman" from casual games.
@@ -156,7 +247,7 @@ When a batch is ready, or a single game looks suspicious enough to investigate a
 - **Research status:** collected, analysed, and eligible for reanalysis.
 - **Problems:** invalid, ineligible, duplicate, conflicting, misnamed and incompatible files.
 
-These describe a small, uncontrolled collection of casual games. They are not estimates of human or AI strength. Detailed evaluation of AI decisions is the job of a commissioned analysis.
+These describe a small, uncontrolled collection of casual games. They are not estimates of human or AI strength. Detailed evaluation of AI decisions is the job of a targeted investigation ([Commissioning an analysis](#commissioning-an-analysis)).
 
 ## 9. Privacy and browser storage
 
