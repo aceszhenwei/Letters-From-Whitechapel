@@ -1,0 +1,598 @@
+[
+ {
+  "jack": "hard",
+  "arms": {
+   "none": {
+    "games": 300,
+    "jackWins": 194,
+    "night1Coaches": 2.02,
+    "night1CoachesFirst": 0.167,
+    "night1Moves": 6.81,
+    "movesPerNight": [
+     6.81,
+     7.418,
+     6.823,
+     8.058
+    ],
+    "night1Lost": 6,
+    "coachesPerNight": [
+     2.02,
+     1.548,
+     1.473,
+     0.923
+    ],
+    "alleysPerNight": [
+     0.27,
+     0.388,
+     0.379,
+     0.55
+    ],
+    "byNight": [
+     {
+      "night": 1,
+      "medianPossible": 36,
+      "jackInTopTen": 0.414
+     },
+     {
+      "night": 2,
+      "medianPossible": 45,
+      "jackInTopTen": 0.498
+     },
+     {
+      "night": 3,
+      "medianPossible": 58,
+      "jackInTopTen": 0.401
+     },
+     {
+      "night": 4,
+      "medianPossible": 50,
+      "jackInTopTen": 0.325
+     }
+    ],
+    "night1": {
+     "decisions": 8730,
+     "medianPossible": 36,
+     "jackInTopTen": 0.414,
+     "medianRankShare": 0.5,
+     "medianWalks": 2,
+     "jackArrestable": 72
+    },
+    "later": {
+     "decisions": 28231,
+     "medianPossible": 50,
+     "jackInTopTen": 0.408,
+     "medianRankShare": 0.5,
+     "medianWalks": 2,
+     "jackArrestable": 318
+    },
+    "all": {
+     "decisions": 36961,
+     "medianPossible": 45,
+     "jackInTopTen": 0.41,
+     "medianRankShare": 0.5,
+     "medianWalks": 2,
+     "jackArrestable": 390
+    },
+    "night2HideoutRank": 22,
+    "night4HideoutRank": 9,
+    "night4HideoutBelief": 0.035
+   },
+   "night1": {
+    "games": 300,
+    "jackWins": 204,
+    "night1Coaches": 3,
+    "night1CoachesFirst": 3,
+    "night1Moves": 8.117,
+    "movesPerNight": [
+     8.117,
+     7.39,
+     6.736,
+     7.826
+    ],
+    "night1Lost": 13,
+    "coachesPerNight": [
+     3,
+     1.54,
+     1.502,
+     0.939
+    ],
+    "alleysPerNight": [
+     0.913,
+     0.387,
+     0.316,
+     0.571
+    ],
+    "byNight": [
+     {
+      "night": 1,
+      "medianPossible": 53,
+      "jackInTopTen": 0.383
+     },
+     {
+      "night": 2,
+      "medianPossible": 44,
+      "jackInTopTen": 0.512
+     },
+     {
+      "night": 3,
+      "medianPossible": 52,
+      "jackInTopTen": 0.429
+     },
+     {
+      "night": 4,
+      "medianPossible": 50,
+      "jackInTopTen": 0.311
+     }
+    ],
+    "night1": {
+     "decisions": 10704,
+     "medianPossible": 53,
+     "jackInTopTen": 0.383,
+     "medianRankShare": 0.354,
+     "medianWalks": 1,
+     "jackArrestable": 311
+    },
+    "later": {
+     "decisions": 26834,
+     "medianPossible": 49,
+     "jackInTopTen": 0.42,
+     "medianRankShare": 0.5,
+     "medianWalks": 2,
+     "jackArrestable": 321
+    },
+    "all": {
+     "decisions": 37538,
+     "medianPossible": 50,
+     "jackInTopTen": 0.409,
+     "medianRankShare": 0.471,
+     "medianWalks": 2,
+     "jackArrestable": 632
+    },
+    "night2HideoutRank": 18,
+    "night4HideoutRank": 11,
+    "night4HideoutBelief": 0.031
+   },
+   "every": {
+    "games": 300,
+    "jackWins": 160,
+    "night1Coaches": 3,
+    "night1CoachesFirst": 3,
+    "night1Moves": 8.117,
+    "movesPerNight": [
+     8.117,
+     7.78,
+     8.175,
+     8.818
+    ],
+    "night1Lost": 13,
+    "coachesPerNight": [
+     3,
+     1.993,
+     1.996,
+     1
+    ],
+    "alleysPerNight": [
+     0.913,
+     0.829,
+     0.646,
+     0.616
+    ],
+    "byNight": [
+     {
+      "night": 1,
+      "medianPossible": 53,
+      "jackInTopTen": 0.383
+     },
+     {
+      "night": 2,
+      "medianPossible": 78,
+      "jackInTopTen": 0.322
+     },
+     {
+      "night": 3,
+      "medianPossible": 114,
+      "jackInTopTen": 0.27
+     },
+     {
+      "night": 4,
+      "medianPossible": 71,
+      "jackInTopTen": 0.244
+     }
+    ],
+    "night1": {
+     "decisions": 10704,
+     "medianPossible": 53,
+     "jackInTopTen": 0.383,
+     "medianRankShare": 0.354,
+     "medianWalks": 1,
+     "jackArrestable": 311
+    },
+    "later": {
+     "decisions": 27897,
+     "medianPossible": 84,
+     "jackInTopTen": 0.281,
+     "medianRankShare": 0.423,
+     "medianWalks": 2,
+     "jackArrestable": 374
+    },
+    "all": {
+     "decisions": 38601,
+     "medianPossible": 73,
+     "jackInTopTen": 0.309,
+     "medianRankShare": 0.414,
+     "medianWalks": 2,
+     "jackArrestable": 685
+    },
+    "night2HideoutRank": 18,
+    "night4HideoutRank": 15,
+    "night4HideoutBelief": 0.022
+   }
+  },
+  "comparisons": {
+   "night1 vs none": {
+    "night1TopTen": {
+     "diff": -0.031,
+     "low": -0.063,
+     "high": 0.002
+    },
+    "laterTopTen": {
+     "diff": 0.012,
+     "low": -0.009,
+     "high": 0.032
+    },
+    "allTopTen": {
+     "diff": 0,
+     "low": -0.017,
+     "high": 0.017
+    },
+    "night1Possible": {
+     "diff": 17,
+     "low": 12,
+     "high": 22
+    },
+    "laterPossible": {
+     "diff": -1,
+     "low": -4,
+     "high": 2
+    },
+    "jackWins": {
+     "diff": 0.033,
+     "onlyHabit": 69,
+     "onlyNone": 59,
+     "p": 0.426
+    }
+   },
+   "every vs none": {
+    "night1TopTen": {
+     "diff": -0.031,
+     "low": -0.063,
+     "high": 0.002
+    },
+    "laterTopTen": {
+     "diff": -0.128,
+     "low": -0.147,
+     "high": -0.108
+    },
+    "allTopTen": {
+     "diff": -0.101,
+     "low": -0.117,
+     "high": -0.083
+    },
+    "night1Possible": {
+     "diff": 17,
+     "low": 12,
+     "high": 22
+    },
+    "laterPossible": {
+     "diff": 34,
+     "low": 32,
+     "high": 38
+    },
+    "jackWins": {
+     "diff": -0.113,
+     "onlyHabit": 50,
+     "onlyNone": 84,
+     "p": 0.004
+    }
+   }
+  }
+ },
+ {
+  "jack": "normal",
+  "arms": {
+   "none": {
+    "games": 300,
+    "jackWins": 78,
+    "night1Coaches": 1.737,
+    "night1CoachesFirst": 0.953,
+    "night1Moves": 4.197,
+    "movesPerNight": [
+     4.197,
+     5.313,
+     6.816,
+     10.367
+    ],
+    "night1Lost": 0,
+    "coachesPerNight": [
+     1.737,
+     1.49,
+     1.496,
+     0.869
+    ],
+    "alleysPerNight": [
+     0.25,
+     0.373,
+     0.445,
+     0.724
+    ],
+    "byNight": [
+     {
+      "night": 1,
+      "medianPossible": 30,
+      "jackInTopTen": 0.305
+     },
+     {
+      "night": 2,
+      "medianPossible": 30,
+      "jackInTopTen": 0.412
+     },
+     {
+      "night": 3,
+      "medianPossible": 47,
+      "jackInTopTen": 0.393
+     },
+     {
+      "night": 4,
+      "medianPossible": 60,
+      "jackInTopTen": 0.309
+     }
+    ],
+    "night1": {
+     "decisions": 4795,
+     "medianPossible": 30,
+     "jackInTopTen": 0.305,
+     "medianRankShare": 0.8,
+     "medianWalks": 2,
+     "jackArrestable": 21
+    },
+    "later": {
+     "decisions": 25412,
+     "medianPossible": 45,
+     "jackInTopTen": 0.366,
+     "medianRankShare": 0.921,
+     "medianWalks": 2,
+     "jackArrestable": 495
+    },
+    "all": {
+     "decisions": 30207,
+     "medianPossible": 41,
+     "jackInTopTen": 0.357,
+     "medianRankShare": 0.642,
+     "medianWalks": 2,
+     "jackArrestable": 516
+    },
+    "night2HideoutRank": 8,
+    "night4HideoutRank": 2,
+    "night4HideoutBelief": 0.14
+   },
+   "night1": {
+    "games": 300,
+    "jackWins": 151,
+    "night1Coaches": 3,
+    "night1CoachesFirst": 3,
+    "night1Moves": 8.117,
+    "movesPerNight": [
+     8.117,
+     4.986,
+     5.518,
+     9.183
+    ],
+    "night1Lost": 13,
+    "coachesPerNight": [
+     3,
+     1.289,
+     1.559,
+     0.912
+    ],
+    "alleysPerNight": [
+     0.913,
+     0.286,
+     0.331,
+     0.637
+    ],
+    "byNight": [
+     {
+      "night": 1,
+      "medianPossible": 53,
+      "jackInTopTen": 0.383
+     },
+     {
+      "night": 2,
+      "medianPossible": 28,
+      "jackInTopTen": 0.43
+     },
+     {
+      "night": 3,
+      "medianPossible": 41,
+      "jackInTopTen": 0.422
+     },
+     {
+      "night": 4,
+      "medianPossible": 54,
+      "jackInTopTen": 0.326
+     }
+    ],
+    "night1": {
+     "decisions": 10704,
+     "medianPossible": 53,
+     "jackInTopTen": 0.383,
+     "medianRankShare": 0.354,
+     "medianWalks": 1,
+     "jackArrestable": 311
+    },
+    "later": {
+     "decisions": 23264,
+     "medianPossible": 41,
+     "jackInTopTen": 0.383,
+     "medianRankShare": 0.613,
+     "medianWalks": 2,
+     "jackArrestable": 337
+    },
+    "all": {
+     "decisions": 33968,
+     "medianPossible": 47,
+     "jackInTopTen": 0.383,
+     "medianRankShare": 0.539,
+     "medianWalks": 2,
+     "jackArrestable": 648
+    },
+    "night2HideoutRank": 18,
+    "night4HideoutRank": 4,
+    "night4HideoutBelief": 0.085
+   },
+   "every": {
+    "games": 300,
+    "jackWins": 159,
+    "night1Coaches": 3,
+    "night1CoachesFirst": 3,
+    "night1Moves": 8.117,
+    "movesPerNight": [
+     8.117,
+     7.78,
+     8.167,
+     8.823
+    ],
+    "night1Lost": 13,
+    "coachesPerNight": [
+     3,
+     1.993,
+     1.996,
+     1
+    ],
+    "alleysPerNight": [
+     0.913,
+     0.829,
+     0.646,
+     0.621
+    ],
+    "byNight": [
+     {
+      "night": 1,
+      "medianPossible": 53,
+      "jackInTopTen": 0.383
+     },
+     {
+      "night": 2,
+      "medianPossible": 78,
+      "jackInTopTen": 0.322
+     },
+     {
+      "night": 3,
+      "medianPossible": 114,
+      "jackInTopTen": 0.27
+     },
+     {
+      "night": 4,
+      "medianPossible": 71,
+      "jackInTopTen": 0.243
+     }
+    ],
+    "night1": {
+     "decisions": 10704,
+     "medianPossible": 53,
+     "jackInTopTen": 0.383,
+     "medianRankShare": 0.354,
+     "medianWalks": 1,
+     "jackArrestable": 311
+    },
+    "later": {
+     "decisions": 27894,
+     "medianPossible": 84,
+     "jackInTopTen": 0.281,
+     "medianRankShare": 0.424,
+     "medianWalks": 2,
+     "jackArrestable": 374
+    },
+    "all": {
+     "decisions": 38598,
+     "medianPossible": 73,
+     "jackInTopTen": 0.309,
+     "medianRankShare": 0.414,
+     "medianWalks": 2,
+     "jackArrestable": 685
+    },
+    "night2HideoutRank": 18,
+    "night4HideoutRank": 15,
+    "night4HideoutBelief": 0.022
+   }
+  },
+  "comparisons": {
+   "night1 vs none": {
+    "night1TopTen": {
+     "diff": 0.078,
+     "low": 0.043,
+     "high": 0.115
+    },
+    "laterTopTen": {
+     "diff": 0.017,
+     "low": -0.005,
+     "high": 0.038
+    },
+    "allTopTen": {
+     "diff": 0.026,
+     "low": 0.007,
+     "high": 0.045
+    },
+    "night1Possible": {
+     "diff": 23,
+     "low": 20,
+     "high": 28
+    },
+    "laterPossible": {
+     "diff": -4,
+     "low": -9,
+     "high": 0
+    },
+    "jackWins": {
+     "diff": 0.243,
+     "onlyHabit": 109,
+     "onlyNone": 36,
+     "p": 0
+    }
+   },
+   "every vs none": {
+    "night1TopTen": {
+     "diff": 0.078,
+     "low": 0.043,
+     "high": 0.115
+    },
+    "laterTopTen": {
+     "diff": -0.086,
+     "low": -0.106,
+     "high": -0.065
+    },
+    "allTopTen": {
+     "diff": -0.048,
+     "low": -0.066,
+     "high": -0.029
+    },
+    "night1Possible": {
+     "diff": 23,
+     "low": 20,
+     "high": 28
+    },
+    "laterPossible": {
+     "diff": 39,
+     "low": 34,
+     "high": 43
+    },
+    "jackWins": {
+     "diff": 0.27,
+     "onlyHabit": 119,
+     "onlyNone": 38,
+     "p": 0
+    }
+   }
+  }
+ }
+]
