@@ -97,15 +97,16 @@ function movement(full, { belief = true } = {}) {
 				walkOptionsInReach: share(B.walk(at, P).filter((q) => q !== home).map((q) => inReach(q, P))) // Could a walk have left reach?
 			};
 			if (belief) {
-				// v3's belief about Jack's circle just before and just after this move (only the police's view)
-				const read = (upto) => {
-					const view = W.rules.policeView(W.record.replay(full, { upto }).game.state);
-					const where = (police.belief(view, true).jack || {}).current || {};
-					const ranked = Object.keys(where).filter((c) => where[c] > 0).sort((a, b) => where[b] - where[a]);
-					return { possible: ranked.length };
-				};
-				step.possibleBefore = k === 0 ? null : read(atMove[k].index).possible;
-				step.possibleAfter = read(atMove[k].index + 1).possible;
+				// How many circles v3's deduction allows just before and just after this move, from the police's view. A replay
+				// can't stop between the police's last action and Jack's move (the engine asks Jack inside that action), so
+				// both come from the state just after the move: its public log with and without the move's entry
+				const view = W.rules.policeView(W.record.replay(full, { upto: atMove[k].index + 1 }).game.state);
+				const homes = Object.keys(police.belief(view, false).hideouts).map(Number);
+				const log = view.publicLog();
+				const alleysLeft = view.jackTokens ? view.jackTokens.alleys : 0;
+				const count = (l, remaining, a) => { const t = W.deduction.track(l, { remaining, hideouts: homes, alleysLeft: a, trail: true }); return t ? Object.keys(t.current).filter((c) => t.current[c] > 0).length : null; };
+				step.possibleAfter = count(log, view.remainingMoves, alleysLeft);
+				step.possibleBefore = count(log.slice(0, -1), view.remainingMoves + cost, alleysLeft + (m.type === 'alley' ? 1 : 0));
 			}
 			at = to;
 			return step;
@@ -128,7 +129,11 @@ function movement(full, { belief = true } = {}) {
 			steps
 		};
 	});
-	const decisions = belief ? study(full.game.id, full).decisions.map((d) => ({ night: d.night, jackMove: d.jackMove, possible: d.possible, rank: d.rankOfJack, p: d.beliefAtJack, reach: d.reach })) : [];
+	// v3's belief at every clue decision (the earlier investigation's measure), with the kind of Jack's latest move
+	const decisions = belief ? study(full.game.id, full).decisions.map((d) => {
+		const last = (nights[d.night - 1].steps[d.jackMove - 1] || {}).type || null;
+		return { night: d.night, jackMove: d.jackMove, lastMove: last, possible: d.possible, rank: d.rankOfJack, p: d.beliefAtJack, reach: d.reach };
+	}) : [];
 	return { id: full.game.id, result: full.outcome.winner, nights, decisions };
 }
 
@@ -172,9 +177,10 @@ function summarise(games) {
 			fartherFromPolice: share(coaches.map((s) => s.after.policeWalks > s.before.policeWalks)),
 			fromThreat: coaches.filter((s) => s.before.inReach).length,
 			leftThreat: coaches.filter((s) => s.before.inReach && !s.after.inReach).length,
-			possibleGrowth: median(coaches.filter((s) => s.possibleBefore !== null && s.possibleBefore !== undefined).map((s) => s.possibleAfter / s.possibleBefore))
+			possibleGrowth: median(coaches.filter((s) => s.possibleBefore && s.possibleAfter).map((s) => s.possibleAfter / s.possibleBefore))
 		},
-		walkPossibleGrowth: median(steps.filter((s) => s.type === 'walk' && s.possibleBefore).map((s) => s.possibleAfter / s.possibleBefore)),
+		walkPossibleGrowth: median(steps.filter((s) => s.type === 'walk' && s.possibleBefore && s.possibleAfter).map((s) => s.possibleAfter / s.possibleBefore)),
+		alleyPossibleGrowth: median(steps.filter((s) => s.type === 'alley' && s.possibleBefore && s.possibleAfter).map((s) => s.possibleAfter / s.possibleBefore)),
 		police: {
 			medianWalks: median(steps.map((s) => s.before.policeWalks)),
 			minWalksPerNight: median(nights.filter((n) => n.steps.length).map((n) => Math.min(...n.steps.map((s) => s.before.policeWalks)))),
@@ -197,6 +203,9 @@ function summarise(games) {
 		// Comparable states: the same night stage (Jack's moves so far tonight) and a similar number of possible circles
 		inferenceByStage: [[0, 1], [2, 3], [4, 99]].map(([lo, hi]) => Object.assign({ jackMoves: lo + '-' + (hi === 99 ? '' : hi) }, inference(d.filter((x) => x.jackMove >= lo && x.jackMove <= hi)))),
 		inferenceBySize: [[1, 20], [21, 50], [51, 100], [101, 999]].map(([lo, hi]) => Object.assign({ possible: lo + '-' + (hi === 999 ? '' : hi) }, inference(d.filter((x) => x.possible >= lo && x.possible <= hi)))),
+		inferenceByLastMove: ['walk', 'carriage', 'alley'].map((t) => Object.assign({ lastMove: t }, inference(d.filter((x) => x.lastMove === t)))),
+		// The same within one band of possible circles (21-100), so that set size doesn't drive the comparison
+		inferenceByLastMoveMidSize: ['walk', 'carriage', 'alley'].map((t) => Object.assign({ lastMove: t }, inference(d.filter((x) => x.lastMove === t && x.possible >= 21 && x.possible <= 100)))),
 		// Stratified by the murder's walks from home, where the routes differ most
 		byDistance: [[1, 3], [4, 6], [7, 99]].map(([lo, hi]) => {
 			const e = escaped.filter((n) => n.walksHome >= lo && n.walksHome <= hi);
