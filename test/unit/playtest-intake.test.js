@@ -85,6 +85,10 @@ test('new records are replay-verified and written byte for byte; games already i
 	assert.deepStrictEqual(scan.batch.analysed, [firstId]);
 	assert.strictEqual(Object.keys(dataset.readState(dir).analysed).length, 1, 'importing marks nothing as analysed');
 	assert.deepStrictEqual(Object.assign({}, scan.stats.bySource), { 'online submission': 2, 'manual upload': 1 });
+	// The snapshot of games awaiting review is refreshed with the import, so the collection stays consistent
+	// (playtests-dataset.test.js requires it; the first import PR, #34, failed CI without it)
+	assert.ok(scan.batch.snapshotCurrent, 'analysis-state.json\'s snapshot matches the collection');
+	assert.deepStrictEqual(dataset.readState(dir).snapshot.outstanding.slice().sort(), [a.game.id, b.game.id].sort());
 	const md = fs.readFileSync(summaryFile, 'utf8');
 	assert.match(md, /\| 3 \| 3 \| 0 \| 1 \| 0 \| 2 \| 0 \| 0 \|/);
 	assert.match(md, /does \*\*not\*\* prove a person played them/);
@@ -284,11 +288,28 @@ test('the pull request: created once, then updated; no empty pull requests; no p
 	assert.ok(obsolete.calls.some((c) => c.startsWith('gh pr close 7')));
 });
 
+test('analysis-state.json may change in an import only in its snapshot: never which games are analysed', () => {
+	const base = { format: 'whitechapel-playtest-analysis-state', analysed: { g1: { report: 'r' } }, reports: [], snapshot: { outstanding: [] } };
+	const run = (after) => {
+		const git = fakeGit({ status: rec('g0123456789abcdef') + ' M research/human-playtests/analysis-state.json\0' });
+		const exec = (cmd, args) => (cmd === 'git' && args[0] === 'show' ? JSON.stringify(base) : git.exec(cmd, args));
+		const code = importPr.main(['--summary', 's.md'], { exec, log: quiet, readFile: () => JSON.stringify(after) });
+		return { code, calls: git.calls };
+	};
+	const snapshotOnly = run(Object.assign({}, base, { snapshot: { outstanding: ['g0123456789abcdef'] } }));
+	assert.strictEqual(snapshotOnly.code, 0);
+	assert.ok(snapshotOnly.calls.some((c) => c.startsWith('git add -- ') && c.includes('analysis-state.json')));
+	const marked = run(Object.assign({}, base, { analysed: { g1: { report: 'r' }, g0123456789abcdef: { report: 'x' } } }));
+	assert.strictEqual(marked.code, 1);
+	assert.ok(!marked.calls.some((c) => /commit|push/.test(c)));
+	assert.ok(!importPr.onlySnapshot('not json', '{}'));
+});
+
 test('the pull request step refuses to commit anything outside the records and the ledger', () => {
 	for (const bad of ['?? .github/workflows/evil.yml\0', '?? research/human-playtests/records/../x.json\0', ' M js/main.js\0',
 		'?? research/human-playtests/analysis-state.json\0', '?? research/human-playtests/records/G0123456789ABCDEF.json\0']) {
 		const git = fakeGit({ status: rec('g0123456789abcdef') + bad });
-		assert.strictEqual(importPr.main(['--summary', 's.md'], { exec: git.exec, log: quiet }), 1, bad);
+		assert.strictEqual(importPr.main(['--summary', 's.md'], { exec: git.exec, log: quiet, readFile: () => '{"analysed":{"gx":{}}}' }), 1, bad);
 		assert.ok(!git.calls.some((c) => /commit|push|pr create/.test(c)), bad);
 	}
 });

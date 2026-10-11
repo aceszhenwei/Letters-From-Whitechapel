@@ -14,7 +14,8 @@
 // Trust: a submission is untrusted until a person merges the pull request. Stages: received by the Worker
 // (structurally accepted) -> replay-verified here (proposed in the pull request) -> reviewed and merged (in the
 // collection, "collected") -> analysed by a report. Importing never marks a game as analysed.
-// Safety: only records/<game id>.json (the id matching /^g[0-9a-f]{16}$/) and intake.json are ever written; files
+// Safety: only records/<game id>.json (the id matching /^g[0-9a-f]{16}$/), intake.json and analysis-state.json's
+// snapshot (the dated list of games awaiting review) are ever written; files
 // are created, never overwritten; nothing in a record is run; text from records reaches the summary only through
 // strict patterns.
 const fs = require('fs');
@@ -236,7 +237,13 @@ async function run({ dir = defaultDir, source, max = 200, dryRun = false, today 
 	if (failed) warnings.push(`${failed} download${failed === 1 ? '' : 's'} failed: retried next run`);
 
 	if (!dryRun && results.some((r) => !r.previous && !['failed', 'deferred'].includes(r.verdict) && r.id !== '?')) writeLedger(dir, ledger);
-	const after = dataset.scan(dir);
+	let after = dataset.scan(dir);
+	if (!dryRun && eligible.length) {
+		// New games change the list awaiting review: refresh analysis-state.json's snapshot, as --update-state does.
+		// Only the snapshot changes; no game is marked as analysed
+		dataset.writeState(dir, dataset.updateSnapshot(after, today));
+		after = dataset.scan(dir);
+	}
 	return { examined: listed.length, results, eligible, ledger, warnings, batch: after.batch, problems: after.problems.length + after.stateProblems.length };
 }
 

@@ -6,6 +6,9 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 #### Automatic playtest collection
 
+- **Fix: import pull requests now keep `analysis-state.json`'s snapshot current.**
+  - **The failure:** the first import (#34) added a game without refreshing the snapshot of games awaiting review, so `playtests-dataset.test.js` failed on it.
+  - **The fix:** the import now refreshes the snapshot, as `--update-state` does. The path guard accepts `analysis-state.json` only when nothing but its `snapshot` changed. No game is marked analysed.
 - **Anonymous Gameplay Research** ([Automatic playtest collection](docs/automatic-playtest-collection.md)): when the site is built with a playtest intake, the full record of each game a person finishes, in either role, is submitted automatically after it is kept in the browser.
   - **The setting:** on by default, with a clear notice in the setup dialog before play and a **Research** button in the top bar. Turning it off is remembered, cancels waiting games and stops retries, and never sends games played while it was off. Global Privacy Control and Do Not Track start it off.
   - **Sending:** in the background, one game at a time, with bounded exponential backoff that honours `Retry-After`; offline games wait. No cookie, referrer or identifier is sent. The game never waits for it.

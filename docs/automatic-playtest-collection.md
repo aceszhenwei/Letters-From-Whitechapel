@@ -233,9 +233,10 @@ The import pull request warns when different game IDs share identical moves (a c
    4. Runs **the collection's own check** (`dataset.checkRecord` → `tools/game-log/validate.js`, with the full replay). There is no second validator.
    5. Compares with `records/`: an identical record is a duplicate; a different one is a conflict, never overwritten.
    6. Writes each eligible record as `records/<game id>.json`, byte for byte, and records every decision in `intake.json`.
+   7. Refreshes the snapshot in `analysis-state.json` (the dated list of games awaiting review, as `--update-state` does), so the collection stays consistent. Nothing else in the state changes: no game is marked analysed.
 3. `node tools/playtests/dataset.js --ci` checks the collection as it would be merged.
 4. `node tools/playtests/import-pr.js` handles the pull request:
-   1. **Path guard:** refuses to commit anything but `records/g<16 hex>.json` and `intake.json`.
+   1. **Path guard:** refuses to commit anything but `records/g<16 hex>.json`, `intake.json`, and `analysis-state.json` when only its `snapshot` changed.
    2. **Commit:** commits to the bot's branch `playtest-import`, rebuilt from master on each run.
    3. **Push only on change:** pushes only if the content changed (`--force-with-lease`).
    4. **One pull request:** updates the open one, or opens one titled **Import human playtests — YYYY-MM-DD**.
@@ -418,7 +419,7 @@ From fastest to most thorough; none of them breaks the game, and local saving an
 |---|---|---|
 | The Worker: valid records, malformed JSON, oversized (declared and streamed), invalid UTF-8, schemas, rule sets, unfinished and AI-only games, unsafe IDs, notes, extra fields, duplicates, conflicts, eight simultaneous submissions, rate limits, caps, pause, storage failures (an interrupted write), import endpoints, retention, no sender data stored, the entry point's exports | `test/unit/playtest-worker.test.js` | `npm test` (CI), against `test/helpers/d1.js`: Node's SQLite running the real migrations, with D1's change counting |
 | The browser queue: default on, persistent opt-out, GPC and DNT, sending once, no cookie or referrer, offline, backoff, Retry-After, bounded retries, permanent rejections, cancelling on opt-out (also mid-request), no retroactive sending, explicit Submit, recovery after a closed page, independence from exporting | `test/unit/playtest-submission.test.js` | `npm test` |
-| The importer and the pull request: no-op runs, new records, duplicates, conflicts, failed replays, other rule sets, checksum mismatches, unsafe IDs, credentials (missing, wrong, endpoints off), the intake down, failed downloads recovered, bounded runs, exclusions, copied-game warnings, PR created once then updated, no push without change, obsolete PR closed, path guard | `test/unit/playtest-intake.test.js` | `npm test` |
+| The importer and the pull request: no-op runs, new records, duplicates, conflicts, failed replays, other rule sets, checksum mismatches, unsafe IDs, credentials (missing, wrong, endpoints off), the intake down, failed downloads recovered, bounded runs, exclusions, copied-game warnings, PR created once then updated, no push without change, obsolete PR closed, path guard, the snapshot refreshed and only the snapshot allowed to change | `test/unit/playtest-intake.test.js` | `npm test` |
 | End to end: a Human Jack game in the page → IndexedDB → automatic submission → Worker → D1 → import with full replay → collection → five-game counter. Same game twice counted once; nothing marked analysed; opting out sends nothing; no intake address shows nothing | `test/regression/playtest-collection-e2e.test.js` | `npm test` |
 | The Pages build fills in the address only when valid | `test/unit/site-build.test.js` | `npm test` |
 | The Worker bundles with its configuration | `npm run playtests:worker-check` | the **Deploy playtest Worker** workflow on pull requests |
