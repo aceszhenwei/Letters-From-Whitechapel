@@ -1,5 +1,5 @@
 // The human playtest collection (research/human-playtests/, tools/playtests/dataset.js): the first real Human Jack game
-// counted once and awaiting review; problems found (invalid, misnamed, ineligible, duplicate, conflict, incompatible);
+// counted once, with the research status analysis-state.json gives it; problems found (invalid, misnamed, ineligible, duplicate, conflict, incompatible);
 // the five-game research batch; recording an analysis; methodology changes; cohorts kept apart; adding batch ZIPs;
 // and the command line as GitHub Actions runs it. Synthetic games are made in temporary folders only.
 const test = require('node:test');
@@ -14,7 +14,7 @@ const collection = path.join(root, 'research', 'human-playtests');
 const records = {};
 const synthetic = (seed) => (records[seed] = records[seed] || humanJackRecord(seed));
 
-test('the first real Human Jack game is in the collection, counted once, against Detective AI v3, and awaiting review (not analysed)', () => {
+test('the first real Human Jack game is in the collection, counted once, against Detective AI v3, with the research status its state records', () => {
 	const result = dataset.scan(collection);
 	const games = result.valid.filter((f) => f.id === firstId);
 	assert.strictEqual(games.length, 1);
@@ -25,9 +25,12 @@ test('the first real Human Jack game is in the collection, counted once, against
 	assert.strictEqual(game.cohort.opponent, 'Detective AI v3');
 	assert.strictEqual(game.cohort.level, 'normal');
 	assert.strictEqual(game.cohort.appVersion, '1.0.0');
-	assert.strictEqual(game.research, 'collected');
-	assert.ok(result.batch.outstanding.includes(firstId));
-	assert.ok(!result.batch.analysed.includes(firstId));
+	// Analysed only once a recorded report covers it (2026-10-11-investigation-arrests); awaiting review before that
+	const report = result.state.analysed[firstId];
+	assert.strictEqual(game.research, report ? 'analysed' : 'collected');
+	assert.strictEqual(result.batch.outstanding.includes(firstId), !report);
+	assert.strictEqual(result.batch.analysed.includes(firstId), !!report);
+	if (report) assert.ok(result.state.reports.some((r) => r.id === report.report && r.games.includes(firstId) && fs.existsSync(path.join(collection, r.file))));
 	assert.deepStrictEqual(result.problems, []);
 	assert.deepStrictEqual(result.stateProblems, []);
 	assert.ok(result.batch.snapshotCurrent, 'analysis-state.json\'s snapshot matches the collection');

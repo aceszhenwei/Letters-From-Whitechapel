@@ -6,16 +6,37 @@
 		"1": "2026-10-10: the procedure in docs/playtests.md#commissioning-an-analysis. Each report covers named games, compares only within a cohort (app version, rule set, role, opponent AI, difficulty), separates confirmed defects from plausible weaknesses, and makes no general claims from small, uncontrolled samples."
 	},
 	"batchThreshold": 5,
-	"reports": [],
-	"analysed": {},
+	"reports": [
+		{
+			"id": "2026-10-11-investigation-arrests",
+			"date": "2026-10-11",
+			"file": "reports/2026-10-11-investigation-arrests.md",
+			"methodologyVersion": 1,
+			"games": [
+				"g91d4014f17ae09e6",
+				"ga36125530c4b4076"
+			],
+			"cohorts": [
+				"1.0.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)"
+			]
+		}
+	],
+	"analysed": {
+		"g91d4014f17ae09e6": {
+			"report": "2026-10-11-investigation-arrests",
+			"methodologyVersion": 1
+		},
+		"ga36125530c4b4076": {
+			"report": "2026-10-11-investigation-arrests",
+			"methodologyVersion": 1
+		}
+	},
 	"aiChanges": [],
 	"snapshot": {
-		"updated": "2026-10-10",
-		"validGames": 1,
-		"outstanding": [
-			"g91d4014f17ae09e6"
-		],
-		"awaitingReview": 1,
+		"updated": "2026-10-11",
+		"validGames": 2,
+		"outstanding": [],
+		"awaitingReview": 0,
 		"status": "Collecting",
 		"reanalysis": []
 	}

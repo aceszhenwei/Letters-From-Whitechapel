@@ -30,6 +30,8 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 - **The first human game**, `g91d4014f17ae09e6`: Human Jack against Detective AI v3 (Normal), Jack escaped all four nights.
   - Verified by full replay, added unchanged, and counted once.
   - It is collected and awaiting review: no analysis has been done.
+- **The second human game**, `ga36125530c4b4076` (the same matchup, Jack escaped again), uploaded and renamed to its game ID.
+- **The first research report**, [an investigation](research/human-playtests/reports/2026-10-11-investigation-arrests.md) of both games, commissioned once to test the workflow. Detective AI v3 never arrested because no arrest was ever likely; this is not a defect. v3's belief stayed more diffuse against this player than against the computer's Jacks, which is recorded as a pattern to watch. Both games are now analysed. No AI changed.
 - **Not changed:** the rules, the AIs, the difficulty levels, and the game record format (schema version 1).
 - **Tests:** `playtests-store.test.js`, `playtests-dataset.test.js` and `playtests-ui.test.js`, with `fake-indexeddb` as the browsers' storage (a development dependency only).
 - **Research process** in two tiers: a 1–2-page triage report for each batch of five games, and separate, targeted investigations only when triage, a recurring pattern or an alarming game gives a reason; cumulative reviews after about 20 games look at trends. Findings are labelled as patterns to watch, defect candidates, confirmed defects or confirmed strategic weaknesses. With a batch-report template and assignment prompts ([Commissioning an analysis](docs/playtests.md#commissioning-an-analysis)).
