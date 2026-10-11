@@ -6,6 +6,9 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 #### Automatic playtest collection
 
+- **Fix: the import's pull-request step read modified files' paths wrongly.**
+  - **The failure:** it trimmed `git status`'s output, so a modified file's line (` M research/…`) lost its leading space and then its first letter (`esearch/…`). The path guard refused it, and the second import run failed safely, with nothing committed. The first run had only added new files (`?? …`), which have no leading space.
+  - **The fix:** only trailing whitespace is trimmed. A test now uses a real git repository.
 - **Fix: import pull requests now keep `analysis-state.json`'s snapshot current.**
   - **The failure:** the first import (#34) added a game without refreshing the snapshot of games awaiting review, so `playtests-dataset.test.js` failed on it.
   - **The fix:** the import now refreshes the snapshot, as `--update-state` does. The path guard accepts `analysis-state.json` only when nothing but its `snapshot` changed. No game is marked analysed.
