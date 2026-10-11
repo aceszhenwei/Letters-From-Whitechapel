@@ -2,7 +2,7 @@
 
 **[▶ Play online](https://aceszhenwei.github.io/Letters-From-Whitechapel/)**: https://aceszhenwei.github.io/Letters-From-Whitechapel/ (nothing to install)
 
-**Version 1.0.0**, the first formal release ([release notes](https://github.com/aceszhenwei/Letters-From-Whitechapel/releases/tag/v1.0.0), [changelog](CHANGELOG.md)).
+**Version 1.1.0**: human playtests are collected and studied ([release notes](https://github.com/aceszhenwei/Letters-From-Whitechapel/releases/tag/v1.1.0), [changelog](CHANGELOG.md)).
 
 A browser version of the board game *Letters from Whitechapel*. Lead the five police detectives hunting Jack the Ripper through the streets of Whitechapel in 1888, or play Jack himself against the computer's detectives. Over four nights Jack kills, then tries to slip back to his secret hideout; the detectives place patrols, follow his trail of clues and try to make the arrest.
 

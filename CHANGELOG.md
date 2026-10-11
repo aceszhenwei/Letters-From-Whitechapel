@@ -4,6 +4,29 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 ## Unreleased
 
+Nothing yet.
+
+## v1.1.0 (2026-10-11)
+
+A minor release: games people play now reach the research collection by themselves, and the first human games have been studied. Release notes: [docs/releases/v1.1.0.md](docs/releases/v1.1.0.md).
+
+**Nothing breaks** (a minor release under the [convention](docs/releasing.md#versioning)):
+- **Records:** game records keep schema version 1 and rule set `whitechapel-fff8e378d715`, so 1.0.0 records still replay.
+- **The game:** the rules, levels and AIs are unchanged.
+- **Cohorts:** records now carry app version `1.1.0`, so new playtests start a new research cohort (games are compared only within a cohort).
+
+### Highlights
+
+- **Human playtest collection:** every game a person finishes is kept in the browser, with exporting and importing in batches. It feeds a research collection in the repository with full replay checks, a five-game batch counter and analysis records.
+- **Anonymous Gameplay Research:** an opt-out setting that submits finished games to a private, free Cloudflare intake. A daily, replay-checked import opens one pull request. It sends nothing until the owner sets up the intake.
+- **The first human games studied:** seven games (a person as Jack against Detective AI v3) in a batch triage and four reports.
+  - **No defect was found, and no AI was changed.**
+  - v3 tracks people worse than computer Jacks, for reasons still open.
+  - A confirmed flaw in how v3 moves a waited-for victim costs no measurable games.
+- **Faster CI:** tests run once per merge, in three parallel groups. Documentation-only and collection-only changes take under a minute.
+
+### Changes
+
 #### Human playtest research
 
 - **How Human Jack moves, extended to all seven games** ([report](research/human-playtests/reports/2026-10-11-movement.md), *(update)* sections):

@@ -56,4 +56,5 @@ Versions are `MAJOR.MINOR.PATCH` ([Semantic Versioning](https://semver.org/)), t
 
 | Version | Date | Notes |
 |---|---|---|
+| v1.1.0 | 2026-10-11 | [Release notes](releases/v1.1.0.md): human playtest collection and research |
 | v1.0.0 | 2026-10-10 | [Release notes](releases/v1.0.0.md): the first formal release |
