@@ -108,6 +108,11 @@ Every experiment uses fixed seeds, so it plays the same games on every run and e
 | 594001–594400 | Study J3: held out (run once) |
 | 595001–595400 | Study J3: reserved for a validation of `safe-skip`, if it is revisited |
 | 600001–600500 | Fresh-seed validation in the detective study |
+| 611001–611020 | Human playtest investigation of arrests: the synthetic baseline (`research/human-playtests/reports/2026-10-11-investigation-arrests.js`) |
+| 612001–612300 | Human playtest investigation of coaches: the controlled comparison ([report](../research/human-playtests/reports/2026-10-11-investigation-coaches.md)) |
+| 613001–613025 | Human playtest investigation of the night-4 escape: the counterfactual runs ([report](../research/human-playtests/reports/2026-10-11-investigation-night4.md)) |
+| 614001–614200 | The same investigation: the lure Jack against v3, focused comparison |
+| 615001–615400 | The same investigation: reserved for a held-out check of a change, if one is proposed |
 | 650001–650500 | Fresh-seed validation of Detective AI v2 |
 | 700001–700060 | Deduction soundness checks |
 | 760001–761000 | Jack v2 study: its independent validation (run in Study J3) |
