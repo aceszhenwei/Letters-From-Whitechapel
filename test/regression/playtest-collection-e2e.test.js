@@ -70,7 +70,8 @@ test('a Human Jack game: kept locally, submitted, stored privately, imported aft
 	// Submitted automatically, once
 	await p.submitter.idle();
 	const store = await p.playtests;
-	for (let i = 0; i < 400 && (await store.get(id)).submission.status !== 'submitted'; i++) await new Promise((r) => setTimeout(r, 5));
+	// Until it is acknowledged, however slow the machine (a deadline, not a count of tries)
+	for (const deadline = Date.now() + 20000; Date.now() < deadline && (await store.get(id)).submission.status !== 'submitted';) await new Promise((r) => setTimeout(r, 5));
 	assert.strictEqual((await store.get(id)).submission.status, 'submitted');
 	const posts = service.requests.filter((r) => r.method === 'POST');
 	assert.strictEqual(posts.length, 1);

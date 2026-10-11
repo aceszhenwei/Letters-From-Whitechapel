@@ -6,6 +6,10 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 #### Faster, scoped CI
 
+- **Fix: a timing-dependent test.**
+  - **The failure:** `playtest-submission.test.js` (opting out mid-request) waited a fixed 20 ms for the queue to send its request, then asserted that it had. On a busy CI runner the queue's storage steps took longer, and the test failed: in the quick check after import PR #38, which changed only records.
+  - **The fix:** it now waits for the request itself, with a 20-second deadline. The end-to-end test's polling loop has a deadline instead of a count of tries.
+  - **Verification:** with storage slowed to 30 ms a write, the old test fails as in CI and the new one passes. [docs/testing.md](docs/testing.md#writing-a-test) now says to wait for events, not for time.
 - **Tests run once per merge.** The Pages deployment no longer runs `npm test` itself. The **Tests** workflow publishes the site (`pages.yml`, now called from it) once the whole suite has passed on `master`. A deployment started by hand still tests first.
 - **Gameplay PRs: about 3 minutes instead of about 5.** The whole suite runs in three parallel jobs (`tools/ci/tests.js`):
   - **golden:** the golden traces and full seeded games;
