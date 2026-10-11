@@ -58,10 +58,20 @@
     "fartherFromPolice": 0.467,
     "fromThreat": 3,
     "leftThreat": 2,
+    "lostGround": 4,
+    "lostGroundFirstMove": 3,
+    "lostGroundLeftThreat": 2,
     "possibleGrowth": 3.5
    },
    "walkPossibleGrowth": 1.462,
    "alleyPossibleGrowth": 1.265,
+   "firstMove": {
+    "nights": 8,
+    "threatened": 2,
+    "coach": 2,
+    "leftReach": 2,
+    "lostGround": 2
+   },
    "police": {
     "medianWalks": 2,
     "minWalksPerNight": 1,
@@ -311,10 +321,20 @@
     "fartherFromPolice": 0.514,
     "fromThreat": 14,
     "leftThreat": 10,
+    "lostGround": 6,
+    "lostGroundFirstMove": 5,
+    "lostGroundLeftThreat": 4,
     "possibleGrowth": 3.462
    },
    "walkPossibleGrowth": 1.486,
    "alleyPossibleGrowth": 1.358,
+   "firstMove": {
+    "nights": 18,
+    "threatened": 7,
+    "coach": 6,
+    "leftReach": 6,
+    "lostGround": 4
+   },
    "police": {
     "medianWalks": 2,
     "minWalksPerNight": 1,
@@ -507,6 +527,269 @@
     }
    ]
   },
+  "humanAll": {
+   "games": 7,
+   "jackWins": 6,
+   "nights": 27,
+   "escapedNights": 26,
+   "walksHome": 4,
+   "turns": 6,
+   "spaces": 8,
+   "extraSpaces": 4,
+   "extraSpacesMean": 3.923,
+   "extraOverWalk": 4,
+   "fastestNights": 0.077,
+   "movesTowardHome": 0.669,
+   "movesAwayFromHome": 0.104,
+   "onFastestRoute": 0.584,
+   "onFastestRoutePolice": 0.613,
+   "walledOffMoves": 0.026,
+   "coachesPerNight": [
+    3,
+    2,
+    1.429,
+    0.833
+   ],
+   "alleysPerNight": [
+    1.429,
+    1,
+    0.571,
+    0.167
+   ],
+   "coach": {
+    "count": 50,
+    "firstMove": 0.38,
+    "relativeTiming": 0.2,
+    "onFastestRoute": 0.34,
+    "onFastestRoutePolice": 0.34,
+    "walksGained": [
+     {
+      "gained": 2,
+      "share": 0.36
+     },
+     {
+      "gained": 1,
+      "share": 0.26
+     },
+     {
+      "gained": 0,
+      "share": 0.18
+     },
+     {
+      "gained": -1,
+      "share": 0.2
+     }
+    ],
+    "closerHome": 0.62,
+    "fartherFromPolice": 0.5,
+    "fromThreat": 17,
+    "leftThreat": 12,
+    "lostGround": 10,
+    "lostGroundFirstMove": 8,
+    "lostGroundLeftThreat": 6,
+    "possibleGrowth": 3.481
+   },
+   "walkPossibleGrowth": 1.479,
+   "alleyPossibleGrowth": 1.333,
+   "firstMove": {
+    "nights": 26,
+    "threatened": 9,
+    "coach": 8,
+    "leftReach": 8,
+    "lostGround": 6
+   },
+   "police": {
+    "medianWalks": 2,
+    "minWalksPerNight": 1,
+    "inReachShare": 0.292
+   },
+   "evasion": {
+    "threatenedMoves": 45,
+    "leftReach": 0.489,
+    "fartherFromPolice": 0.422,
+    "couldLeaveByWalk": 0.867,
+    "unthreatenedFarther": 0.275
+   },
+   "waiting": {
+    "waitsPerNight": 0.926,
+    "nightsWithWait": 0.741,
+    "victimCloser": 13,
+    "victimFarther": 2
+   },
+   "inference": {
+    "decisions": 671,
+    "medianPossible": 62,
+    "topTen": 0.154,
+    "medianRankShare": 0.651,
+    "medianBelief": 0.005
+   },
+   "inferenceByNight": [
+    {
+     "night": 1,
+     "decisions": 230,
+     "medianPossible": 65,
+     "topTen": 0.052,
+     "medianRankShare": 0.651,
+     "medianBelief": 0.003
+    },
+    {
+     "night": 2,
+     "decisions": 180,
+     "medianPossible": 59.5,
+     "topTen": 0.217,
+     "medianRankShare": 0.589,
+     "medianBelief": 0.006
+    },
+    {
+     "night": 3,
+     "decisions": 156,
+     "medianPossible": 59.5,
+     "topTen": 0.237,
+     "medianRankShare": 0.715,
+     "medianBelief": 0.009
+    },
+    {
+     "night": 4,
+     "decisions": 105,
+     "medianPossible": 60,
+     "topTen": 0.143,
+     "medianRankShare": 0.653,
+     "medianBelief": 0.004
+    }
+   ],
+   "inferenceByStage": [
+    {
+     "jackMoves": "0-1",
+     "decisions": 156,
+     "medianPossible": 15,
+     "topTen": 0.538,
+     "medianRankShare": 0.731,
+     "medianBelief": 0.05
+    },
+    {
+     "jackMoves": "2-3",
+     "decisions": 230,
+     "medianPossible": 55.5,
+     "topTen": 0.078,
+     "medianRankShare": 0.68,
+     "medianBelief": 0.005
+    },
+    {
+     "jackMoves": "4-",
+     "decisions": 285,
+     "medianPossible": 103,
+     "topTen": 0.004,
+     "medianRankShare": 0.629,
+     "medianBelief": 0.001
+    }
+   ],
+   "inferenceBySize": [
+    {
+     "possible": "1-20",
+     "decisions": 112,
+     "medianPossible": 11,
+     "topTen": 0.741,
+     "medianRankShare": 0.667,
+     "medianBelief": 0.093
+    },
+    {
+     "possible": "21-50",
+     "decisions": 137,
+     "medianPossible": 32,
+     "topTen": 0.102,
+     "medianRankShare": 0.731,
+     "medianBelief": 0.011
+    },
+    {
+     "possible": "51-100",
+     "decisions": 239,
+     "medianPossible": 66,
+     "topTen": 0.025,
+     "medianRankShare": 0.609,
+     "medianBelief": 0.005
+    },
+    {
+     "possible": "101-",
+     "decisions": 183,
+     "medianPossible": 133,
+     "topTen": 0,
+     "medianRankShare": 0.645,
+     "medianBelief": 0.001
+    }
+   ],
+   "inferenceByLastMove": [
+    {
+     "lastMove": "walk",
+     "decisions": 280,
+     "medianPossible": 72.5,
+     "topTen": 0.118,
+     "medianRankShare": 0.631,
+     "medianBelief": 0.002
+    },
+    {
+     "lastMove": "carriage",
+     "decisions": 250,
+     "medianPossible": 51,
+     "topTen": 0.136,
+     "medianRankShare": 0.7,
+     "medianBelief": 0.009
+    },
+    {
+     "lastMove": "alley",
+     "decisions": 110,
+     "medianPossible": 76.5,
+     "topTen": 0.045,
+     "medianRankShare": 0.491,
+     "medianBelief": 0.004
+    }
+   ],
+   "inferenceByLastMoveMidSize": [
+    {
+     "lastMove": "walk",
+     "decisions": 152,
+     "medianPossible": 62.5,
+     "topTen": 0.053,
+     "medianRankShare": 0.623,
+     "medianBelief": 0.005
+    },
+    {
+     "lastMove": "carriage",
+     "decisions": 148,
+     "medianPossible": 51,
+     "topTen": 0.047,
+     "medianRankShare": 0.719,
+     "medianBelief": 0.009
+    },
+    {
+     "lastMove": "alley",
+     "decisions": 76,
+     "medianPossible": 67.5,
+     "topTen": 0.066,
+     "medianRankShare": 0.449,
+     "medianBelief": 0.011
+    }
+   ],
+   "byDistance": [
+    {
+     "walksHome": "1-3",
+     "nights": 10,
+     "turns": 4,
+     "extraSpaces": 3.5
+    },
+    {
+     "walksHome": "4-6",
+     "nights": 16,
+     "turns": 6,
+     "extraSpaces": 4
+    },
+    {
+     "walksHome": "7-",
+     "nights": 0,
+     "turns": null,
+     "extraSpaces": null
+    }
+   ]
+  },
   "strategic": {
    "games": 25,
    "jackWins": 8,
@@ -564,10 +847,20 @@
     "fartherFromPolice": 0.349,
     "fromThreat": 48,
     "leftThreat": 24,
+    "lostGround": 0,
+    "lostGroundFirstMove": 0,
+    "lostGroundLeftThreat": 0,
     "possibleGrowth": 5.615
    },
    "walkPossibleGrowth": 1.406,
    "alleyPossibleGrowth": 1.875,
+   "firstMove": {
+    "nights": 91,
+    "threatened": 4,
+    "coach": 4,
+    "leftReach": 3,
+    "lostGround": 0
+   },
    "police": {
     "medianWalks": 2,
     "minWalksPerNight": 1,
@@ -817,10 +1110,20 @@
     "fartherFromPolice": 0.294,
     "fromThreat": 60,
     "leftThreat": 32,
+    "lostGround": 1,
+    "lostGroundFirstMove": 0,
+    "lostGroundLeftThreat": 1,
     "possibleGrowth": 2.478
    },
    "walkPossibleGrowth": 1.783,
    "alleyPossibleGrowth": 1.391,
+   "firstMove": {
+    "nights": 95,
+    "threatened": 10,
+    "coach": 6,
+    "leftReach": 5,
+    "lostGround": 1
+   },
    "police": {
     "medianWalks": 2,
     "minWalksPerNight": 1,
@@ -4863,6 +5166,7482 @@
   "g6b7af2a30b071ae6",
   "g98c41370f7344474",
   "gcdf6409ed736eaf5"
+ ],
+ "humanLaterGames": [
+  {
+   "id": "g2358629abcf5b51d",
+   "result": "jack",
+   "nights": [
+    {
+     "night": 1,
+     "scene": 4,
+     "hideout": 117,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 6,
+     "fewestSpaces": 6,
+     "turns": 6,
+     "spaces": 9,
+     "extraSpaces": 3,
+     "extraOverWalk": 3,
+     "waits": 1,
+     "victimWalksBefore": 5,
+     "coaches": 3,
+     "alleys": 2,
+     "startPolice": [
+      33,
+      56,
+      76,
+      190,
+      210
+     ],
+     "endPolice": [
+      43,
+      69,
+      147,
+      141,
+      205
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 4,
+       "via": 3,
+       "to": 2,
+       "cost": 2,
+       "before": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.667,
+       "possibleAfter": 20,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 2,
+       "via": 26,
+       "to": 79,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.571,
+       "possibleAfter": 66,
+       "possibleBefore": 17
+      },
+      {
+       "k": 3,
+       "type": "carriage",
+       "from": 79,
+       "via": 97,
+       "to": 115,
+       "cost": 2,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 116,
+       "possibleBefore": 60
+      },
+      {
+       "k": 4,
+       "type": "alley",
+       "from": 115,
+       "to": 138,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 3,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 1,
+       "possibleAfter": 111,
+       "possibleBefore": 79
+      },
+      {
+       "k": 5,
+       "type": "alley",
+       "from": 138,
+       "to": 139,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.273,
+       "possibleAfter": 32,
+       "possibleBefore": 11
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 139,
+       "to": 117,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.4,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 2,
+     "scene": 145,
+     "hideout": 117,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 6,
+     "fewestSpaces": 6,
+     "turns": 10,
+     "spaces": 12,
+     "extraSpaces": 6,
+     "extraOverWalk": 6,
+     "waits": 2,
+     "victimWalksBefore": 8,
+     "coaches": 2,
+     "alleys": 1,
+     "startPolice": [
+      43,
+      69,
+      147,
+      141,
+      205
+     ],
+     "endPolice": [
+      213,
+      218,
+      215,
+      224,
+      211
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "walk",
+       "from": 145,
+       "to": 173,
+       "cost": 1,
+       "before": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 10,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "walk",
+       "from": 173,
+       "to": 144,
+       "cost": 1,
+       "before": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 31,
+       "possibleBefore": 10
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 144,
+       "to": 143,
+       "cost": 1,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.143,
+       "possibleAfter": 54,
+       "possibleBefore": 31
+      },
+      {
+       "k": 4,
+       "type": "carriage",
+       "from": 143,
+       "via": 102,
+       "to": 55,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.273,
+       "possibleAfter": 105,
+       "possibleBefore": 54
+      },
+      {
+       "k": 5,
+       "type": "walk",
+       "from": 55,
+       "to": 53,
+       "cost": 1,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 6,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 133,
+       "possibleBefore": 102
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 53,
+       "to": 67,
+       "cost": 1,
+       "before": {
+        "walksHome": 6,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 154,
+       "possibleBefore": 133
+      },
+      {
+       "k": 7,
+       "type": "carriage",
+       "from": 67,
+       "via": 65,
+       "to": 82,
+       "cost": 2,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 192,
+       "possibleBefore": 154
+      },
+      {
+       "k": 8,
+       "type": "alley",
+       "from": 82,
+       "to": 120,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.167,
+       "possibleAfter": 188,
+       "possibleBefore": 185
+      },
+      {
+       "k": 9,
+       "type": "walk",
+       "from": 120,
+       "to": 118,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 176,
+       "possibleBefore": 179
+      },
+      {
+       "k": 10,
+       "type": "walk",
+       "from": 118,
+       "to": 117,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.273,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 3,
+     "scene": 142,
+     "hideout": 117,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 4,
+     "fewestSpaces": 4,
+     "turns": 6,
+     "spaces": 8,
+     "extraSpaces": 4,
+     "extraOverWalk": 4,
+     "waits": 1,
+     "victimWalksBefore": 5,
+     "coaches": 2,
+     "alleys": 1,
+     "startPolice": [
+      235,
+      223,
+      207,
+      231,
+      240
+     ],
+     "endPolice": [
+      235,
+      224,
+      208,
+      231,
+      240
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 142,
+       "via": 102,
+       "to": 86,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 31,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "walk",
+       "from": 86,
+       "to": 84,
+       "cost": 1,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 66,
+       "possibleBefore": 31
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 84,
+       "to": 65,
+       "cost": 1,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 107,
+       "possibleBefore": 66
+      },
+      {
+       "k": 4,
+       "type": "carriage",
+       "from": 65,
+       "via": 82,
+       "to": 80,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 178,
+       "possibleBefore": 107
+      },
+      {
+       "k": 5,
+       "type": "alley",
+       "from": 80,
+       "to": 97,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.143,
+       "possibleAfter": 182,
+       "possibleBefore": 170
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 97,
+       "to": 117,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.5,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 4,
+     "scene": 100,
+     "hideout": 117,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 3,
+     "fewestSpaces": 3,
+     "turns": 4,
+     "spaces": 5,
+     "extraSpaces": 2,
+     "extraOverWalk": 2,
+     "waits": 1,
+     "victimWalksBefore": 4,
+     "coaches": 1,
+     "alleys": 0,
+     "startPolice": [
+      235,
+      224,
+      208,
+      231,
+      240
+     ],
+     "endPolice": [
+      210,
+      218,
+      205,
+      215,
+      203
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 100,
+       "via": 83,
+       "to": 82,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.071,
+       "possibleAfter": 43,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "walk",
+       "from": 82,
+       "to": 80,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.5,
+       "possibleAfter": 81,
+       "possibleBefore": 40
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 80,
+       "to": 97,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.571,
+       "possibleAfter": 126,
+       "possibleBefore": 81
+      },
+      {
+       "k": 4,
+       "type": "walk",
+       "from": 97,
+       "to": 117,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 0,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 1,
+       "possibleAfter": 4,
+       "possibleBefore": 4
+      }
+     ]
+    }
+   ],
+   "decisions": [
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 20,
+     "rank": 5,
+     "p": 0.069,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 20,
+     "rank": 5,
+     "p": 0.069,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 5,
+     "p": 0.073,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 17,
+     "rank": 3,
+     "p": 0.088,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 17,
+     "rank": 3,
+     "p": 0.088,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 66,
+     "rank": 49,
+     "p": 0.004,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 65,
+     "rank": 49,
+     "p": 0.004,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 62,
+     "rank": 45,
+     "p": 0.005,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 60,
+     "rank": 43,
+     "p": 0.006,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 60,
+     "rank": 43,
+     "p": 0.006,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 116,
+     "rank": 99,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 108,
+     "rank": 90,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 105,
+     "rank": 87,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 80,
+     "rank": 66,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 80,
+     "rank": 66,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 111,
+     "rank": 94,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 107,
+     "rank": 90,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 106,
+     "rank": 89,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 102,
+     "rank": 99,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 100,
+     "rank": 97,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 32,
+     "rank": 12,
+     "p": 0.032,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 32,
+     "rank": 12,
+     "p": 0.032,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 32,
+     "rank": 12,
+     "p": 0.032,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 32,
+     "rank": 12,
+     "p": 0.035,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 32,
+     "rank": 12,
+     "p": 0.038,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 10,
+     "rank": 3,
+     "p": 0.1,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 10,
+     "rank": 3,
+     "p": 0.1,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 10,
+     "rank": 3,
+     "p": 0.1,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 10,
+     "rank": 3,
+     "p": 0.1,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 10,
+     "rank": 3,
+     "p": 0.1,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 31,
+     "rank": 9,
+     "p": 0.049,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 31,
+     "rank": 9,
+     "p": 0.049,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 31,
+     "rank": 9,
+     "p": 0.049,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 31,
+     "rank": 9,
+     "p": 0.049,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 31,
+     "rank": 9,
+     "p": 0.049,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 54,
+     "rank": 21,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 54,
+     "rank": 21,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 54,
+     "rank": 21,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 54,
+     "rank": 21,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 54,
+     "rank": 21,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 105,
+     "rank": 66,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 102,
+     "rank": 66,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 102,
+     "rank": 66,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 102,
+     "rank": 66,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 102,
+     "rank": 66,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 133,
+     "rank": 91,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 133,
+     "rank": 91,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 133,
+     "rank": 91,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 133,
+     "rank": 91,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 133,
+     "rank": 91,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 154,
+     "rank": 108,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 154,
+     "rank": 108,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 154,
+     "rank": 108,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 154,
+     "rank": 108,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 154,
+     "rank": 108,
+     "p": 0,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 7,
+     "lastMove": "carriage",
+     "possible": 192,
+     "rank": 125,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 7,
+     "lastMove": "carriage",
+     "possible": 190,
+     "rank": 125,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 7,
+     "lastMove": "carriage",
+     "possible": 188,
+     "rank": 125,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 7,
+     "lastMove": "carriage",
+     "possible": 187,
+     "rank": 125,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 7,
+     "lastMove": "carriage",
+     "possible": 186,
+     "rank": 125,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 188,
+     "rank": 79,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 186,
+     "rank": 79,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 184,
+     "rank": 79,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 183,
+     "rank": 79,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 180,
+     "rank": 79,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 9,
+     "lastMove": "walk",
+     "possible": 176,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 9,
+     "lastMove": "walk",
+     "possible": 176,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 9,
+     "lastMove": "walk",
+     "possible": 174,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 9,
+     "lastMove": "walk",
+     "possible": 173,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 9,
+     "lastMove": "walk",
+     "possible": 170,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 1,
+     "rank": 1,
+     "p": 1,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 1,
+     "rank": 1,
+     "p": 1,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 1,
+     "rank": 1,
+     "p": 1,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 1,
+     "rank": 1,
+     "p": 1,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 31,
+     "rank": 24,
+     "p": 0.011,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 31,
+     "rank": 24,
+     "p": 0.011,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 31,
+     "rank": 24,
+     "p": 0.011,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 31,
+     "rank": 24,
+     "p": 0.011,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 31,
+     "rank": 24,
+     "p": 0.011,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 66,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 66,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 66,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 66,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 66,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 107,
+     "rank": 73,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 107,
+     "rank": 73,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 107,
+     "rank": 73,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 107,
+     "rank": 73,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 107,
+     "rank": 73,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 178,
+     "rank": 94,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 177,
+     "rank": 94,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 176,
+     "rank": 94,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 170,
+     "rank": 94,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 170,
+     "rank": 94,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 182,
+     "rank": 105,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 182,
+     "rank": 105,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 182,
+     "rank": 105,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 180,
+     "rank": 105,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 180,
+     "rank": 105,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 43,
+     "rank": 23,
+     "p": 0.014,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 43,
+     "rank": 23,
+     "p": 0.014,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 43,
+     "rank": 23,
+     "p": 0.014,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 40,
+     "rank": 17,
+     "p": 0.017,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 40,
+     "rank": 17,
+     "p": 0.017,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 81,
+     "rank": 43,
+     "p": 0.007,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 81,
+     "rank": 43,
+     "p": 0.007,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 81,
+     "rank": 43,
+     "p": 0.007,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 81,
+     "rank": 43,
+     "p": 0.007,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 81,
+     "rank": 43,
+     "p": 0.007,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 126,
+     "rank": 87,
+     "p": 0.001,
+     "reach": 0
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 126,
+     "rank": 87,
+     "p": 0.001,
+     "reach": 0
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 126,
+     "rank": 87,
+     "p": 0.001,
+     "reach": 0
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 126,
+     "rank": 87,
+     "p": 0.001,
+     "reach": 0
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 126,
+     "rank": 87,
+     "p": 0.001,
+     "reach": 0
+    }
+   ]
+  },
+  {
+   "id": "g4e86b6b6af7cc2e1",
+   "result": "police",
+   "nights": [
+    {
+     "night": 1,
+     "scene": 133,
+     "hideout": 126,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 5,
+     "fewestSpaces": 5,
+     "turns": 8,
+     "spaces": 11,
+     "extraSpaces": 6,
+     "extraOverWalk": 6,
+     "waits": 1,
+     "victimWalksBefore": 5,
+     "coaches": 3,
+     "alleys": 2,
+     "startPolice": [
+      33,
+      56,
+      76,
+      190,
+      210
+     ],
+     "endPolice": [
+      416,
+      169,
+      181,
+      387,
+      270
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 133,
+       "via": 146,
+       "to": 161,
+       "cost": 2,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 18,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 161,
+       "via": 160,
+       "to": 159,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 6,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 54,
+       "possibleBefore": 18
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 159,
+       "to": 183,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 70,
+       "possibleBefore": 52
+      },
+      {
+       "k": 4,
+       "type": "alley",
+       "from": 183,
+       "to": 155,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 76,
+       "possibleBefore": 65
+      },
+      {
+       "k": 5,
+       "type": "carriage",
+       "from": 155,
+       "via": 100,
+       "to": 99,
+       "cost": 2,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.75,
+       "possibleAfter": 114,
+       "possibleBefore": 73
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 99,
+       "to": 86,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.5,
+       "possibleAfter": 139,
+       "possibleBefore": 101
+      },
+      {
+       "k": 7,
+       "type": "alley",
+       "from": 86,
+       "to": 101,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.444,
+       "possibleAfter": 158,
+       "possibleBefore": 130
+      },
+      {
+       "k": 8,
+       "type": "walk",
+       "from": 101,
+       "to": 126,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 2,
+     "scene": 138,
+     "hideout": 126,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 5,
+     "fewestSpaces": 5,
+     "turns": 6,
+     "spaces": 8,
+     "extraSpaces": 3,
+     "extraOverWalk": 3,
+     "waits": 1,
+     "victimWalksBefore": 5,
+     "coaches": 2,
+     "alleys": 0,
+     "startPolice": [
+      416,
+      169,
+      181,
+      387,
+      270
+     ],
+     "endPolice": [
+      422,
+      102,
+      205,
+      93,
+      218
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "walk",
+       "from": 138,
+       "to": 114,
+       "cost": 1,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.182,
+       "possibleAfter": 11,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 114,
+       "via": 115,
+       "to": 97,
+       "cost": 2,
+       "before": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 5,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.2,
+       "possibleAfter": 30,
+       "possibleBefore": 9
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 97,
+       "to": 80,
+       "cost": 1,
+       "before": {
+        "walksHome": 5,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.429,
+       "possibleAfter": 44,
+       "possibleBefore": 28
+      },
+      {
+       "k": 4,
+       "type": "carriage",
+       "from": 80,
+       "via": 98,
+       "to": 123,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.571,
+       "possibleAfter": 78,
+       "possibleBefore": 33
+      },
+      {
+       "k": 5,
+       "type": "walk",
+       "from": 123,
+       "to": 125,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.231,
+       "possibleAfter": 94,
+       "possibleBefore": 72
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 125,
+       "to": 126,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 3,
+     "scene": 147,
+     "hideout": 126,
+     "escaped": false,
+     "ending": "arrested",
+     "walksHome": 5,
+     "fewestSpaces": 5,
+     "turns": 0,
+     "spaces": 0,
+     "extraSpaces": null,
+     "extraOverWalk": null,
+     "waits": 0,
+     "victimWalksBefore": null,
+     "coaches": 0,
+     "alleys": 0,
+     "startPolice": [
+      422,
+      102,
+      205,
+      93,
+      218
+     ],
+     "endPolice": null,
+     "steps": []
+    }
+   ],
+   "decisions": [
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 11,
+     "p": 0.046,
+     "reach": 6
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 11,
+     "p": 0.046,
+     "reach": 6
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 11,
+     "p": 0.046,
+     "reach": 6
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 11,
+     "p": 0.046,
+     "reach": 6
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 11,
+     "p": 0.046,
+     "reach": 6
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 54,
+     "rank": 30,
+     "p": 0.009,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 52,
+     "rank": 30,
+     "p": 0.009,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 52,
+     "rank": 30,
+     "p": 0.009,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 52,
+     "rank": 30,
+     "p": 0.009,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 52,
+     "rank": 30,
+     "p": 0.009,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 70,
+     "rank": 49,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 65,
+     "rank": 46,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 65,
+     "rank": 46,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 65,
+     "rank": 46,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 65,
+     "rank": 46,
+     "p": 0.001,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 76,
+     "rank": 64,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 74,
+     "rank": 62,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 74,
+     "rank": 62,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 74,
+     "rank": 62,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 73,
+     "rank": 61,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 114,
+     "rank": 96,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 111,
+     "rank": 93,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 107,
+     "rank": 90,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 102,
+     "rank": 89,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 101,
+     "rank": 88,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 139,
+     "rank": 73,
+     "p": 0.001,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 137,
+     "rank": 67,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 135,
+     "rank": 62,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 134,
+     "rank": 62,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 131,
+     "rank": 64,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 158,
+     "rank": 73,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 156,
+     "rank": 71,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 153,
+     "rank": 71,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 152,
+     "rank": 71,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 141,
+     "rank": 69,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 11,
+     "rank": 3,
+     "p": 0.091,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 11,
+     "rank": 3,
+     "p": 0.091,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 11,
+     "rank": 3,
+     "p": 0.091,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 11,
+     "rank": 3,
+     "p": 0.091,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 11,
+     "rank": 3,
+     "p": 0.091,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 30,
+     "rank": 21,
+     "p": 0.009,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 30,
+     "rank": 21,
+     "p": 0.009,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 30,
+     "rank": 21,
+     "p": 0.009,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 29,
+     "rank": 21,
+     "p": 0.009,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 29,
+     "rank": 21,
+     "p": 0.009,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 44,
+     "rank": 33,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 44,
+     "rank": 33,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 44,
+     "rank": 33,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 42,
+     "rank": 32,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 42,
+     "rank": 32,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 78,
+     "rank": 51,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 78,
+     "rank": 51,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 77,
+     "rank": 51,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 75,
+     "rank": 49,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "carriage",
+     "possible": 75,
+     "rank": 49,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 94,
+     "rank": 84,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 94,
+     "rank": 84,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 61,
+     "rank": 57,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 61,
+     "rank": 57,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 59,
+     "rank": 55,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 0
+    }
+   ]
+  },
+  {
+   "id": "g6b7af2a30b071ae6",
+   "result": "jack",
+   "nights": [
+    {
+     "night": 1,
+     "scene": 174,
+     "hideout": 126,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 5,
+     "fewestSpaces": 5,
+     "turns": 6,
+     "spaces": 9,
+     "extraSpaces": 4,
+     "extraOverWalk": 4,
+     "waits": 2,
+     "victimWalksBefore": 5,
+     "coaches": 3,
+     "alleys": 1,
+     "startPolice": [
+      33,
+      56,
+      76,
+      190,
+      210
+     ],
+     "endPolice": [
+      33,
+      60,
+      141,
+      215,
+      224
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 174,
+       "via": 136,
+       "to": 113,
+       "cost": 2,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.714,
+       "possibleAfter": 21,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 113,
+       "via": 95,
+       "to": 78,
+       "cost": 2,
+       "before": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.444,
+       "possibleAfter": 45,
+       "possibleBefore": 13
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 78,
+       "to": 80,
+       "cost": 1,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 45,
+       "possibleBefore": 27
+      },
+      {
+       "k": 4,
+       "type": "alley",
+       "from": 80,
+       "to": 118,
+       "cost": 1,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.429,
+       "possibleAfter": 58,
+       "possibleBefore": 41
+      },
+      {
+       "k": 5,
+       "type": "carriage",
+       "from": 118,
+       "via": 123,
+       "to": 124,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.25,
+       "possibleAfter": 111,
+       "possibleBefore": 50
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 124,
+       "to": 126,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.3,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 2,
+     "scene": 84,
+     "hideout": 126,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 2,
+     "fewestSpaces": 2,
+     "turns": 6,
+     "spaces": 8,
+     "extraSpaces": 6,
+     "extraOverWalk": 6,
+     "waits": 1,
+     "victimWalksBefore": 3,
+     "coaches": 2,
+     "alleys": 2,
+     "startPolice": [
+      33,
+      60,
+      141,
+      215,
+      224
+     ],
+     "endPolice": [
+      185,
+      81,
+      67,
+      91,
+      76
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 84,
+       "via": 51,
+       "to": 31,
+       "cost": 2,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.625,
+       "possibleAfter": 35,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "walk",
+       "from": 31,
+       "to": 50,
+       "cost": 1,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 1,
+       "possibleAfter": 72,
+       "possibleBefore": 28
+      },
+      {
+       "k": 3,
+       "type": "carriage",
+       "from": 50,
+       "via": 51,
+       "to": 84,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 1,
+       "possibleAfter": 149,
+       "possibleBefore": 54
+      },
+      {
+       "k": 4,
+       "type": "alley",
+       "from": 84,
+       "to": 86,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 0,
+        "inReach": true
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 1,
+       "possibleAfter": 65,
+       "possibleBefore": 47
+      },
+      {
+       "k": 5,
+       "type": "alley",
+       "from": 86,
+       "to": 101,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.444,
+       "possibleAfter": 49,
+       "possibleBefore": 27
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 101,
+       "to": 126,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.375,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 3,
+     "scene": 146,
+     "hideout": 126,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 4,
+     "fewestSpaces": 4,
+     "turns": 3,
+     "spaces": 4,
+     "extraSpaces": 0,
+     "extraOverWalk": 0,
+     "waits": 1,
+     "victimWalksBefore": 5,
+     "coaches": 1,
+     "alleys": 0,
+     "startPolice": [
+      188,
+      99,
+      69,
+      91,
+      88
+     ],
+     "endPolice": [
+      93,
+      95,
+      69,
+      78,
+      88
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 146,
+       "via": 145,
+       "to": 144,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 6,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 19,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "walk",
+       "from": 144,
+       "to": 143,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 41,
+       "possibleBefore": 19
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 143,
+       "to": 126,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 4,
+     "scene": 142,
+     "hideout": 126,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 1,
+     "fewestSpaces": 1,
+     "turns": 1,
+     "spaces": 1,
+     "extraSpaces": 0,
+     "extraOverWalk": 0,
+     "waits": 1,
+     "victimWalksBefore": 2,
+     "coaches": 0,
+     "alleys": 0,
+     "startPolice": [
+      95,
+      69,
+      78,
+      88,
+      312
+     ],
+     "endPolice": [
+      95,
+      69,
+      78,
+      88,
+      312
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "walk",
+       "from": 142,
+       "to": 126,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 0,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.75,
+       "possibleAfter": 5,
+       "possibleBefore": 5
+      }
+     ]
+    }
+   ],
+   "decisions": [
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 21,
+     "rank": 15,
+     "p": 0.025,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 21,
+     "rank": 15,
+     "p": 0.025,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 21,
+     "rank": 15,
+     "p": 0.025,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 21,
+     "rank": 15,
+     "p": 0.025,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 14,
+     "p": 0.031,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 45,
+     "rank": 45,
+     "p": 0.002,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 45,
+     "rank": 45,
+     "p": 0.002,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 45,
+     "rank": 45,
+     "p": 0.002,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 45,
+     "rank": 45,
+     "p": 0.002,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 44,
+     "rank": 44,
+     "p": 0.002,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 45,
+     "rank": 32,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 45,
+     "rank": 32,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 45,
+     "rank": 32,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 45,
+     "rank": 32,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 43,
+     "rank": 30,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 58,
+     "rank": 22,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 58,
+     "rank": 22,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 58,
+     "rank": 22,
+     "p": 0.016,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 57,
+     "rank": 19,
+     "p": 0.017,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 54,
+     "rank": 14,
+     "p": 0.021,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 111,
+     "rank": 73,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 111,
+     "rank": 73,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 106,
+     "rank": 73,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 75,
+     "rank": 72,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 72,
+     "rank": 69,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 35,
+     "rank": 15,
+     "p": 0.021,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 34,
+     "rank": 15,
+     "p": 0.021,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 31,
+     "rank": 12,
+     "p": 0.027,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 28,
+     "rank": 10,
+     "p": 0.033,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 28,
+     "rank": 10,
+     "p": 0.033,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 72,
+     "rank": 15,
+     "p": 0.022,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 71,
+     "rank": 15,
+     "p": 0.023,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 55,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 54,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 54,
+     "rank": 35,
+     "p": 0.006,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 149,
+     "rank": 15,
+     "p": 0.023,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 136,
+     "rank": 18,
+     "p": 0.015,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 133,
+     "rank": 19,
+     "p": 0.014,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 51,
+     "rank": 16,
+     "p": 0.027,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 49,
+     "rank": 16,
+     "p": 0.027,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 65,
+     "rank": 27,
+     "p": 0.014,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 59,
+     "rank": 27,
+     "p": 0.014,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 56,
+     "rank": 22,
+     "p": 0.016,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 37,
+     "rank": 15,
+     "p": 0.029,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 36,
+     "rank": 15,
+     "p": 0.03,
+     "reach": 1
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 49,
+     "rank": 32,
+     "p": 0.004,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 47,
+     "rank": 31,
+     "p": 0.004,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 47,
+     "rank": 30,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 41,
+     "rank": 26,
+     "p": 0.005,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 5,
+     "lastMove": "alley",
+     "possible": 41,
+     "rank": 26,
+     "p": 0.005,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 6
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 6
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 1,
+     "rank": 1,
+     "p": 1,
+     "reach": 6
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 1,
+     "rank": 1,
+     "p": 1,
+     "reach": 6
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 1,
+     "rank": 1,
+     "p": 1,
+     "reach": 6
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 16,
+     "p": 0.019,
+     "reach": 5
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 16,
+     "p": 0.019,
+     "reach": 5
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 16,
+     "p": 0.019,
+     "reach": 5
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 16,
+     "p": 0.019,
+     "reach": 5
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 16,
+     "p": 0.019,
+     "reach": 5
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 41,
+     "rank": 32,
+     "p": 0.004,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 41,
+     "rank": 32,
+     "p": 0.004,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 41,
+     "rank": 32,
+     "p": 0.004,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 41,
+     "rank": 32,
+     "p": 0.004,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 41,
+     "rank": 32,
+     "p": 0.004,
+     "reach": 4
+    }
+   ]
+  },
+  {
+   "id": "g98c41370f7344474",
+   "result": "jack",
+   "nights": [
+    {
+     "night": 1,
+     "scene": 58,
+     "hideout": 141,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 5,
+     "fewestSpaces": 5,
+     "turns": 9,
+     "spaces": 12,
+     "extraSpaces": 7,
+     "extraOverWalk": 7,
+     "waits": 2,
+     "victimWalksBefore": 6,
+     "coaches": 3,
+     "alleys": 1,
+     "startPolice": [
+      33,
+      56,
+      76,
+      190,
+      210
+     ],
+     "endPolice": [
+      378,
+      387,
+      205,
+      381,
+      241
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 58,
+       "via": 76,
+       "to": 77,
+       "cost": 2,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 7,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.667,
+       "possibleAfter": 20,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 77,
+       "via": 91,
+       "to": 105,
+       "cost": 2,
+       "before": {
+        "walksHome": 7,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 6,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.444,
+       "possibleAfter": 49,
+       "possibleBefore": 15
+      },
+      {
+       "k": 3,
+       "type": "carriage",
+       "from": 105,
+       "via": 130,
+       "to": 161,
+       "cost": 2,
+       "before": {
+        "walksHome": 6,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 52,
+       "possibleBefore": 32
+      },
+      {
+       "k": 4,
+       "type": "walk",
+       "from": 161,
+       "to": 160,
+       "cost": 1,
+       "before": {
+        "walksHome": 5,
+        "spaces": 5,
+        "spacesPolice": 5,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 71,
+       "possibleBefore": 51
+      },
+      {
+       "k": 5,
+       "type": "walk",
+       "from": 160,
+       "to": 159,
+       "cost": 1,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.667,
+       "possibleAfter": 90,
+       "possibleBefore": 62
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 159,
+       "to": 157,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.538,
+       "possibleAfter": 86,
+       "possibleBefore": 58
+      },
+      {
+       "k": 7,
+       "type": "walk",
+       "from": 157,
+       "to": 156,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.286,
+       "possibleAfter": 93,
+       "possibleBefore": 66
+      },
+      {
+       "k": 8,
+       "type": "alley",
+       "from": 156,
+       "to": 125,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.3,
+       "possibleAfter": 97,
+       "possibleBefore": 74
+      },
+      {
+       "k": 9,
+       "type": "walk",
+       "from": 125,
+       "to": 141,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.071,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 2,
+     "scene": 139,
+     "hideout": 141,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 3,
+     "fewestSpaces": 3,
+     "turns": 3,
+     "spaces": 5,
+     "extraSpaces": 2,
+     "extraOverWalk": 2,
+     "waits": 1,
+     "victimWalksBefore": 4,
+     "coaches": 2,
+     "alleys": 0,
+     "startPolice": [
+      378,
+      387,
+      205,
+      381,
+      241
+     ],
+     "endPolice": [
+      350,
+      357,
+      198,
+      369,
+      210
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 139,
+       "via": 151,
+       "to": 153,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.636,
+       "possibleAfter": 32,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 153,
+       "via": 168,
+       "to": 170,
+       "cost": 2,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 85,
+       "possibleBefore": 28
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 170,
+       "to": 141,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.167,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 3,
+     "scene": 86,
+     "hideout": 141,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 2,
+     "fewestSpaces": 2,
+     "turns": 4,
+     "spaces": 6,
+     "extraSpaces": 4,
+     "extraOverWalk": 4,
+     "waits": 1,
+     "victimWalksBefore": 2,
+     "coaches": 2,
+     "alleys": 1,
+     "startPolice": [
+      313,
+      315,
+      185,
+      348,
+      198
+     ],
+     "endPolice": [
+      177,
+      315,
+      185,
+      348,
+      304
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 86,
+       "via": 69,
+       "to": 70,
+       "cost": 2,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.667,
+       "possibleAfter": 64,
+       "possibleBefore": 2
+      },
+      {
+       "k": 2,
+       "type": "alley",
+       "from": 70,
+       "to": 144,
+       "cost": 1,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.5,
+       "possibleAfter": 76,
+       "possibleBefore": 48
+      },
+      {
+       "k": 3,
+       "type": "carriage",
+       "from": 144,
+       "via": 143,
+       "to": 125,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.714,
+       "possibleAfter": 144,
+       "possibleBefore": 71
+      },
+      {
+       "k": 4,
+       "type": "walk",
+       "from": 125,
+       "to": 141,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.9,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 4,
+     "scene": 67,
+     "hideout": 141,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 3,
+     "fewestSpaces": 3,
+     "turns": 6,
+     "spaces": 7,
+     "extraSpaces": 4,
+     "extraOverWalk": 4,
+     "waits": 1,
+     "victimWalksBefore": 2,
+     "coaches": 1,
+     "alleys": 0,
+     "startPolice": [
+      177,
+      315,
+      185,
+      348,
+      304
+     ],
+     "endPolice": [
+      308,
+      313,
+      300,
+      312,
+      177
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "walk",
+       "from": 67,
+       "to": 65,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.5,
+       "possibleAfter": 6,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 65,
+       "via": 82,
+       "to": 98,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 4,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 62,
+       "possibleBefore": 6
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 98,
+       "to": 119,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.444,
+       "possibleAfter": 90,
+       "possibleBefore": 56
+      },
+      {
+       "k": 4,
+       "type": "walk",
+       "from": 119,
+       "to": 153,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 3,
+        "policeWalks": 1,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.5,
+       "possibleAfter": 131,
+       "possibleBefore": 88
+      },
+      {
+       "k": 5,
+       "type": "walk",
+       "from": 153,
+       "to": 140,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.375,
+       "possibleAfter": 165,
+       "possibleBefore": 129
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 140,
+       "to": 141,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.333,
+       "possibleAfter": 183,
+       "possibleBefore": 183
+      }
+     ]
+    }
+   ],
+   "decisions": [
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 20,
+     "rank": 14,
+     "p": 0.028,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 16,
+     "rank": 7,
+     "p": 0.046,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 7,
+     "p": 0.047,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 7,
+     "p": 0.047,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 7,
+     "p": 0.047,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 49,
+     "rank": 33,
+     "p": 0.006,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 47,
+     "rank": 26,
+     "p": 0.014,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 32,
+     "rank": 23,
+     "p": 0.017,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 32,
+     "rank": 23,
+     "p": 0.017,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 32,
+     "rank": 23,
+     "p": 0.017,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 52,
+     "rank": 40,
+     "p": 0.003,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 52,
+     "rank": 40,
+     "p": 0.002,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 51,
+     "rank": 39,
+     "p": 0.002,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 51,
+     "rank": 39,
+     "p": 0.002,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 51,
+     "rank": 39,
+     "p": 0.002,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 71,
+     "rank": 45,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 65,
+     "rank": 42,
+     "p": 0.003,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 63,
+     "rank": 38,
+     "p": 0.006,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 63,
+     "rank": 38,
+     "p": 0.006,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 62,
+     "rank": 38,
+     "p": 0.006,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 90,
+     "rank": 44,
+     "p": 0.006,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 71,
+     "rank": 22,
+     "p": 0.015,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 69,
+     "rank": 16,
+     "p": 0.023,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 69,
+     "rank": 16,
+     "p": 0.023,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 58,
+     "rank": 38,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 86,
+     "rank": 74,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 76,
+     "rank": 53,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 69,
+     "rank": 42,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 69,
+     "rank": 42,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 66,
+     "rank": 40,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "walk",
+     "possible": 93,
+     "rank": 57,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "walk",
+     "possible": 92,
+     "rank": 56,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "walk",
+     "possible": 80,
+     "rank": 49,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "walk",
+     "possible": 80,
+     "rank": 49,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "walk",
+     "possible": 74,
+     "rank": 39,
+     "p": 0.002,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 97,
+     "rank": 47,
+     "p": 0.002,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 87,
+     "rank": 26,
+     "p": 0.005,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 86,
+     "rank": 26,
+     "p": 0.006,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 86,
+     "rank": 26,
+     "p": 0.006,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "alley",
+     "possible": 85,
+     "rank": 25,
+     "p": 0.006,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 32,
+     "rank": 27,
+     "p": 0.01,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 32,
+     "rank": 27,
+     "p": 0.01,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 32,
+     "rank": 27,
+     "p": 0.01,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 30,
+     "rank": 25,
+     "p": 0.012,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 30,
+     "rank": 25,
+     "p": 0.012,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 85,
+     "rank": 46,
+     "p": 0.005,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 82,
+     "rank": 46,
+     "p": 0.005,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 82,
+     "rank": 46,
+     "p": 0.005,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 67,
+     "rank": 52,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 67,
+     "rank": 52,
+     "p": 0.002,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 1,
+     "p": 0.5,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 1,
+     "p": 0.5,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 1,
+     "p": 0.5,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 1,
+     "p": 0.5,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 1,
+     "p": 0.5,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 64,
+     "rank": 51,
+     "p": 0.008,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 63,
+     "rank": 49,
+     "p": 0.009,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 61,
+     "rank": 47,
+     "p": 0.009,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 49,
+     "rank": 42,
+     "p": 0.01,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 48,
+     "rank": 37,
+     "p": 0.011,
+     "reach": 2
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 76,
+     "rank": 38,
+     "p": 0.01,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 75,
+     "rank": 38,
+     "p": 0.01,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 73,
+     "rank": 36,
+     "p": 0.011,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 72,
+     "rank": 36,
+     "p": 0.011,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 71,
+     "rank": 35,
+     "p": 0.011,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 144,
+     "rank": 43,
+     "p": 0.01,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 143,
+     "rank": 43,
+     "p": 0.01,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 141,
+     "rank": 44,
+     "p": 0.008,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 138,
+     "rank": 46,
+     "p": 0.008,
+     "reach": 1
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 10,
+     "rank": 3,
+     "p": 0.056,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 6,
+     "rank": 4,
+     "p": 0.167,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 6,
+     "rank": 4,
+     "p": 0.167,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 6,
+     "rank": 4,
+     "p": 0.167,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 6,
+     "rank": 4,
+     "p": 0.167,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "walk",
+     "possible": 6,
+     "rank": 4,
+     "p": 0.167,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 62,
+     "rank": 42,
+     "p": 0.005,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 59,
+     "rank": 40,
+     "p": 0.005,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 58,
+     "rank": 40,
+     "p": 0.005,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 57,
+     "rank": 40,
+     "p": 0.005,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 57,
+     "rank": 40,
+     "p": 0.005,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 90,
+     "rank": 58,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 90,
+     "rank": 58,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 90,
+     "rank": 58,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 89,
+     "rank": 58,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 89,
+     "rank": 58,
+     "p": 0.002,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 131,
+     "rank": 77,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 131,
+     "rank": 77,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 131,
+     "rank": 77,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 130,
+     "rank": 76,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 130,
+     "rank": 76,
+     "p": 0.001,
+     "reach": 2
+    },
+    {
+     "night": 4,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 165,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 165,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 165,
+     "rank": 86,
+     "p": 0.001,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 164,
+     "rank": 85,
+     "p": 0.001,
+     "reach": 1
+    },
+    {
+     "night": 4,
+     "jackMove": 5,
+     "lastMove": "walk",
+     "possible": 164,
+     "rank": 85,
+     "p": 0.001,
+     "reach": 1
+    }
+   ]
+  },
+  {
+   "id": "gcdf6409ed736eaf5",
+   "result": "jack",
+   "nights": [
+    {
+     "night": 1,
+     "scene": 12,
+     "hideout": 71,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 6,
+     "fewestSpaces": 6,
+     "turns": 9,
+     "spaces": 12,
+     "extraSpaces": 6,
+     "extraOverWalk": 6,
+     "waits": 2,
+     "victimWalksBefore": 7,
+     "coaches": 3,
+     "alleys": 2,
+     "startPolice": [
+      33,
+      56,
+      76,
+      190,
+      210
+     ],
+     "endPolice": [
+      147,
+      195,
+      106,
+      205,
+      190
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 12,
+       "via": 11,
+       "to": 2,
+       "cost": 2,
+       "before": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 8,
+        "spaces": 8,
+        "spacesPolice": 8,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.778,
+       "possibleAfter": 26,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 2,
+       "via": 26,
+       "to": 79,
+       "cost": 2,
+       "before": {
+        "walksHome": 8,
+        "spaces": 8,
+        "spacesPolice": 8,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 8,
+        "spaces": 8,
+        "spacesPolice": 8,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.857,
+       "possibleAfter": 61,
+       "possibleBefore": 15
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 79,
+       "to": 97,
+       "cost": 1,
+       "before": {
+        "walksHome": 8,
+        "spaces": 8,
+        "spacesPolice": 8,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 8,
+        "spaces": 7,
+        "spacesPolice": 7,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.125,
+       "possibleAfter": 56,
+       "possibleBefore": 34
+      },
+      {
+       "k": 4,
+       "type": "alley",
+       "from": 97,
+       "to": 118,
+       "cost": 1,
+       "before": {
+        "walksHome": 8,
+        "spaces": 7,
+        "spacesPolice": 7,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 1,
+        "inReach": true
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.857,
+       "possibleAfter": 50,
+       "possibleBefore": 37
+      },
+      {
+       "k": 5,
+       "type": "carriage",
+       "from": 118,
+       "via": 122,
+       "to": 125,
+       "cost": 2,
+       "before": {
+        "walksHome": 6,
+        "spaces": 6,
+        "spacesPolice": 6,
+        "policeWalks": 2,
+        "inReach": true
+       },
+       "after": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0.333,
+       "possibleAfter": 78,
+       "possibleBefore": 24
+      },
+      {
+       "k": 6,
+       "type": "walk",
+       "from": 125,
+       "to": 102,
+       "cost": 1,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 98,
+       "possibleBefore": 48
+      },
+      {
+       "k": 7,
+       "type": "alley",
+       "from": 102,
+       "to": 69,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 116,
+       "possibleBefore": 85
+      },
+      {
+       "k": 8,
+       "type": "walk",
+       "from": 69,
+       "to": 70,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 124,
+       "possibleBefore": 84
+      },
+      {
+       "k": 9,
+       "type": "walk",
+       "from": 70,
+       "to": 71,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 2,
+     "scene": 21,
+     "hideout": 71,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 4,
+     "fewestSpaces": 4,
+     "turns": 5,
+     "spaces": 7,
+     "extraSpaces": 3,
+     "extraOverWalk": 3,
+     "waits": 0,
+     "victimWalksBefore": null,
+     "coaches": 2,
+     "alleys": 2,
+     "startPolice": [
+      147,
+      195,
+      106,
+      205,
+      190
+     ],
+     "endPolice": [
+      271,
+      300,
+      304,
+      141,
+      185
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 21,
+       "via": 40,
+       "to": 73,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 6,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 11,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "alley",
+       "from": 73,
+       "to": 56,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 22,
+       "possibleBefore": 11
+      },
+      {
+       "k": 3,
+       "type": "carriage",
+       "from": 56,
+       "via": 69,
+       "to": 70,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 2,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.143,
+       "possibleAfter": 73,
+       "possibleBefore": 22
+      },
+      {
+       "k": 4,
+       "type": "alley",
+       "from": 70,
+       "to": 72,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 92,
+       "possibleBefore": 70
+      },
+      {
+       "k": 5,
+       "type": "walk",
+       "from": 72,
+       "to": 71,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 3,
+     "scene": 146,
+     "hideout": 71,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 3,
+     "fewestSpaces": 3,
+     "turns": 4,
+     "spaces": 6,
+     "extraSpaces": 3,
+     "extraOverWalk": 3,
+     "waits": 1,
+     "victimWalksBefore": 4,
+     "coaches": 2,
+     "alleys": 1,
+     "startPolice": [
+      190,
+      314,
+      186,
+      95,
+      181
+     ],
+     "endPolice": [
+      357,
+      345,
+      93,
+      95,
+      78
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 146,
+       "via": 133,
+       "to": 106,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0.167,
+       "possibleAfter": 19,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "carriage",
+       "from": 106,
+       "via": 89,
+       "to": 73,
+       "cost": 2,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 62,
+       "possibleBefore": 18
+      },
+      {
+       "k": 3,
+       "type": "alley",
+       "from": 73,
+       "to": 72,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 71,
+       "possibleBefore": 58
+      },
+      {
+       "k": 4,
+       "type": "walk",
+       "from": 72,
+       "to": 71,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": null,
+       "possibleBefore": null
+      }
+     ]
+    },
+    {
+     "night": 4,
+     "scene": 147,
+     "hideout": 71,
+     "escaped": true,
+     "ending": "escaped",
+     "walksHome": 4,
+     "fewestSpaces": 4,
+     "turns": 5,
+     "spaces": 6,
+     "extraSpaces": 2,
+     "extraOverWalk": 2,
+     "waits": 0,
+     "victimWalksBefore": null,
+     "coaches": 1,
+     "alleys": 0,
+     "startPolice": [
+      357,
+      345,
+      93,
+      95,
+      78
+     ],
+     "endPolice": [
+      342,
+      326,
+      296,
+      304,
+      300
+     ],
+     "steps": [
+      {
+       "k": 1,
+       "type": "carriage",
+       "from": 147,
+       "via": 111,
+       "to": 94,
+       "cost": 2,
+       "before": {
+        "walksHome": 4,
+        "spaces": 4,
+        "spacesPolice": 4,
+        "policeWalks": 3,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 15,
+       "possibleBefore": 1
+      },
+      {
+       "k": 2,
+       "type": "walk",
+       "from": 94,
+       "to": 76,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": false,
+       "onFastestRoutePolice": false,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 30,
+       "possibleBefore": 15
+      },
+      {
+       "k": 3,
+       "type": "walk",
+       "from": 76,
+       "to": 74,
+       "cost": 1,
+       "before": {
+        "walksHome": 3,
+        "spaces": 3,
+        "spacesPolice": 3,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 42,
+       "possibleBefore": 30
+      },
+      {
+       "k": 4,
+       "type": "walk",
+       "from": 74,
+       "to": 72,
+       "cost": 1,
+       "before": {
+        "walksHome": 2,
+        "spaces": 2,
+        "spacesPolice": 2,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 56,
+       "possibleBefore": 39
+      },
+      {
+       "k": 5,
+       "type": "walk",
+       "from": 72,
+       "to": 71,
+       "cost": 1,
+       "before": {
+        "walksHome": 1,
+        "spaces": 1,
+        "spacesPolice": 1,
+        "policeWalks": 5,
+        "inReach": false
+       },
+       "after": {
+        "walksHome": 0,
+        "spaces": 0,
+        "spacesPolice": 0,
+        "policeWalks": 4,
+        "inReach": false
+       },
+       "onFastestRoute": true,
+       "onFastestRoutePolice": true,
+       "walledOff": false,
+       "walkOptionsInReach": 0,
+       "possibleAfter": 71,
+       "possibleBefore": 71
+      }
+     ]
+    }
+   ],
+   "decisions": [
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 26,
+     "rank": 19,
+     "p": 0.019,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 26,
+     "rank": 19,
+     "p": 0.019,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 23,
+     "rank": 14,
+     "p": 0.024,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 8,
+     "p": 0.04,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 8,
+     "p": 0.04,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 61,
+     "rank": 57,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 58,
+     "rank": 53,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 55,
+     "rank": 50,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 34,
+     "rank": 33,
+     "p": 0.003,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 34,
+     "rank": 33,
+     "p": 0.003,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 56,
+     "rank": 56,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 51,
+     "rank": 51,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 48,
+     "rank": 48,
+     "p": 0,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 38,
+     "rank": 36,
+     "p": 0.001,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 37,
+     "rank": 35,
+     "p": 0.001,
+     "reach": 1
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 50,
+     "rank": 47,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 49,
+     "rank": 46,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 45,
+     "rank": 42,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 44,
+     "rank": 41,
+     "p": 0,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 24,
+     "rank": 21,
+     "p": 0.004,
+     "reach": 2
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 78,
+     "rank": 77,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 77,
+     "rank": 76,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 74,
+     "rank": 73,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 74,
+     "rank": 73,
+     "p": 0,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 5,
+     "lastMove": "carriage",
+     "possible": 60,
+     "rank": 59,
+     "p": 0.001,
+     "reach": 3
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 98,
+     "rank": 97,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 97,
+     "rank": 96,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 94,
+     "rank": 93,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 88,
+     "rank": 87,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 6,
+     "lastMove": "walk",
+     "possible": 86,
+     "rank": 85,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 116,
+     "rank": 109,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 114,
+     "rank": 107,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 87,
+     "rank": 80,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 87,
+     "rank": 80,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 7,
+     "lastMove": "alley",
+     "possible": 85,
+     "rank": 78,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "walk",
+     "possible": 124,
+     "rank": 118,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "walk",
+     "possible": 121,
+     "rank": 115,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "walk",
+     "possible": 116,
+     "rank": 110,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "walk",
+     "possible": 115,
+     "rank": 109,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 1,
+     "jackMove": 8,
+     "lastMove": "walk",
+     "possible": 113,
+     "rank": 107,
+     "p": 0,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 11,
+     "rank": 9,
+     "p": 0.095,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 11,
+     "rank": 9,
+     "p": 0.095,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 11,
+     "rank": 9,
+     "p": 0.095,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 11,
+     "rank": 9,
+     "p": 0.095,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 11,
+     "rank": 9,
+     "p": 0.095,
+     "reach": 4
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 22,
+     "rank": 6,
+     "p": 0.064,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 22,
+     "rank": 6,
+     "p": 0.064,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 22,
+     "rank": 6,
+     "p": 0.064,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 22,
+     "rank": 6,
+     "p": 0.064,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 2,
+     "lastMove": "alley",
+     "possible": 22,
+     "rank": 6,
+     "p": 0.064,
+     "reach": 2
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 73,
+     "rank": 45,
+     "p": 0.005,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 73,
+     "rank": 45,
+     "p": 0.005,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 72,
+     "rank": 45,
+     "p": 0.005,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 72,
+     "rank": 45,
+     "p": 0.005,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 3,
+     "lastMove": "carriage",
+     "possible": 72,
+     "rank": 45,
+     "p": 0.005,
+     "reach": 3
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 92,
+     "rank": 17,
+     "p": 0.02,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 92,
+     "rank": 17,
+     "p": 0.02,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 91,
+     "rank": 17,
+     "p": 0.02,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 90,
+     "rank": 17,
+     "p": 0.02,
+     "reach": 5
+    },
+    {
+     "night": 2,
+     "jackMove": 4,
+     "lastMove": "alley",
+     "possible": 90,
+     "rank": 17,
+     "p": 0.02,
+     "reach": 5
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 0,
+     "lastMove": null,
+     "possible": 2,
+     "rank": 2,
+     "p": 0.5,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 10,
+     "p": 0.049,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 19,
+     "rank": 10,
+     "p": 0.049,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 18,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 3
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 62,
+     "rank": 44,
+     "p": 0.002,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 60,
+     "rank": 44,
+     "p": 0.002,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 58,
+     "rank": 43,
+     "p": 0.003,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 58,
+     "rank": 43,
+     "p": 0.003,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 2,
+     "lastMove": "carriage",
+     "possible": 58,
+     "rank": 43,
+     "p": 0.003,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "alley",
+     "possible": 71,
+     "rank": 27,
+     "p": 0.014,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "alley",
+     "possible": 61,
+     "rank": 26,
+     "p": 0.015,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "alley",
+     "possible": 59,
+     "rank": 26,
+     "p": 0.016,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "alley",
+     "possible": 59,
+     "rank": 26,
+     "p": 0.016,
+     "reach": 4
+    },
+    {
+     "night": 3,
+     "jackMove": 3,
+     "lastMove": "alley",
+     "possible": 59,
+     "rank": 26,
+     "p": 0.016,
+     "reach": 4
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 1,
+     "lastMove": "carriage",
+     "possible": 15,
+     "rank": 10,
+     "p": 0.05,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 30,
+     "rank": 24,
+     "p": 0.01,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 30,
+     "rank": 24,
+     "p": 0.01,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 30,
+     "rank": 24,
+     "p": 0.01,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 30,
+     "rank": 24,
+     "p": 0.01,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 2,
+     "lastMove": "walk",
+     "possible": 30,
+     "rank": 24,
+     "p": 0.01,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 42,
+     "rank": 34,
+     "p": 0.004,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 39,
+     "rank": 31,
+     "p": 0.004,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 39,
+     "rank": 31,
+     "p": 0.004,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 39,
+     "rank": 31,
+     "p": 0.004,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 3,
+     "lastMove": "walk",
+     "possible": 39,
+     "rank": 31,
+     "p": 0.004,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 56,
+     "rank": 32,
+     "p": 0.007,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 56,
+     "rank": 32,
+     "p": 0.007,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 56,
+     "rank": 32,
+     "p": 0.007,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 56,
+     "rank": 32,
+     "p": 0.007,
+     "reach": 5
+    },
+    {
+     "night": 4,
+     "jackMove": 4,
+     "lastMove": "walk",
+     "possible": 56,
+     "rank": 32,
+     "p": 0.007,
+     "reach": 5
+    }
+   ]
+  }
+ ],
+ "perGame": [
+  {
+   "id": "g91d4014f17ae09e6",
+   "result": "jack",
+   "hideout": 141,
+   "nights": 4,
+   "escaped": 4,
+   "walksHome": 4,
+   "extraSpaces": 2.5,
+   "coaches": 8,
+   "coachesLostGround": 0.25,
+   "coachesFirst": 0.125,
+   "alleys": 2,
+   "waits": 3,
+   "inReach": 0.211,
+   "topTen": 0.087,
+   "possible": 59.5,
+   "decisions": 80
+  },
+  {
+   "id": "ga36125530c4b4076",
+   "result": "jack",
+   "hideout": 123,
+   "nights": 4,
+   "escaped": 4,
+   "walksHome": 3.5,
+   "extraSpaces": 7,
+   "coaches": 7,
+   "coachesLostGround": 0.286,
+   "coachesFirst": 0.2,
+   "alleys": 4,
+   "waits": 2,
+   "inReach": 0.382,
+   "topTen": 0.135,
+   "possible": 80,
+   "decisions": 155
+  },
+  {
+   "id": "g2358629abcf5b51d",
+   "result": "jack",
+   "hideout": 117,
+   "nights": 4,
+   "escaped": 4,
+   "walksHome": 5,
+   "extraSpaces": 3.5,
+   "coaches": 8,
+   "coachesLostGround": 0.125,
+   "coachesFirst": 0.267,
+   "alleys": 4,
+   "waits": 5,
+   "inReach": 0.231,
+   "topTen": 0.174,
+   "possible": 100,
+   "decisions": 115
+  },
+  {
+   "id": "g4e86b6b6af7cc2e1",
+   "result": "police",
+   "hideout": 126,
+   "nights": 3,
+   "escaped": 2,
+   "walksHome": 5,
+   "extraSpaces": 4.5,
+   "coaches": 5,
+   "coachesLostGround": 0,
+   "coachesFirst": 0.2,
+   "alleys": 2,
+   "waits": 2,
+   "inReach": 0.214,
+   "topTen": 0.098,
+   "possible": 65,
+   "decisions": 61
+  },
+  {
+   "id": "g6b7af2a30b071ae6",
+   "result": "jack",
+   "hideout": 126,
+   "nights": 4,
+   "escaped": 4,
+   "walksHome": 3,
+   "extraSpaces": 2,
+   "coaches": 6,
+   "coachesLostGround": 0.333,
+   "coachesFirst": 0.1,
+   "alleys": 3,
+   "waits": 5,
+   "inReach": 0.5,
+   "topTen": 0.108,
+   "possible": 45,
+   "decisions": 65
+  },
+  {
+   "id": "g98c41370f7344474",
+   "result": "jack",
+   "hideout": 141,
+   "nights": 4,
+   "escaped": 4,
+   "walksHome": 3,
+   "extraSpaces": 4,
+   "coaches": 8,
+   "coachesLostGround": 0.25,
+   "coachesFirst": 0.163,
+   "alleys": 2,
+   "waits": 5,
+   "inReach": 0.364,
+   "topTen": 0.158,
+   "possible": 67,
+   "decisions": 95
+  },
+  {
+   "id": "gcdf6409ed736eaf5",
+   "result": "jack",
+   "hideout": 71,
+   "nights": 4,
+   "escaped": 4,
+   "walksHome": 4,
+   "extraSpaces": 3,
+   "coaches": 8,
+   "coachesLostGround": 0.125,
+   "coachesFirst": 0.063,
+   "alleys": 5,
+   "waits": 3,
+   "inReach": 0.13,
+   "topTen": 0.27,
+   "possible": 50.5,
+   "decisions": 100
+  }
  ],
  "samples": {
   "strategic": [

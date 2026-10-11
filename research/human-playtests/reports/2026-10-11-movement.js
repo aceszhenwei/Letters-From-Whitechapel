@@ -3,7 +3,7 @@
 // each Jack move is replayed with the police positions recorded at that moment, and Detective AI v3's belief is the one
 // it had from the police's view (rules.policeView) at that point.
 //   node research/human-playtests/reports/2026-10-11-movement.js summary [--games 25]   -> results/movement-summary.json
-//   node research/human-playtests/reports/2026-10-11-movement.js figures                -> figures/movement-*.svg
+//   node research/human-playtests/reports/2026-10-11-movement.js figures                -> figures/movement-*.svg (all 7 human games)
 // AI games: Detective AI v3 against Strategic Jack ('normal') and Jack AI v2 ('hard'), played as the coach investigation
 // played its control arm (2026-10-11-investigation-coaches.js, playOne with no habit), seeds 612001 on: the same games.
 // Read-only: it changes no record and no AI.
@@ -180,10 +180,21 @@ function summarise(games) {
 			fartherFromPolice: share(coaches.map((s) => s.after.policeWalks > s.before.policeWalks)),
 			fromThreat: coaches.filter((s) => s.before.inReach).length,
 			leftThreat: coaches.filter((s) => s.before.inReach && !s.after.inReach).length,
+			// The coaches that ended farther from home: on the night's first move? begun within reach, and leaving it?
+			lostGround: coaches.filter((s) => s.after.walksHome > s.before.walksHome).length,
+			lostGroundFirstMove: coaches.filter((s) => s.after.walksHome > s.before.walksHome && s.k === 1).length,
+			lostGroundLeftThreat: coaches.filter((s) => s.after.walksHome > s.before.walksHome && s.before.inReach && !s.after.inReach).length,
 			possibleGrowth: median(coaches.filter((s) => s.possibleBefore && s.possibleAfter).map((s) => s.possibleAfter / s.possibleBefore))
 		},
 		walkPossibleGrowth: median(steps.filter((s) => s.type === 'walk' && s.possibleBefore && s.possibleAfter).map((s) => s.possibleAfter / s.possibleBefore)),
 		alleyPossibleGrowth: median(steps.filter((s) => s.type === 'alley' && s.possibleBefore && s.possibleAfter).map((s) => s.possibleAfter / s.possibleBefore)),
+		// The night's first move, when the night began with a policeman in reach (the crime scene is public)
+		firstMove: (() => {
+			const firsts = nights.filter((n) => n.steps.length).map((n) => n.steps[0]);
+			const threatened = firsts.filter((s) => s.before.inReach);
+			return { nights: firsts.length, threatened: threatened.length, coach: threatened.filter((s) => s.type === 'carriage').length,
+				leftReach: threatened.filter((s) => !s.after.inReach).length, lostGround: threatened.filter((s) => s.after.walksHome > s.before.walksHome).length };
+		})(),
 		police: {
 			medianWalks: median(steps.map((s) => s.before.policeWalks)),
 			minWalksPerNight: median(nights.filter((n) => n.steps.length).map((n) => Math.min(...n.steps.map((s) => s.before.policeWalks)))),
@@ -229,9 +240,17 @@ function summary(count) {
 	const v2 = aiGames('hard', count);
 	return {
 		seeds: `${firstSeed}-${firstSeed + count - 1}`,
-		groups: { human: summarise(human), humanLater: summarise(others), strategic: summarise(strategic), v2: summarise(v2) },
+		groups: { human: summarise(human), humanLater: summarise(others), humanAll: summarise(human.concat(others)), strategic: summarise(strategic), v2: summarise(v2) },
 		humanGames: human,
 		humanLaterIds: others.map((g) => g.id),
+		humanLaterGames: others,
+		// Each human game on its own, to see whether the seven agree (they may share a player)
+		perGame: human.concat(others).map((g) => {
+			const t = summarise([g]);
+			return { id: g.id, result: g.result, hideout: g.nights[0].hideout, nights: g.nights.length, escaped: t.escapedNights, walksHome: t.walksHome, extraSpaces: t.extraSpaces,
+				coaches: t.coach.count, coachesLostGround: t.coach.walksGained[3].share, coachesFirst: t.coach.relativeTiming, alleys: g.nights.reduce((a, n) => a + n.alleys, 0),
+				waits: g.nights.reduce((a, n) => a + n.waits, 0), inReach: t.police.inReachShare, topTen: t.inference.topTen, possible: t.inference.medianPossible, decisions: t.inference.decisions };
+		}),
 		samples: { strategic: strategic.slice(0, 3).map((g) => Object.assign({ seed: firstSeed + strategic.indexOf(g) }, g)), v2: v2.slice(0, 3).map((g) => Object.assign({ seed: firstSeed + v2.indexOf(g) }, g)) }
 	};
 }
@@ -355,7 +374,8 @@ if (require.main === module) {
 	} else if (command === 'figures') {
 		const dir = path.join(__dirname, 'figures');
 		fs.mkdirSync(dir, { recursive: true });
-		for (const id of humanGames) {
+		const all = fs.readdirSync(records).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+		for (const id of humanGames.concat(all.filter((x) => !humanGames.includes(x)).sort())) {
 			fs.writeFileSync(path.join(dir, `movement-${id}.svg`), figure(movement(require(path.join(records, id + '.json')), { belief: false }), `Human Jack, game ${id}`) + '\n');
 		}
 		for (const [jack, name] of [['normal', 'Strategic Jack'], ['hard', 'Jack AI v2']]) {
