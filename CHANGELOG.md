@@ -6,6 +6,13 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 #### Human playtest research
 
+- **How Human Jack moves** ([exploratory report](research/human-playtests/reports/2026-10-11-movement.md); `2026-10-11-movement.js`):
+  - **What it compares:** the two first human games, traced night by night with annotated route figures, against Strategic Jack and Jack AI v2. That is 25 games each against Detective AI v3, on seeds 612001–612025.
+  - **Human routes:** 4.5 track spaces longer than the fastest route (Strategic Jack 1, Jack AI v2 3).
+  - **Coaches:** spent early; a quarter lost ground home, against almost none for the computer Jacks.
+  - **Alleys and waiting:** people used about twice as many alleys and waited on half their nights. The police came just as close to every Jack.
+  - **v3's tracking:** within sets of the same size it still ranked people lower, mostly after ordinary walks. That is inconclusive, and a pattern to watch. No AI was changed.
+
 - **Two investigations of batch 1's recommendations.** No AI was changed; neither met the bar for one.
   - **Coaches** ([report](research/human-playtests/reports/2026-10-11-investigation-coaches.md)):
     - **The test:** the human habit of spending all three coaches at the start of night 1, against Detective AI v3, with Jack AI v2 and Strategic Jack. That is 1,800 paired games, on seeds 612001–612300.

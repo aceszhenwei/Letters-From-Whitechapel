@@ -144,6 +144,11 @@ Reference: [docs/playtests.md](docs/playtests.md).
   - **Hideouts repeat,** so there are likely few players: never generalise.
 - **Two investigations** of batch 1's recommendations (they record no games):
   - **`reports/2026-10-11-investigation-coaches.md`:** early coaches on night 1 don't make v3 lose track of Jack, in 1,800 AI games on seeds 612001–612300. v3's poor tracking of people stays a pattern to watch, with its cause unknown. The proposed next step is an offline calibration check.
+  - **`reports/2026-10-11-movement.md`** (exploratory: the first two human games against 25 Strategic Jack and 25 Jack AI v2 games, seeds 612001–612025):
+    - **Human routes** run longer than needed (+4.5 spaces, against +1 and +3).
+    - **Coaches:** spent early and often not homeward; about twice as many alleys; and waiting.
+    - **Police proximity:** the same for every Jack.
+    - **v3's tracking:** it still ranks people lower within sets of the same size, mostly after walks. That is inconclusive, and a pattern to watch.
   - **`reports/2026-10-11-investigation-night4.md`:** v3 moved a waited-for Wretched from 158 to 142, next to Jack's hideout, ignoring its own threat model. This is a confirmed decision-level flaw. `containWretched` closes these escapes but changes no win rate, even against a lure Jack (seeds 614001–614200). It is not a strategic weakness, and no AI was changed.
 
 ### Automatic public playtest submission (implemented; awaiting owner setup)
