@@ -149,6 +149,7 @@ Reference: [docs/playtests.md](docs/playtests.md).
     - **Coaches:** spent early and often not homeward; about twice as many alleys; and waiting.
     - **Police proximity:** the same for every Jack.
     - **v3's tracking:** it still ranks people lower within sets of the same size, mostly after walks. That is inconclusive, and a pattern to watch.
+    - **Updated to all seven games:** every game agrees. Human nights began with a policeman in reach on 9 of 26 nights, always after a wait. In 8 of them Jack coached out of reach first, which accounts for most of the coaches that lost ground.
   - **`reports/2026-10-11-investigation-night4.md`:** v3 moved a waited-for Wretched from 158 to 142, next to Jack's hideout, ignoring its own threat model. This is a confirmed decision-level flaw. `containWretched` closes these escapes but changes no win rate, even against a lure Jack (seeds 614001–614200). It is not a strategic weakness, and no AI was changed.
 
 ### Automatic public playtest submission (implemented; awaiting owner setup)

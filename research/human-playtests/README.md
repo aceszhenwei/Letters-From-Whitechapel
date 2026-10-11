@@ -35,4 +35,5 @@ Two investigations followed it, both of games already analysed (they record no g
   - **Waiting:** they waited, which the computer Jacks never do.
   - **Police proximity:** the same for every Jack.
   - **Inconclusive:** these differences may explain only part of v3's weaker tracking. Within sets of the same size it still ranked people lower, mostly after ordinary walks.
+  - **Update, all seven games:** every game shows the same patterns. Human nights also began with a policeman in reach more often (9 of 26 against 4–10 of about 90), always after a wait, and were answered by a coach out of reach.
 - [2026-10-11-investigation-night4](reports/2026-10-11-investigation-night4.md): the night-4 escape in `g6b7af2a30b071ae6` came from v3 itself moving the waited-for Wretched next to Jack's hideout, ignoring its own threat model. This is a confirmed decision-level flaw, but it costs no measurable games, even against a Jack who lures on purpose. No AI was changed.
