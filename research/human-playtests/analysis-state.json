@@ -34,9 +34,11 @@
 	"aiChanges": [],
 	"snapshot": {
 		"updated": "2026-10-11",
-		"validGames": 2,
-		"outstanding": [],
-		"awaitingReview": 0,
+		"validGames": 3,
+		"outstanding": [
+			"g98c41370f7344474"
+		],
+		"awaitingReview": 1,
 		"status": "Collecting",
 		"reanalysis": []
 	}
