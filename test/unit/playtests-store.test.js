@@ -120,7 +120,7 @@ test('a batch ZIP: manifest.json and records/<game id>.json, each record unchang
 	assert.strictEqual(manifest.format, 'whitechapel-playtest-batch');
 	assert.strictEqual(manifest.count, 2);
 	assert.strictEqual(manifest.exportedAt, '2026-10-10T19:30:00.000Z');
-	assert.deepStrictEqual(plain(manifest.schema), { format: 'whitechapel-game-log', schemaVersion: 1, ruleset: WC.record.ruleset.id, appVersion: '1.0.0' });
+	assert.deepStrictEqual(plain(manifest.schema), { format: 'whitechapel-game-log', schemaVersion: 1, ruleset: WC.record.ruleset.id, appVersion: WC.record.appVersion });
 	assert.deepStrictEqual(manifest.games.map((g) => g.id).sort(), [firstId, second.game.id].sort());
 	assert.match(manifest.upload, /does not upload/);
 	const inZip = JSON.parse(files.find((f) => f.name == 'records/' + firstId + '.json').text);

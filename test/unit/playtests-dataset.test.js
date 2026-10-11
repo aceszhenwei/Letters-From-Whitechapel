@@ -154,7 +154,10 @@ test('cohorts keep app versions, opponents and difficulties apart in the statist
 	assert.ok(keys.some((k) => k.startsWith('0.9.0 ·')));
 	assert.ok(keys.some((k) => k.includes('Detective AI v3 (normal)')));
 	assert.ok(keys.some((k) => k.includes('Random police (test) (test)')));
-	assert.deepStrictEqual(Object.assign({}, result.stats.byAppVersion), { '1.0.0': 2, '0.9.0': 1 });
+	// By the records' own versions: the first human game's (1.0.0) and the synthetic game's (the current one)
+	const expected = {};
+	[firstRecord().app.version, synthetic(32).app.version, '0.9.0'].forEach((v) => { expected[v] = (expected[v] || 0) + 1; });
+	assert.deepStrictEqual(Object.assign({}, result.stats.byAppVersion), expected);
 	const total = Object.values(result.stats.winsByCohort).reduce((n, c) => n + c.games, 0);
 	assert.strictEqual(total, 3, 'each game in exactly one cohort');
 	assert.ok(result.stats.results.jackWins >= 1);
