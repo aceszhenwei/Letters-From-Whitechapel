@@ -170,7 +170,8 @@ Reference: [docs/automatic-playtest-collection.md](docs/automatic-playtest-colle
 
 ```
 npm install                 # Node 22+; dev dependencies: jsdom, fake-indexeddb
-npm test                    # fast tier: unit + regression, incl. golden traces (CI; a few minutes)
+npm test                    # fast tier: unit + regression, incl. golden traces (about 4 min; CI runs it in 3 parallel groups)
+npm run test:fast           # headless tests only (about 30 s): use while iterating; run npm test before a PR
 npm run test:smoke          # small simulations; required for AI/rules/engine/map changes (CI runs it)
 npm run eval:medium         # algorithmic AI changes (~13 min); results in experiments/medium/
 npm run research:full       # research milestones only (~4 h); never routine
@@ -192,7 +193,8 @@ Reference: [docs/testing.md](docs/testing.md).
   - Page tests use jsdom through `test/helpers/game.js`, which loads the scripts in `index.html` order.
   - jsdom lacks `TextEncoder`/`TextDecoder`, so the helper injects Node's.
   - UI storage tests use `fake-indexeddb`.
-- **Golden traces** (`test/fixtures/golden-traces.json`):
+- **CI groups:** every test file is in exactly one CI group, and `test/unit/ci.test.js` checks it. A new file joins a group automatically: files that load the page (`loadGame`/`startGame`/`setupJack`/`playGame`) go to `browser`, the rest to `core`/`test:fast`.
+- **Golden traces** (`test/fixtures/golden-traces.json`; checked by `golden-traces.test.js` for odd seeds and `golden-traces-even.test.js` for even ones):
   - They pin how seeded games play.
   - If a change alters them, it is a behaviour change: regenerate them only deliberately, and explain why in the PR.
   - The default Jack AI shares the page's random source, so UI code that draws random numbers can shift them.
@@ -206,9 +208,9 @@ Reference: [docs/testing.md](docs/testing.md).
 ## Deployment and releases (implemented)
 
 - **GitHub Pages:**
-  - `pages.yml` publishes https://aceszhenwei.github.io/Letters-From-Whitechapel/ on every push to `master`.
-  - It runs `npm test`, then stages only `index.html`, `css/`, `js/`, `images/` and `fonts/` with `tools/site/build.js`.
-  - It ignores pushes that only touch `research/human-playtests/**`.
+  - `pages.yml` publishes https://aceszhenwei.github.io/Letters-From-Whitechapel/ after every push to `master` that changes the game. `test.yml` calls it once the whole suite has passed, so the tests run once per merge.
+  - It stages only `index.html`, `css/`, `js/`, `images/` and `fonts/` with `tools/site/build.js`.
+  - Pushes that only touch docs or `research/human-playtests/**` don't redeploy (the `docs` and `playtests` test scopes).
   - The repository setting **Pages source** must be **GitHub Actions**.
   - The site lives under a project path, so no root-relative URLs.
 - **Releases** ([docs/releasing.md](docs/releasing.md)):
@@ -216,7 +218,13 @@ Reference: [docs/testing.md](docs/testing.md).
   - Bump `package.json`, `package-lock.json` and `appVersion` in `js/core/record.js`. Records carry `app.version`, so a release starts new cohorts.
   - Where tag pushes are refused, run **Actions › Release › Run workflow** (`release.yml`) instead.
   - Releases don't deploy.
-- **Workflows:** `test.yml` (tests plus smoke on pushes and PRs), `pages.yml` (passes `vars.PLAYTEST_API_URL` to the build), `playtests.yml`, `release.yml`, `playtest-import.yml` (daily import PR), `playtest-worker.yml` (Worker deploy, by hand).
+- **Workflows:**
+  - `test.yml` runs on pushes and PRs. `tools/ci/scope.js` picks the scope:
+    - docs-only or `research/human-playtests/`-only changes get `test:fast` plus `dataset.js --ci`, in under a minute;
+    - anything else gets the whole suite in 3 groups (`tools/ci/tests.js`: golden / browser / core + smoke), about 3 minutes;
+    - on a push to `master` it then calls `pages.yml`.
+  - `pages.yml` runs only when `test.yml` calls it, or by hand, when it runs `npm test` first. It passes `vars.PLAYTEST_API_URL` to the build.
+  - The other workflows: `playtests.yml`, `release.yml`, `playtest-import.yml` (daily import PR), `playtest-worker.yml` (Worker deploy, by hand).
 
 ## Known limitations and precautions
 

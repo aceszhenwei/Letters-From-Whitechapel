@@ -67,6 +67,8 @@ test('new records are replay-verified and written byte for byte; games already i
 	const dir = tempCollection([{ record: firstRecord() }]);
 	const state = dataset.readState(dir);
 	state.analysed[firstId] = { report: 'earlier', methodologyVersion: 1 };
+	state.reports.push({ id: 'earlier', date: '2026-10-10', file: 'reports/earlier.md', methodologyVersion: 1, games: [firstId], cohorts: [] });
+	fs.writeFileSync(path.join(dir, 'reports', 'earlier.md'), '# An earlier report (test)\n');
 	dataset.writeState(dir, state);
 	const summaryFile = path.join(dir, 'summary.md');
 	const r = await runImport(s, dir, ['--summary', summaryFile]);

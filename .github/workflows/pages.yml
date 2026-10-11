@@ -1,44 +1,42 @@
 # Publishes the game to GitHub Pages (docs/deployment.md): https://aceszhenwei.github.io/Letters-From-Whitechapel/
-# On every push to master, or by hand (Actions > Deploy to GitHub Pages > Run workflow). The fast tests run first, so
-# a commit that fails them is never published; then tools/site/build.js stages only what the game loads, with the
-# playtest intake's address from the repository variable PLAYTEST_API_URL, if it is set.
+# - After every push to master that changes the game, called by the Tests workflow (test.yml) once the whole suite has
+#   passed there, so the tests aren't run a second time here. Pushes that only change documentation or the playtest
+#   collection don't redeploy: the site contains neither.
+# - By hand (Actions > Deploy to GitHub Pages > Run workflow), for example after setting PLAYTEST_API_URL: then the
+#   fast tests run here first, since no Tests run gates it.
+# tools/site/build.js stages only what the game loads, with the playtest intake's address from the repository variable
+# PLAYTEST_API_URL, if it is set.
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [master]
-    # Uploading playtest records changes nothing on the site (docs/playtests.md): no redeployment for them alone
-    paths-ignore:
-      - 'research/human-playtests/**'
+  workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# One deployment at a time; a newer push waits rather than cancelling one in progress
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm test
+      - name: Tests (by hand only; after a push, the Tests workflow has run the whole suite)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm test
       # The playtest intake's public address (docs/automatic-playtest-collection.md): unset, the site sends nothing
       - run: node tools/site/build.js _site
         env:
           PLAYTEST_API_URL: ${{ vars.PLAYTEST_API_URL }}
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
+          include-hidden-files: true # .nojekyll, as before
 
   deploy:
     needs: build
@@ -46,9 +44,13 @@ jobs:
     permissions:
       pages: write
       id-token: write
+    # One deployment at a time; a newer one waits rather than cancelling one in progress
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

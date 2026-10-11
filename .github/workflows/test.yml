@@ -1,19 +1,88 @@
+# The test suite (docs/testing.md#continuous-integration), on every pull request and every push to master.
+# 1. scope: tools/ci/scope.js compares the change with its base. Documentation-only and playtest-collection-only
+#    changes get the quick check; anything else (code, tests, tools, data, dependencies, workflows), or any doubt,
+#    gets the whole suite.
+# 2. quick: the headless tests (tools/ci/tests.js fast), plus dataset.js --ci for collection changes. Under a minute.
+# 3. suite: the whole suite in three parallel groups (golden traces and full games / other page tests / headless
+#    tests and smoke). Every test file is in exactly one group, so together they run all of `npm test`.
+# 4. pages: after a push to master that passed the whole suite, publishes the site (pages.yml), so the tests run once
+#    per merge instead of once here and again in the Pages build. Documentation and collection changes don't
+#    redeploy (the site doesn't contain them).
 name: Tests
 
 on:
   push:
-    branches: [master, main]
+    branches: [master]
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to a pull request replaces its older run; runs on master always finish (they deploy)
+concurrency:
+  group: tests-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  test:
+  scope:
     runs-on: ubuntu-latest
+    outputs:
+      scope: ${{ steps.scope.outputs.scope }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # The base commit, to compare with
+      - id: scope
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event_name == 'push' && github.event.before || '' }}
+          HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: node tools/ci/scope.js --base "$BASE" --head "$HEAD"
+
+  quick:
+    needs: scope
+    if: needs.scope.outputs.scope == 'docs' || needs.scope.outputs.scope == 'playtests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm test
-      - run: npm run test:smoke
+      - run: npm run test:fast
+      - name: Check the playtest collection
+        if: needs.scope.outputs.scope == 'playtests'
+        run: node tools/playtests/dataset.js --ci
+
+  suite:
+    needs: scope
+    if: needs.scope.outputs.scope == 'full'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [golden, browser, core]
+    name: suite (${{ matrix.group }})
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node tools/ci/tests.js ${{ matrix.group }}
+      - name: Smoke tier (small simulations)
+        if: matrix.group == 'core'
+        run: npm run test:smoke
+
+  pages:
+    needs: [scope, suite]
+    if: github.event_name == 'push' && needs.scope.outputs.scope == 'full'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml

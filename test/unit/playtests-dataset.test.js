@@ -223,3 +223,52 @@ test('the command line as GitHub Actions runs it: pass with a summary, fail on a
 	assert.strictEqual(json.stats.validGames, 1);
 	assert.deepStrictEqual(json.batch.outstanding, [firstId]);
 });
+
+test('the CI check holds a change to the collection to the suite\'s consistency rules: a current snapshot, and analysed games with their reports', () => {
+	// What test 1 asserts about the live collection, enforced by dataset.js --ci itself, so the Tests workflow can
+	// skip the whole suite for changes that only touch the collection (docs/testing.md#ci-scopes)
+	const ci = (dir) => {
+		try {
+			return { code: 0, out: execFileSync(process.execPath, [path.join(root, 'tools', 'playtests', 'dataset.js'), '--dir', dir, '--ci'], { encoding: 'utf8' }) };
+		} catch (error) {
+			return { code: error.status, out: error.stdout };
+		}
+	};
+	const dir = tempCollection([{ record: firstRecord() }]);
+	assert.strictEqual(ci(dir).code, 0);
+	// PR #34: a record added without refreshing the snapshot
+	const added = synthetic(25);
+	fs.writeFileSync(path.join(dir, 'records', added.game.id + '.json'), JSON.stringify(added));
+	let r = ci(dir);
+	assert.strictEqual(r.code, 1);
+	assert.match(r.out, /::error file=research\/human-playtests\/analysis-state\.json::analysis-state\.json's snapshot .* out of date: run npm run playtests -- --update-state/);
+	execFileSync(process.execPath, [path.join(root, 'tools', 'playtests', 'dataset.js'), '--dir', dir, '--update-state'], { encoding: 'utf8' });
+	assert.strictEqual(ci(dir).code, 0);
+	// An analysed game whose report isn't recorded, doesn't list it, or is missing
+	const state = dataset.readState(dir);
+	state.analysed[firstId] = { report: 'nowhere', methodologyVersion: 1 };
+	dataset.writeState(dir, state);
+	r = ci(dir);
+	assert.strictEqual(r.code, 1);
+	assert.match(r.out, /marks g91d4014f17ae09e6 as analysed by nowhere, which is not a recorded report/);
+	state.reports.push({ id: 'nowhere', file: 'reports/nowhere.md', methodologyVersion: 1, games: [firstId], cohorts: [] });
+	dataset.writeState(dir, state);
+	assert.match(ci(dir).out, /report nowhere \(reports\/nowhere\.md\) is recorded, but its file is missing/);
+	fs.writeFileSync(path.join(dir, 'reports', 'nowhere.md'), '# test\n');
+	state.reports[0].games = [];
+	dataset.writeState(dir, state);
+	assert.match(ci(dir).out, /analysed by nowhere, which doesn't list it/);
+	// The real collection passes
+	assert.strictEqual(ci(collection).code, 0);
+});
+
+test('adding records with --add keeps the snapshot current', () => {
+	const dir = tempCollection([{ record: firstRecord() }]);
+	const extra = synthetic(26);
+	const file = path.join(dir, 'extra.json');
+	fs.writeFileSync(file, JSON.stringify(extra));
+	execFileSync(process.execPath, [path.join(root, 'tools', 'playtests', 'dataset.js'), '--dir', dir, '--add', file], { encoding: 'utf8' });
+	const result = dataset.scan(dir);
+	assert.ok(result.batch.outstanding.includes(extra.game.id));
+	assert.ok(result.batch.snapshotCurrent);
+});

@@ -188,6 +188,13 @@ function scan(dir, options = {}) {
 	const problems = files.filter((f) => f.verdict === 'invalid' || f.verdict === 'ineligible' || f.misnamed || f.duplicate || f.conflict ||
 		(f.verdict === 'incompatible' && f.changed));
 	const stateProblems = Object.keys(state.analysed).filter((id) => !byId[id]).map((id) => `analysis-state.json marks ${id} as analysed, but records/ has no such game`);
+	// Every analysed game names a recorded report that lists it, and whose file exists
+	for (const [id, entry] of Object.entries(state.analysed)) {
+		const report = state.reports.find((r) => r.id === (entry && entry.report));
+		if (!report) stateProblems.push(`analysis-state.json marks ${id} as analysed by ${entry && entry.report}, which is not a recorded report`);
+		else if (!Array.isArray(report.games) || !report.games.includes(id)) stateProblems.push(`analysis-state.json marks ${id} as analysed by ${report.id}, which doesn't list it`);
+		else if (!report.file || !fs.existsSync(path.join(dir, report.file))) stateProblems.push(`report ${report.id} (${report.file}) is recorded, but its file is missing`);
+	}
 	// Provenance: games imported from online submissions, which must still be exactly what was received
 	const intake = readIntake(dir);
 	for (const [id, entry] of Object.entries(intake)) {
@@ -403,7 +410,12 @@ async function main(argv) {
 		const report = addItems(dir, expanded);
 		for (const r of report) console.log(`${r.from}: ${r.outcome}${r.file ? ' -> ' + r.file : ''}${r.reason ? ' (' + r.reason + ')' : ''}`);
 		console.log('');
-		const result = scan(dir);
+		let result = scan(dir);
+		if (report.some((r) => r.outcome === 'added')) {
+			// New games change the list awaiting review: keep the snapshot current, as the CI check requires
+			writeState(dir, updateSnapshot(result, option(args, '--date')));
+			result = scan(dir);
+		}
 		console.log(lines(result).join('\n'));
 		return report.some((r) => r.outcome === 'rejected' || r.outcome === 'conflict') ? 1 : 0;
 	}
@@ -423,6 +435,11 @@ async function main(argv) {
 		result.batch.snapshotCurrent = true;
 		console.log('Updated analysis-state.json.');
 	}
+	if (args.includes('--ci') && !result.batch.snapshotCurrent) {
+		// The same consistency the test suite requires (test/unit/playtests-dataset.test.js), so a pull request that only
+		// changes the collection is held to it without running the whole suite
+		result.stateProblems.push('analysis-state.json\'s snapshot of the games awaiting review is out of date: run npm run playtests -- --update-state and commit it');
+	}
 	const failed = result.problems.length > 0 || result.stateProblems.length > 0;
 	if (args.includes('--json')) {
 		const strip = (f) => Object.fromEntries(Object.entries(f).filter(([k]) => k !== 'record'));
@@ -436,9 +453,6 @@ async function main(argv) {
 		for (const f of result.files.filter((x) => x.verdict === 'incompatible' && !x.changed)) console.log(`::warning file=${f.file}::incompatible with this version (kept as historical evidence)`);
 		if (result.batch.status === statuses.ready) {
 			console.log(`::notice title=Research batch ready::${result.batch.outstanding.length} new valid human games await review (threshold ${result.batch.threshold}). Commission the analysis by hand: docs/playtests.md`);
-		}
-		if (!result.batch.snapshotCurrent) {
-			console.log('::notice title=Analysis state snapshot::analysis-state.json\'s snapshot is out of date; refresh it with npm run playtests -- --update-state (informational)');
 		}
 		if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown(result));
 		console.log(failed ? '\nFAIL: the playtest collection has problems (above).' : '\nPASS: every playtest record is valid.');

@@ -200,7 +200,7 @@ A policeman moving, from click to screen:
 | `index.html` | The page and the script load order |
 | `css/style.css` | All styling (see [User interface](ui.md)); `css/font-awesome.min.css` and `fonts/` are the icon font |
 | `images/vintage-map.jpg` | The old map under the board |
-| `.github/workflows/` | `test.yml` runs the tests on every push and pull request; `pages.yml` publishes the game (see [Deployment](deployment.md)); `release.yml` publishes a GitHub Release for a version tag (see [Releasing](releasing.md)); `playtests.yml` checks the human playtest collection (see [Human playtests](playtests.md)); `playtest-import.yml` imports submitted playtests into a pull request and `playtest-worker.yml` deploys the intake Worker (see [Automatic playtest collection](automatic-playtest-collection.md)) |
+| `.github/workflows/` | `test.yml` runs the tests on every push and pull request, scoped by `tools/ci/scope.js` and split into parallel groups by `tools/ci/tests.js` (see [Testing](testing.md#continuous-integration)), then calls `pages.yml`, which publishes the game (see [Deployment](deployment.md)); `release.yml` publishes a GitHub Release for a version tag (see [Releasing](releasing.md)); `playtests.yml` checks the human playtest collection (see [Human playtests](playtests.md)); `playtest-import.yml` imports submitted playtests into a pull request and `playtest-worker.yml` deploys the intake Worker (see [Automatic playtest collection](automatic-playtest-collection.md)) |
 | `js/data/` | Map and content data |
 | `js/core/` | Board, rules, engine, random, deduction, the game record: no page access |
 | `js/ai/jack.js` | The baseline Jack AI |
