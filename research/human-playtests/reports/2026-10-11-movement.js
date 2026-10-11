@@ -93,7 +93,9 @@ function movement(full, { belief = true } = {}) {
 				k: k + 1, type: m.type, from: num(at), via: m.via !== undefined ? num(m.via) : undefined, to: num(to), cost, before, after,
 				onFastestRoute: to === home || cost + after.spaces === before.spaces,
 				// The same with the policemen where they stood (they move after Jack, so this is the route as it looked then)
-				onFastestRoutePolice: to === home || cost + after.spacesPolice === before.spacesPolice,
+				// (null when the policemen wall off every way home: no route to be on)
+				onFastestRoutePolice: before.spacesPolice === Infinity ? null : to === home || cost + after.spacesPolice === before.spacesPolice,
+				walledOff: before.spacesPolice === Infinity,
 				walkOptionsInReach: share(B.walk(at, P).filter((q) => q !== home).map((q) => inReach(q, P))) // Could a walk have left reach?
 			};
 			if (belief) {
@@ -162,7 +164,8 @@ function summarise(games) {
 		movesTowardHome: share(steps.map((s) => s.after.walksHome < s.before.walksHome)),
 		movesAwayFromHome: share(steps.map((s) => s.after.walksHome > s.before.walksHome)),
 		onFastestRoute: share(steps.map((s) => s.onFastestRoute)),
-		onFastestRoutePolice: share(steps.map((s) => s.onFastestRoutePolice)),
+		onFastestRoutePolice: share(steps.filter((s) => s.onFastestRoutePolice !== null).map((s) => s.onFastestRoutePolice)),
+		walledOffMoves: share(steps.map((s) => s.walledOff)),
 		coachesPerNight: [0, 1, 2, 3].map((i) => mean(games.filter((g) => g.nights[i]).map((g) => g.nights[i].coaches))),
 		alleysPerNight: [0, 1, 2, 3].map((i) => mean(games.filter((g) => g.nights[i]).map((g) => g.nights[i].alleys))),
 		coach: {
@@ -170,7 +173,7 @@ function summarise(games) {
 			firstMove: share(coaches.map((s) => s.k === 1)),
 			relativeTiming: median(coaches.map((s) => (s.k - 1) / Math.max(1, s.turns - 1))), // 0 = first move, 1 = last
 			onFastestRoute: share(coaches.map((s) => s.onFastestRoute)),
-			onFastestRoutePolice: share(coaches.map((s) => s.onFastestRoutePolice)),
+			onFastestRoutePolice: share(coaches.filter((s) => s.onFastestRoutePolice !== null).map((s) => s.onFastestRoutePolice)),
 			// Walks nearer home for its two spaces: 2 is as good as two walks; less spends a space on something else
 			walksGained: [2, 1, 0, -1].map((g) => ({ gained: g, share: share(coaches.map((s) => (g === -1 ? s.before.walksHome - s.after.walksHome < 0 : s.before.walksHome - s.after.walksHome === g))) })),
 			closerHome: share(coaches.map((s) => s.after.walksHome < s.before.walksHome)),
@@ -261,7 +264,7 @@ function panel(night, title, x0, y0, size) {
 	const inside = (m) => { const [x, y] = B.position(m); return x >= minX && x <= maxX && y >= minY && y <= maxY; };
 	const f = (v) => v.toFixed(1);
 	let out = `<g><rect x="${x0}" y="${y0 + 24}" width="${size}" height="${size}" fill="${colors.surface}" stroke="${colors.street}"/>`;
-	out += `<text x="${x0}" y="${y0 + 16}" font-size="13" font-weight="600" fill="${colors.text}">${title}</text>`;
+	out += `<text x="${x0}" y="${y0 + 16}" font-size="12" font-weight="600" fill="${colors.text}">${title}</text>`;
 	out += `<clipPath id="c${x0}_${y0}"><rect x="${x0}" y="${y0 + 24}" width="${size}" height="${size}"/></clipPath><g clip-path="url(#c${x0}_${y0})">`;
 	// Streets and circles
 	let d = '';
@@ -315,7 +318,8 @@ function figure(game, label) {
 		const x = (i % 2) * (size + gap);
 		const y = Math.floor(i / 2) * (size + 24 + gap);
 		const kinds = n.steps.map((s) => s.type[0]).join('');
-		const title = `Night ${n.night}: ${kinds || 'no move'} · ${n.walksHome} walks home · ${n.ending}${n.waits ? ` · ${n.waits} wait${n.waits > 1 ? 's' : ''}` : ''}`;
+		const ending = { escaped: 'escaped', arrested: 'arrested', outOfMoves: 'out of moves' }[n.ending] || n.ending;
+		const title = `Night ${n.night}: ${kinds || 'no move'} · ${n.walksHome} walks home · ${ending}${n.waits ? ` · ${n.waits} wait${n.waits > 1 ? 's' : ''}` : ''}`;
 		svg += panel(n, title, x, y, size);
 	});
 	const ly = height - 50;

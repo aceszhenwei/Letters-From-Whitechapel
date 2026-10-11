@@ -29,4 +29,10 @@ The permanent collection of games people have played, kept as research evidence.
 
 Two investigations followed it, both of games already analysed (they record no games):
 - [2026-10-11-investigation-coaches](reports/2026-10-11-investigation-coaches.md): the habit of spending all three coaches early on night 1 doesn't make Detective AI v3 lose track of Jack (1,800 computer games). v3 tracks people worse for another, unknown reason, which stays a pattern to watch.
+- [2026-10-11-movement](reports/2026-10-11-movement.md), an exploratory comparison of how Human Jack moves (the first two games) with Strategic Jack and Jack AI v2 (25 games each, seeds 612001–612025):
+  - **Human routes:** 4.5 track spaces longer than needed, against 1 and 3 for the computer Jacks.
+  - **Coaches and alleys:** every coach spent early and often not homeward, and about twice as many alleys.
+  - **Waiting:** they waited, which the computer Jacks never do.
+  - **Police proximity:** the same for every Jack.
+  - **Inconclusive:** these differences may explain only part of v3's weaker tracking. Within sets of the same size it still ranked people lower, mostly after ordinary walks.
 - [2026-10-11-investigation-night4](reports/2026-10-11-investigation-night4.md): the night-4 escape in `g6b7af2a30b071ae6` came from v3 itself moving the waited-for Wretched next to Jack's hideout, ignoring its own threat model. This is a confirmed decision-level flaw, but it costs no measurable games, even against a Jack who lures on purpose. No AI was changed.
