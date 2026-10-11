@@ -1,0 +1,64 @@
+{
+ "lure": {
+  "v3": {
+   "games": 200,
+   "jackWins": 154,
+   "lastNights": 177,
+   "waited": 177,
+   "sceneOneWalk": 73,
+   "sceneOneWalkOpen": 65,
+   "firstMoveEscapes": 65,
+   "lastNightEscapes": 154
+  },
+  "v3-wretched": {
+   "games": 200,
+   "jackWins": 149,
+   "lastNights": 178,
+   "waited": 178,
+   "sceneOneWalk": 16,
+   "sceneOneWalkOpen": 11,
+   "firstMoveEscapes": 11,
+   "lastNightEscapes": 149
+  },
+  "comparison": {
+   "paired": 200,
+   "onlyWithLever": 5,
+   "onlyWithV3": 10,
+   "diff": -2.5,
+   "low": -6.3,
+   "high": 1.3,
+   "p": 0.3018
+  }
+ },
+ "lure-now": {
+  "v3": {
+   "games": 200,
+   "jackWins": 154,
+   "lastNights": 177,
+   "waited": 0,
+   "sceneOneWalk": 0,
+   "sceneOneWalkOpen": 0,
+   "firstMoveEscapes": 0,
+   "lastNightEscapes": 154
+  },
+  "v3-wretched": {
+   "games": 200,
+   "jackWins": 155,
+   "lastNights": 178,
+   "waited": 0,
+   "sceneOneWalk": 0,
+   "sceneOneWalkOpen": 0,
+   "firstMoveEscapes": 0,
+   "lastNightEscapes": 155
+  },
+  "comparison": {
+   "paired": 200,
+   "onlyWithLever": 1,
+   "onlyWithV3": 0,
+   "diff": 0.5,
+   "low": -0.5,
+   "high": 1.5,
+   "p": 1
+  }
+ }
+}

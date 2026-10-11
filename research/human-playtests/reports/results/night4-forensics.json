@@ -1,0 +1,255 @@
+{
+ "game": "g6b7af2a30b071ae6",
+ "hideout": 126,
+ "scene": 142,
+ "blockers": [
+  315,
+  314
+ ],
+ "hideoutBelief": [
+  {
+   "circle": 142,
+   "p": 0.144
+  },
+  {
+   "circle": 156,
+   "p": 0.144
+  },
+  {
+   "circle": 127,
+   "p": 0.144
+  },
+  {
+   "circle": 101,
+   "p": 0.128
+  },
+  {
+   "circle": 126,
+   "p": 0.128
+  },
+  {
+   "circle": 102,
+   "p": 0.128
+  },
+  {
+   "circle": 125,
+   "p": 0.105
+  },
+  {
+   "circle": 143,
+   "p": 0.079
+  }
+ ],
+ "trueHideoutRank": 5,
+ "night3": [
+  {
+   "jackMove": 0,
+   "threats": 61,
+   "thisThreat": {
+    "weight": 0.0116,
+    "share": 0.0124,
+    "rank": 44
+   },
+   "openShareAfter": 0.639,
+   "closesThis": false,
+   "nearestTurnsToBlocker": 3
+  },
+  {
+   "jackMove": 1,
+   "threats": 61,
+   "thisThreat": {
+    "weight": 0.0116,
+    "share": 0.0124,
+    "rank": 44
+   },
+   "openShareAfter": 0.534,
+   "closesThis": false,
+   "nearestTurnsToBlocker": 3
+  },
+  {
+   "jackMove": 2,
+   "threats": 61,
+   "thisThreat": {
+    "weight": 0.0116,
+    "share": 0.0124,
+    "rank": 44
+   },
+   "openShareAfter": 0.534,
+   "closesThis": false,
+   "nearestTurnsToBlocker": 3
+  }
+ ],
+ "night3Last": {
+  "jackMove": 2,
+  "threats": 61,
+  "thisThreat": {
+   "weight": 0.0116,
+   "share": 0.0124,
+   "rank": 44
+  },
+  "openShareAfter": 0.534,
+  "closesThis": false,
+  "nearestTurnsToBlocker": 3
+ },
+ "patrols": {
+  "women": [
+   3,
+   65,
+   27,
+   158
+  ],
+  "required": [
+   93,
+   95,
+   69,
+   78,
+   88
+  ],
+  "stations": [
+   {
+    "crossing": 312,
+    "gain": 0.343,
+    "blocksThis": false
+   },
+   {
+    "crossing": 385,
+    "gain": 0.086,
+    "blocksThis": false
+   },
+   {
+    "crossing": 56,
+    "gain": 0.022,
+    "blocksThis": false
+   },
+   {
+    "crossing": 190,
+    "gain": 0.01,
+    "blocksThis": false
+   },
+   {
+    "crossing": 33,
+    "gain": 0,
+    "blocksThis": false
+   },
+   {
+    "crossing": 76,
+    "gain": 0,
+    "blocksThis": false
+   },
+   {
+    "crossing": 210,
+    "gain": 0,
+    "blocksThis": false
+   }
+  ],
+  "swapThreshold": 0.2,
+  "thisThreatWeight": 0.064,
+  "thisThreatShare": 0.0538,
+  "openShare": 1,
+  "blockerIsStation": false
+ },
+ "wretched": {
+  "from": 158,
+  "to": 142,
+  "fromWalksHome": 2,
+  "fromThreat": 0.223,
+  "options": [
+   {
+    "circle": 172,
+    "patrolDistance": 3,
+    "threat": 0,
+    "openThreat": 0,
+    "hideoutsOneWalk": [],
+    "trueHomeOneWalk": false,
+    "trueHomeOpen": false
+   },
+   {
+    "circle": 185,
+    "patrolDistance": 3,
+    "threat": 0,
+    "openThreat": 0,
+    "hideoutsOneWalk": [],
+    "trueHomeOneWalk": false,
+    "trueHomeOpen": false
+   },
+   {
+    "circle": 159,
+    "patrolDistance": 2,
+    "threat": 0.079,
+    "openThreat": 0.079,
+    "hideoutsOneWalk": [
+     143
+    ],
+    "trueHomeOneWalk": false,
+    "trueHomeOpen": false
+   },
+   {
+    "circle": 183,
+    "patrolDistance": 2,
+    "threat": 0.144,
+    "openThreat": 0.144,
+    "hideoutsOneWalk": [
+     156
+    ],
+    "trueHomeOneWalk": false,
+    "trueHomeOpen": false
+   },
+   {
+    "circle": 171,
+    "patrolDistance": 2,
+    "threat": 0.144,
+    "openThreat": 0.144,
+    "hideoutsOneWalk": [
+     156
+    ],
+    "trueHomeOneWalk": false,
+    "trueHomeOpen": false
+   },
+   {
+    "circle": 157,
+    "patrolDistance": 2,
+    "threat": 0.144,
+    "openThreat": 0.144,
+    "hideoutsOneWalk": [
+     156
+    ],
+    "trueHomeOneWalk": false,
+    "trueHomeOpen": false
+   },
+   {
+    "circle": 142,
+    "patrolDistance": 1,
+    "threat": 0.777,
+    "openThreat": 0.377,
+    "hideoutsOneWalk": [
+     101,
+     126,
+     156,
+     125,
+     102,
+     127
+    ],
+    "trueHomeOneWalk": true,
+    "trueHomeOpen": true
+   },
+   {
+    "circle": 143,
+    "patrolDistance": 1,
+    "threat": 0.649,
+    "openThreat": 0.521,
+    "hideoutsOneWalk": [
+     101,
+     156,
+     125,
+     102,
+     127
+    ],
+    "trueHomeOneWalk": true,
+    "trueHomeOpen": true
+   }
+  ],
+  "v3Rule": 142,
+  "containWretchedRule": 172,
+  "chosenRankByOpenThreat": 7
+ }
+}

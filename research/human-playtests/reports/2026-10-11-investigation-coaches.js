@@ -197,8 +197,11 @@ function summary() {
 			night1Coaches: mean(games.map((g) => g.nights[0].coaches)),
 			night1CoachesFirst: mean(games.map((g) => g.nights[0].coachesFirst)),
 			night1Moves: mean(games.map((g) => g.nights[0].moves)),
+			movesPerNight: [0, 1, 2, 3].map((n) => mean(games.filter((g) => g.nights[n]).map((g) => g.nights[n].moves))),
 			night1Lost: games.filter((g) => g.night === 1 && g.result !== 'jack').length,
 			coachesPerNight: [0, 1, 2, 3].map((n) => mean(games.filter((g) => g.nights[n]).map((g) => g.nights[n].coaches))),
+			alleysPerNight: [0, 1, 2, 3].map((n) => mean(games.filter((g) => g.nights[n]).map((g) => g.nights[n].alleys))),
+			byNight: [1, 2, 3, 4].map((n) => { const t = tracking([].concat(...nightDecisions(games, n))); return { night: n, medianPossible: t.medianPossible, jackInTopTen: t.jackInTopTen }; }),
 			night1: tracking([].concat(...nightDecisions(games, 1))),
 			later: tracking([].concat(...laterDecisions(games))),
 			all: tracking([].concat(...games.map((g) => g.decisions))),
@@ -247,7 +250,7 @@ function humans() {
 			nights: full.nights.map((n) => {
 				const moves = n.jack.moves || [];
 				const first = moves.findIndex((m) => m.type !== 'carriage');
-				return { coaches: moves.filter((m) => m.type === 'carriage').length, coachesFirst: first === -1 ? moves.length : first, moves: moves.length, pattern: moves.map((m) => m.type[0]).join('') };
+				return { coaches: moves.filter((m) => m.type === 'carriage').length, alleys: moves.filter((m) => m.type === 'alley').length, coachesFirst: first === -1 ? moves.length : first, moves: moves.length, pattern: moves.map((m) => m.type[0]).join('') };
 			}),
 			decisions: study(id, full).decisions.map((d) => [d.night, d.possible, d.rankOfJack, d.reach, d.jackArrestable ? 1 : 0, d.chose === 'arrest' ? 1 : 0])
 		};
@@ -258,6 +261,8 @@ function humans() {
 		night1Coaches: mean(games.map((g) => g.nights[0].coaches)),
 		night1CoachesFirst: mean(games.map((g) => g.nights[0].coachesFirst)),
 		coachesPerNight: [0, 1, 2, 3].map((n) => mean(games.filter((g) => g.nights[n]).map((g) => g.nights[n].coaches))),
+		alleysPerNight: [0, 1, 2, 3].map((n) => mean(games.filter((g) => g.nights[n]).map((g) => g.nights[n].alleys))),
+		movesPerNight: [0, 1, 2, 3].map((n) => mean(games.filter((g) => g.nights[n]).map((g) => g.nights[n].moves))),
 		byNight,
 		later: tracking([].concat(...games.map((g) => g.decisions.filter((d) => d[0] > 1)))),
 		all: tracking([].concat(...games.map((g) => g.decisions)))

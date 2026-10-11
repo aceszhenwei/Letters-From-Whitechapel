@@ -1,0 +1,147 @@
+{
+ "games": [
+  {
+   "id": "g2358629abcf5b51d",
+   "result": "jack",
+   "nights": [
+    "cccaaw",
+    "wwwcwwcaww",
+    "cwwcaw",
+    "cwww"
+   ]
+  },
+  {
+   "id": "g4e86b6b6af7cc2e1",
+   "result": "police",
+   "nights": [
+    "ccwacwaw",
+    "wcwcww",
+    ""
+   ]
+  },
+  {
+   "id": "g6b7af2a30b071ae6",
+   "result": "jack",
+   "nights": [
+    "ccwacw",
+    "cwcaaw",
+    "cww",
+    "w"
+   ]
+  },
+  {
+   "id": "g91d4014f17ae09e6",
+   "result": "jack",
+   "nights": [
+    "ccacw",
+    "cwwcwaw",
+    "cwcww",
+    "cw"
+   ]
+  },
+  {
+   "id": "g98c41370f7344474",
+   "result": "jack",
+   "nights": [
+    "cccwwwwaw",
+    "ccw",
+    "cacw",
+    "wcwwww"
+   ]
+  },
+  {
+   "id": "ga36125530c4b4076",
+   "result": "jack",
+   "nights": [
+    "cccwwawwww",
+    "wccwaw",
+    "wwwwwwacw",
+    "wcwawwwww"
+   ]
+  },
+  {
+   "id": "gcdf6409ed736eaf5",
+   "result": "jack",
+   "nights": [
+    "ccwacwaww",
+    "cacaw",
+    "ccaw",
+    "cwwww"
+   ]
+  }
+ ],
+ "night1Coaches": 3,
+ "night1CoachesFirst": 2.429,
+ "coachesPerNight": [
+  3,
+  2,
+  1.429,
+  0.833
+ ],
+ "alleysPerNight": [
+  1.429,
+  1,
+  0.571,
+  0.167
+ ],
+ "movesPerNight": [
+  7.571,
+  6.143,
+  4.429,
+  4.5
+ ],
+ "byNight": [
+  {
+   "night": 1,
+   "decisions": 230,
+   "medianPossible": 65,
+   "jackInTopTen": 0.052,
+   "medianRankShare": 0.655,
+   "medianWalks": 2,
+   "jackArrestable": 0
+  },
+  {
+   "night": 2,
+   "decisions": 180,
+   "medianPossible": 60,
+   "jackInTopTen": 0.217,
+   "medianRankShare": 0.616,
+   "medianWalks": 2,
+   "jackArrestable": 1
+  },
+  {
+   "night": 3,
+   "decisions": 156,
+   "medianPossible": 60,
+   "jackInTopTen": 0.237,
+   "medianRankShare": 0.717,
+   "medianWalks": 3,
+   "jackArrestable": 1
+  },
+  {
+   "night": 4,
+   "decisions": 105,
+   "medianPossible": 60,
+   "jackInTopTen": 0.143,
+   "medianRankShare": 0.653,
+   "medianWalks": 2,
+   "jackArrestable": 1
+  }
+ ],
+ "later": {
+  "decisions": 441,
+  "medianPossible": 60,
+  "jackInTopTen": 0.206,
+  "medianRankShare": 0.651,
+  "medianWalks": 2,
+  "jackArrestable": 3
+ },
+ "all": {
+  "decisions": 671,
+  "medianPossible": 62,
+  "jackInTopTen": 0.154,
+  "medianRankShare": 0.651,
+  "medianWalks": 2,
+  "jackArrestable": 3
+ }
+}
