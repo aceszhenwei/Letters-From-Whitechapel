@@ -1,0 +1,15 @@
+{
+	"format": "whitechapel-playtest-intake",
+	"version": 1,
+	"submissions": {
+		"g98c41370f7344474": {
+			"seq": 1,
+			"receivedOn": "2026-10-11",
+			"sha256": "b4cc3cde6b63b744691325b5062d92c05c85d9a0d0cfdcf86ef187c947924a30",
+			"bytes": 106795,
+			"examinedOn": "2026-10-11",
+			"verdict": "imported",
+			"cohort": "1.0.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)"
+		}
+	}
+}
