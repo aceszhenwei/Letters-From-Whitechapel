@@ -132,9 +132,16 @@ Reference: [docs/playtests.md](docs/playtests.md).
 - **Finding labels:** pattern to watch, defect candidate, confirmed defect (needs a failing test), confirmed strategic weakness (needs evidence across several games plus a targeted test).
 - **Where findings get confirmed:** triage only flags; confirmation comes from an investigation, or from a cumulative review backed by a test.
 
-**Collection so far:** two valid games, both a person as Jack against Detective AI v3 (Normal), Jack winning both. Both are analysed by `reports/2026-10-11-investigation-arrests.md`, a one-off workflow test:
-- **Finding:** v3 never arrested because no arrest was likely. That was not a defect.
-- **Pattern to watch:** v3's belief stayed diffuse against this player.
+**Collection so far:** seven valid games, all a person as Jack against Detective AI v3 (Normal); Jack won 6. All are analysed:
+- **`reports/2026-10-11-investigation-arrests.md`** (the first two games, a one-off workflow test):
+  - **Finding:** v3 never arrested because no arrest was likely. That was not a defect.
+  - **Pattern to watch:** v3's belief stayed diffuse.
+- **`reports/2026-10-11-batch-1.md`** (the first batch triage, the five online submissions):
+  - **No defect candidates.** All 7 arrests follow v3's code; forced arrests explain the investigation script's apparent "disagreements".
+  - **The diffuse-belief pattern recurs.** Every game spent all three coaches on night 1.
+  - **New patterns to watch:** coin-flip arrests on the double event (1 of 4 right), and one last-night escape next to home that v3's containment didn't stop.
+  - **Recommendation:** an investigation (proposed, not commissioned).
+  - **Hideouts repeat,** so there are likely few players: never generalise.
 
 ### Automatic public playtest submission (implemented; awaiting owner setup)
 

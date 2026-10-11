@@ -4,6 +4,14 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 ## Unreleased
 
+#### Human playtest research
+
+- **Batch 1 triage** ([report](research/human-playtests/reports/2026-10-11-batch-1.md), reproducible with `research/human-playtests/reports/2026-10-11-batch-1.js`): the first five online submissions, all a person as Jack against Detective AI v3 (Normal). Jack won 4; the police won once, with an arrest on the double event.
+  - **No defect candidates.**
+  - **Recurring:** v3's belief stays diffuse, and all three coaches are spent on night 1.
+  - **New patterns to watch:** coin-flip arrests on the double event, and a last-night escape next to home.
+  - **Recommended:** an investigation, not commissioned. The games are recorded as analysed in `analysis-state.json`. No AI was changed.
+
 #### Faster, scoped CI
 
 - **Fix: a timing-dependent test.**

@@ -19,6 +19,10 @@ The permanent collection of games people have played, kept as research evidence.
 - the research batch status: **Collecting**, or **Ready for Review** at 5 new games;
 - cumulative statistics by cohort.
 
-**Collected so far:** see `analysis-state.json` (`snapshot`) or run `npm run playtests`. The first two games, `g91d4014f17ae09e6` (10 October 2026) and `ga36125530c4b4076` (11 October 2026), are both a person as Jack against Detective AI v3 (Normal), app version 1.0.0, with Jack escaping on all four nights.
+**Collected so far:** see `analysis-state.json` (`snapshot`) or run `npm run playtests`. The first two games, `g91d4014f17ae09e6` (10 October 2026) and `ga36125530c4b4076` (11 October 2026), are both a person as Jack against Detective AI v3 (Normal), app version 1.0.0, with Jack escaping on all four nights. Five more arrived as online submissions on 11 October 2026, in the same cohort. Jack won 4 of them; the police arrested him once, on the double event.
 
-**Reports so far:** [2026-10-11-investigation-arrests](reports/2026-10-11-investigation-arrests.md), a one-off investigation commissioned to test the workflow. It covers both games: why v3 never arrested. Its finding: not a defect; one pattern to watch.
+**Reports so far:** [2026-10-11-investigation-arrests](reports/2026-10-11-investigation-arrests.md), a one-off investigation commissioned to test the workflow. It covers both games: why v3 never arrested. Its finding: not a defect; one pattern to watch. [2026-10-11-batch-1](reports/2026-10-11-batch-1.md), the first batch triage, covering the five online games:
+- **No defect candidates.**
+- **The diffuse-belief pattern recurs.**
+- **New patterns to watch:** coin-flip arrests on the double event, and a last-night escape next to home.
+- **Recommendation:** an investigation.
