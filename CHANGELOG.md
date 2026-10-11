@@ -4,7 +4,35 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 ## Unreleased
 
-Nothing yet.
+#### Human playtest collection
+
+- **Games are kept automatically:** every game a person finishes, as Jack or as the detectives, is saved as its full game record in the browser's IndexedDB.
+  - Each game is kept once, by its game ID; unfinished games and games the computer played alone are not kept.
+  - The ending dialog says whether the game was kept. If storage fails, the game plays on and the existing export still works.
+  - Nothing is sent anywhere.
+- **Playtest records** (Developer Mode, in the top bar or the setup dialog): a table of the kept games, with:
+  - **Export new playtests** (a ZIP of the games not exported yet), **Export selected**, **Export all (again)**, and one JSON per game;
+  - import of JSON files or batch ZIPs, each checked by a full replay first: duplicates are skipped, and conflicts and bad files are reported, never overwriting;
+  - delete, and clear after confirming.
+
+  A record is marked exported once its ZIP's download has started. Exporting never uploads.
+- **The research collection** `research/human-playtests/`:
+  - one full record per game, `records/<game id>.json`;
+  - `reports/`;
+  - `analysis-state.json`, recording which games reports have covered, the methodology version, AI changes and a snapshot of the games awaiting review.
+- **`npm run playtests`** (`tools/playtests/dataset.js`) checks every record with the existing importer and its full replay. It reports:
+  - invalid, misnamed, ineligible, duplicate, conflicting and incompatible files;
+  - the research batch: **Collecting**, or **Ready for Review** at five new games;
+  - cumulative statistics by cohort (app version, rule set, role, opponent, difficulty).
+
+  It also records completed analyses. **`npm run playtests:add`** copies valid records from exported files into the collection.
+- **GitHub Actions** (`playtests.yml`) checks the collection on every change to it, read-only, with a summary and annotations. It shows a notice when a research batch is ready. The Pages workflow no longer redeploys for changes to the collection alone.
+- **The first human game**, `g91d4014f17ae09e6`: Human Jack against Detective AI v3 (Normal), Jack escaped all four nights.
+  - Verified by full replay, added unchanged, and counted once.
+  - It is collected and awaiting review: no analysis has been done.
+- **Not changed:** the rules, the AIs, the difficulty levels, and the game record format (schema version 1).
+- **Tests:** `playtests-store.test.js`, `playtests-dataset.test.js` and `playtests-ui.test.js`, with `fake-indexeddb` as the browsers' storage (a development dependency only).
+- **Docs:** see [Human playtests](docs/playtests.md).
 
 ## v1.0.0 (2026-10-10)
 

@@ -6,6 +6,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+    # Uploading playtest records changes nothing on the site (docs/playtests.md): no redeployment for them alone
+    paths-ignore:
+      - 'research/human-playtests/**'
   workflow_dispatch:
 
 permissions:

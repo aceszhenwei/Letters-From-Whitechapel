@@ -1553,3 +1553,70 @@ h2 {
 .game-ended .jack-board-actions {
     display: none;
 }
+
+/* Playtest records (Developer Mode, js/ui/playtests.js): a wider dialog with a table that scrolls sideways on phones */
+.dialog.dialog-wide {
+    max-width: 960px;
+    width: calc(100vw - 32px);
+}
+
+.playtests-actions, .playtests-danger {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.playtests-danger {
+    padding-top: 10px;
+    border-top: 1px solid var(--paper-dim);
+    font-size: 13px;
+}
+
+.playtests-status[data-kind="error"] {
+    color: var(--blood);
+}
+
+.playtests-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.playtests-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.playtests-table th, .playtests-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--paper-dim);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.playtests-table .playtests-id {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 12px;
+}
+
+.playtests-row-actions .button {
+    padding: 4px 10px;
+    min-height: 32px;
+    margin-right: 4px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.playtest-saved {
+    font-size: 13px;
+    color: #5d4d3e;
+}

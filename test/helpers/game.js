@@ -30,6 +30,9 @@ const scripts = [
 	'js/ui/autopolice.js',
 	'js/ui/jack-player.js',
 	'js/ui/export.js',
+	'js/ui/zip.js',
+	'js/ui/playtest-store.js',
+	'js/ui/playtests.js',
 	'js/ui/setup.js',
 	'js/main.js'
 ];
@@ -56,6 +59,9 @@ function loadGame(options = {}) {
 		window.Math.random = seededRandom(options.seed);
 	}
 	window.WHITECHAPEL_NO_AUTOSTART = true;
+	// jsdom has no TextEncoder or TextDecoder, which every supported browser has (the playtest ZIPs use them)
+	window.TextEncoder = TextEncoder;
+	window.TextDecoder = TextDecoder;
 	for (const script of scripts) {
 		window.eval(fs.readFileSync(path.join(root, script), 'utf8'));
 	}

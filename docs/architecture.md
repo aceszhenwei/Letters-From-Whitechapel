@@ -200,7 +200,7 @@ A policeman moving, from click to screen:
 | `index.html` | The page and the script load order |
 | `css/style.css` | All styling (see [User interface](ui.md)); `css/font-awesome.min.css` and `fonts/` are the icon font |
 | `images/vintage-map.jpg` | The old map under the board |
-| `.github/workflows/` | `test.yml` runs the tests on every push and pull request; `pages.yml` publishes the game (see [Deployment](deployment.md)); `release.yml` publishes a GitHub Release for a version tag (see [Releasing](releasing.md)) |
+| `.github/workflows/` | `test.yml` runs the tests on every push and pull request; `pages.yml` publishes the game (see [Deployment](deployment.md)); `release.yml` publishes a GitHub Release for a version tag (see [Releasing](releasing.md)); `playtests.yml` checks the human playtest collection (see [Human playtests](playtests.md)) |
 | `js/data/` | Map and content data |
 | `js/core/` | Board, rules, engine, random, deduction, the game record: no page access |
 | `js/ai/jack.js` | The baseline Jack AI |
@@ -209,6 +209,8 @@ A policeman moving, from click to screen:
 | `js/ai/police.js`, `js/ai/containment.js` | Computer police (the original, v2 and v3), and v3's containment model |
 | `js/ai/difficulty.js`, `js/ai/police-levels.js`, `js/ui/setup.js`, `js/ui/autopolice.js` | Jack's difficulty, who leads the detectives and the detectives' difficulty, the setup dialog, and computer police in the page |
 | `js/ui/jack-player.js` | Playing Jack: his side of the board and his decisions |
+| `js/ui/playtest-store.js`, `js/ui/playtests.js`, `js/ui/zip.js` | Human playtests: games a person finishes kept in the browser (IndexedDB), the Developer Mode manager, and ZIP batches ([Human playtests](playtests.md)) |
+| `research/human-playtests/`, `tools/playtests/` | The collection of human games, and the tool that checks it, tracks research batches and gives its statistics |
 | `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)); `game-log/`, which checks, replays and summarises exported game records (see [Game records](game-records.md)) |
 | `experiments/` | Recorded simulation results |
 | `js/ui/renderer.js`, `js/ui/review.js`, `js/ui/export.js` | The interface, the night review, and exporting the game log |

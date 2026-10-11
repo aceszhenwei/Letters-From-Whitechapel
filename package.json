@@ -11,10 +11,13 @@
     "eval:medium": "node tools/tiers/run-tier.js medium",
     "research:full": "node tools/tiers/run-tier.js full",
     "research:import": "node tools/game-log/import.js",
+    "playtests": "node tools/playtests/dataset.js",
+    "playtests:add": "node tools/playtests/dataset.js --add",
     "site": "node tools/site/build.js",
     "tier": "node tools/tiers/run-tier.js"
   },
   "devDependencies": {
+    "fake-indexeddb": "^6.2.5",
     "jsdom": "^26.1.0"
   }
 }

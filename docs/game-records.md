@@ -228,6 +228,7 @@ From there a test can ask any police AI what it would do (`ai.turn(game, WC.rule
 - **`schemaVersion`** changes when the record's meaning changes (a field renamed, an action added, a meaning altered). The importer reads only the versions it lists (`supportedVersions` in `validate.js`). A newer schema should add a reader for older versions rather than reinterpret them.
 - **`ruleset.id`** changes when the rules' numbers or the map change. A record is replayed only against the same rule set; others are *incompatible*. To analyse old records after a rules or map change, check out the commit that matches their `app.version` and import them there, or keep them as their own dataset. Never mix rule sets in one summary; the summary lists the rule sets it counted.
 - **`app.version`** is `package.json`'s version, and a test keeps `record.js` equal to it. Raise it when a release changes behaviour. A different app version with the same rule set only gives a warning: the replay still decides.
+- **Human playtests** ([Human playtests](playtests.md)) keep and upload these same full records, unchanged; the collection's tool checks them with this importer.
 - **Human Jack games** ([Playing Jack](playing-jack.md#6-game-records)) needed no new format: `players.jack.type` is `"human"`, `players.police` names the detectives' AI, and `randomness` holds the seed of the detectives' tie-breaks. Schema version 1 is unchanged, so every existing record still reads and replays.
 
 ## 9. Privacy

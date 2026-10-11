@@ -23,6 +23,8 @@ For developers and researchers, **Developer Mode** (`index.html?dev=1`) also off
 
 While you lead the detectives you can undo a policeman's move until you choose Done. After each night the board stays as it was, with the night's log in the case files, until you begin the next night. Any earlier night can be looked at again, with walking distances from its crime scenes and clues. The women and the Wretched are ringed on the board, and **Highlight** makes them stand out. See [User interface](docs/ui.md#the-detectives-tools).
 
+**Playtests.** Every game a person finishes is kept in the browser (nothing is sent anywhere). Developer Mode's **Playtests** exports new games as a ZIP, to upload to the research collection in `research/human-playtests/` by hand: play → saved automatically → export a batch → upload to GitHub → checked automatically → after five new games, a research analysis is commissioned by hand. See [Human playtests](docs/playtests.md).
+
 The game follows the revised edition rulebook: four nights (including the double event), real and fake patrols, the Time of the Crime, Jack's coaches and alleys, and searching for clues or making an arrest. See [Game rules](docs/game-rules.md) for the details and what isn't implemented yet.
 
 ## Documentation
@@ -35,6 +37,7 @@ Start at the [documentation index](docs/README.md). The most used pages:
 - [Testing](docs/testing.md): running the tests, the test tiers and the seeds (`npm install && npm test`)
 - [Research reports](docs/README.md#research-reports): the studies behind the AIs
 - [Game records](docs/game-records.md): exporting a game, and checking and replaying exported games
+- [Human playtests](docs/playtests.md): games people play are kept in the browser, exported in batches, uploaded to the research collection and checked by GitHub Actions
 - [Deployment](docs/deployment.md): how the online game is published
 - [Roadmap](docs/roadmap.md), [Changelog](CHANGELOG.md) and [Releasing](docs/releasing.md) (versions and how a release is made)
 
