@@ -4,6 +4,30 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 ## Unreleased
 
+#### Faster, scoped CI
+
+- **Tests run once per merge.** The Pages deployment no longer runs `npm test` itself. The **Tests** workflow publishes the site (`pages.yml`, now called from it) once the whole suite has passed on `master`. A deployment started by hand still tests first.
+- **Gameplay PRs: about 3 minutes instead of about 5.** The whole suite runs in three parallel jobs (`tools/ci/tests.js`):
+  - **golden:** the golden traces and full seeded games;
+  - **browser:** the other page tests;
+  - **core:** the headless tests, then smoke.
+
+  Every test file is in exactly one group, and `test/unit/ci.test.js` checks it. No test was removed. The golden traces are split into two files by seed parity (`golden-traces.test.js`, `golden-traces-even.test.js`), so all 10 recorded games still run, in parallel.
+- **Documentation-only and playtest-collection-only changes: under a minute.** `tools/ci/scope.js` picks the scope:
+  - such changes run `npm run test:fast` (every headless test, the playtest tests included), plus `dataset.js --ci` for collection changes;
+  - code, tests, tools, data, dependencies, workflow changes, and any doubt, still get the whole suite.
+- **`dataset.js --ci` enforces what the suite checks on the live collection**, so a collection-only change can't skip a check:
+  - a current snapshot of the games awaiting review (the failure in PR #34), now an error rather than a notice;
+  - every analysed game names a recorded report that lists it and whose file exists.
+
+  `npm run playtests:add` refreshes the snapshot itself, as the import and `--record-analysis` do.
+- **`npm run test:fast`:** the headless tests (197 tests, about 30 seconds) for quick local checks.
+- **GitHub Actions on Node 24:**
+  - `actions/checkout@v5`, `actions/setup-node@v5`;
+  - `actions/configure-pages@v6`, `actions/upload-pages-artifact@v5` (keeping `.nojekyll`), `actions/deploy-pages@v5`.
+
+  The Worker workflow's jobs don't cache dependencies, as setup-node advises for jobs holding secrets.
+
 #### Automatic playtest collection
 
 - **Fix: the import's pull-request step read modified files' paths wrongly.**

@@ -5,6 +5,7 @@
   "description": "Browser based version of the Letters From Whitechapel board game",
   "scripts": {
     "test": "node --test \"test/**/*.test.js\"",
+    "test:fast": "node tools/ci/tests.js fast",
     "test:unit": "node --test \"test/unit/**/*.test.js\"",
     "test:regression": "node --test \"test/regression/**/*.test.js\"",
     "test:smoke": "node tools/tiers/run-tier.js smoke",

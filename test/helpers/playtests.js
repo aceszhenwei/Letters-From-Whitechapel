@@ -59,7 +59,7 @@ function humanJackRecord(seed, { police = 'random', players } = {}) {
 }
 
 function tempCollection(records = []) {
-	// A temporary copy of the collection's layout: records/, reports/ and a fresh analysis state
+	// A temporary copy of the collection's layout: records/, reports/ and a fresh analysis state with a current snapshot
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'playtests-'));
 	fs.mkdirSync(path.join(dir, 'records'));
 	fs.mkdirSync(path.join(dir, 'reports'));
@@ -70,6 +70,9 @@ function tempCollection(records = []) {
 		const name = r.name || r.record.game.id + '.json';
 		fs.writeFileSync(path.join(dir, 'records', name), r.text || JSON.stringify(r.record));
 	}
+	// A current snapshot of the games awaiting review, as the real collection keeps (dataset.js --ci requires it)
+	const dataset = require('../../tools/playtests/dataset');
+	dataset.writeState(dir, dataset.updateSnapshot(dataset.scan(dir), '2026-10-11'));
 	return dir;
 }
 

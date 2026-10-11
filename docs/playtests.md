@@ -91,10 +91,13 @@ The research collection is `research/human-playtests/records/` in the repository
 - **requires** a full record of a completed human game, named `<game id>.json`;
 - **flags** files that are invalid, misnamed or ineligible, duplicates (the same game twice) and conflicts (different records with one game ID);
 - **records from another schema or rule set** are *incompatible*: a newly added one fails, while old ones already in the collection are kept as historical evidence and only noted;
-- **checks** that the statistics can be generated, and that `analysis-state.json` names only games that exist;
+- **checks** that the statistics can be generated, and that `analysis-state.json` is consistent:
+  - it names only games that exist;
+  - every analysed game names a recorded report that lists it and whose file exists;
+  - its snapshot of the games awaiting review is current. Refresh it with `npm run playtests -- --update-state`; `--add`, `--record-analysis` and the automatic import refresh it themselves;
 - **writes a summary** to the run's page: the counts of valid, invalid, ineligible, duplicate, conflicting, misnamed and incompatible records, the research batch status, and the files in the change. Problems also appear as annotations on the files.
 
-**Pass or fail:** the check fails on any problem, so a pull request with a bad record can't be merged unnoticed.
+**Pass or fail:** the check fails on any problem, so a pull request with a bad record can't be merged unnoticed. The **Tests** workflow runs the same check for a pull request that only changes the collection, together with the headless tests, instead of the whole suite ([Testing](testing.md#continuous-integration)).
 
 **What it doesn't do:** it is read-only. It changes no file, needs no secrets, and doesn't deploy: the Pages workflow ignores changes to the collection.
 
@@ -113,7 +116,7 @@ The research collection is `research/human-playtests/records/` in the repository
 - **Ready for Review** once 5 do. The threshold is `batchThreshold` in the state.
 - **To see it:** run `npm run playtests`, or open the summary of the latest **Human playtests** run on GitHub. When a batch is ready, that run shows a **Research batch ready** notice.
 
-**Nothing runs automatically:** no agent is started and no report is written. Passing validation doesn't make a game analysed. The state also holds a dated snapshot of the games awaiting review; `npm run playtests -- --update-state` refreshes it, and CI only notes when it is out of date.
+**Nothing runs automatically:** no agent is started and no report is written. Passing validation doesn't make a game analysed. The state also holds a dated snapshot of the games awaiting review; `npm run playtests -- --update-state` refreshes it (`--add`, `--record-analysis` and the automatic import do so themselves), and the CI check fails when it is out of date.
 
 ## Commissioning an analysis
 

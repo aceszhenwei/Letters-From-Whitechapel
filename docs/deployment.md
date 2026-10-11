@@ -4,8 +4,11 @@ The game is published with GitHub Pages at **https://aceszhenwei.github.io/Lette
 
 ## How it works
 
-`.github/workflows/pages.yml` (**Deploy to GitHub Pages**) runs on every push to `master`, and by hand:
-1. **build:** installs the dependencies, runs the fast tests (`npm test`), and stages the site with `node tools/site/build.js _site`. If the repository variable `PLAYTEST_API_URL` is set, the build writes that public address into the staged `js/config.js`, which turns on Anonymous Gameplay Research; unset, the site sends nothing. Only `index.html`, `css/`, `js/`, `images/` and `fonts/` are copied: no research data, tests, tools, docs or experiment results. The script also checks that every local file `index.html` and the stylesheets refer to is present and none is referred to from the site root, which would break under the `/Letters-From-Whitechapel/` project path. A failing test or a missing file stops the release.
+`.github/workflows/pages.yml` (**Deploy to GitHub Pages**) runs in two ways:
+- **After a push to `master` that changes the game:** the **Tests** workflow calls it, once the whole suite has passed there ([Testing](testing.md#continuous-integration)), so the tests aren't run twice. Pushes that change only documentation or the playtest collection don't redeploy.
+- **By hand**, for example after setting `PLAYTEST_API_URL`: then it runs `npm test` first, since no Tests run gates it.
+
+1. **build:** installs the dependencies (and runs `npm test` when started by hand), then stages the site with `node tools/site/build.js _site`. If the repository variable `PLAYTEST_API_URL` is set, the build writes that public address into the staged `js/config.js`, which turns on Anonymous Gameplay Research; unset, the site sends nothing. Only `index.html`, `css/`, `js/`, `images/` and `fonts/` are copied: no research data, tests, tools, docs or experiment results. The script also checks that every local file `index.html` and the stylesheets refer to is present and none is referred to from the site root, which would break under the `/Letters-From-Whitechapel/` project path. A failing test or a missing file stops the release.
 2. **deploy:** publishes the staged files with the official `actions/deploy-pages`. Only this job may write to Pages (`pages: write`, `id-token: write`); the workflow can otherwise only read the repository.
 
 A newer push waits for a deployment in progress rather than cancelling it. Each run's result is on the repository's **Actions** tab, and the live address on its `github-pages` environment.
@@ -17,7 +20,7 @@ A newer push waits for a deployment in progress rather than cancelling it. Each 
 ## Redeploying
 
 - **After a failed release:** open the failed run on the **Actions** tab. If the tests or the site check failed, fix the cause on `master`; the push deploys again. If the failure was GitHub's (a deployment that timed out, for example), choose **Re-run failed jobs**.
-- **The same commit again:** **Actions → Deploy to GitHub Pages → Run workflow** on `master`.
+- **The same commit again:** **Actions → Deploy to GitHub Pages → Run workflow** on `master` (it tests first), or re-run the **pages** job of that commit's **Tests** run.
 - **Going back to an earlier version:** revert the commit on `master`; the push deploys the reverted game.
 
 ## Releases and the online game
@@ -41,5 +44,5 @@ npm run site                    # stage the site in _site/ exactly as the workfl
 
 ## The playtest intake Worker
 
-Deployed separately from Pages, by hand: **Actions → Deploy playtest Worker → Run workflow** (`deploy`, `pause` or `resume`), with the Cloudflare secrets described in [Automatic playtest collection §11](automatic-playtest-collection.md#11-owner-setup). Pull requests that touch `worker/` get a bundling check. Records imported from it into `research/human-playtests/` don't redeploy Pages (`pages.yml` ignores that folder).
+Deployed separately from Pages, by hand: **Actions → Deploy playtest Worker → Run workflow** (`deploy`, `pause` or `resume`), with the Cloudflare secrets described in [Automatic playtest collection §11](automatic-playtest-collection.md#11-owner-setup). Pull requests that touch `worker/` get a bundling check. Records imported from it into `research/human-playtests/` don't redeploy Pages: a change to the collection alone is the `playtests` test scope, which never deploys.
 - **Browsers:** current desktop and mobile versions of Chrome, Edge, Firefox and Safari. The page uses no features that need a server.

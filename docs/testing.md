@@ -4,10 +4,13 @@
 
 ```
 npm install
-npm test
+npm test            # everything: about 4 minutes on 4 cores
+npm run test:fast   # the headless tests only: about 30 seconds
 ```
 
-The tests use Node's built-in test runner (`node:test`). Most of them run the game's core directly in Node. Tests of the interface use [jsdom](https://github.com/jsdom/jsdom), a simulated browser, so no real browser is needed. They need Node.js 22 or later and take about two minutes; most of that is the golden traces and full-game tests, which play through the simulated page.
+The tests use Node's built-in test runner (`node:test`). Most of them run the game's core directly in Node. Tests of the interface use [jsdom](https://github.com/jsdom/jsdom), a simulated browser, so no real browser is needed. They need Node.js 22 or later. Over 90% of `npm test`'s time is the page tests, which play whole games through the simulated page: the golden traces, the full games, Human Jack's page games and the night review.
+
+**While working, `npm run test:fast`** runs every headless test: the core, the AIs, the records, the playtest pipeline, the Worker and the tools. That is 197 tests in about 30 seconds, and it never loads the page. **Before opening a pull request, run `npm test`**, which CI runs too. `node tools/ci/tests.js --list <group>` lists any group's files ([Continuous integration](#continuous-integration)).
 
 To run one file, or the tests whose names match a pattern:
 
@@ -16,7 +19,38 @@ node --test test/unit/rules.test.js
 node --test --test-name-pattern="double event" "test/**/*.test.js"
 ```
 
-GitHub Actions runs `npm test` on every push to `master` and on every pull request (`.github/workflows/test.yml`).
+GitHub Actions runs the tests on every push to `master` and every pull request ([Continuous integration](#continuous-integration)).
+
+## Continuous integration
+
+`.github/workflows/test.yml` (**Tests**) runs in four steps.
+
+**1. Scope.** `tools/ci/scope.js` compares the change with its base and picks one of three scopes:
+
+| Scope | When | What runs | Typical time |
+|---|---|---|---|
+| `docs` | Only `.md` files and `docs/images/`, outside `research/human-playtests/` and `docs/examples/` | `npm run test:fast` | under a minute |
+| `playtests` | Only `research/human-playtests/` (records, the intake ledger, `analysis-state.json`, reports), possibly with documentation: import pull requests, uploads, triage reports | `npm run test:fast` (every playtest test is headless) and `node tools/playtests/dataset.js --ci` | under a minute |
+| `full` | Anything else: code, tests, tools, data, `package.json` or the lockfile, any workflow, the site. Also whenever the scope can't be told: no base commit, a git error, a by-hand run | The whole suite, in three parallel jobs, then the smoke tier | about 3 minutes |
+
+**2. Quick check** for the `docs` and `playtests` scopes. `dataset.js --ci` enforces the same consistency the suite checks on the live collection, so a collection-only change is held to it without the whole suite:
+- every record is valid and named after its game ID;
+- there are no duplicates or conflicts;
+- the snapshot of games awaiting review is current (the check that caught PR #34);
+- every analysed game names a recorded report that lists it and exists;
+- every imported record still matches its SHA-256.
+
+**3. The whole suite** for the `full` scope, in three groups on three runners (`tools/ci/tests.js`). Every test file is in exactly one group, so together they are `npm test`; `test/unit/ci.test.js` checks this, and new files join a group automatically.
+
+| Group | Files | Time (4 cores) |
+|---|---|---|
+| `golden` | The golden traces (odd and even seeds in two files) and the full seeded games | about 2¼ min |
+| `browser` | Every other page test: Human Jack's page, the night review, the playtest manager, the end-to-end playtest test, the setup and UI tests | about 2¼ min |
+| `core` | Every headless test (the same files as `test:fast`), then the smoke tier | about 1 min |
+
+**4. Pages.** After a push to `master` that passed the whole suite, the same run publishes the site (`pages.yml`; [Deployment](deployment.md)). The tests run once per merge: before, they ran again in the Pages build. Pushes that change only documentation or the collection don't redeploy, since the site contains neither.
+
+A newer push to a pull request cancels its older run; runs on `master` always finish. A file counts as a page test if it calls `loadGame`, `startGame`, `setupJack`, `traceGame` or `playGame`, or makes its own JSDOM. The golden-trace files are named in `tools/ci/tests.js`.
 
 The playtest intake tests use Node's built-in SQLite (`node:sqlite`, Node 22.13 or later) as a stand-in for Cloudflare D1; Node prints an "experimental" warning for it, which the helper silences. No test sends anything to a real service.
 
@@ -26,7 +60,7 @@ The simulations and research behind the AIs take up to a couple of hours in full
 
 | Tier | Command | What it runs | When | Typical time (4 cores) |
 |---|---|---|---|---|
-| Fast | `npm test` (or `npm run test:unit`, `npm run test:regression`) | Unit and regression tests, including the golden traces | Every change; CI runs it | 1.7 min |
+| Fast | `npm test` (or `npm run test:unit`, `npm run test:regression`); `npm run test:fast` for the headless part | Unit and regression tests, including the golden traces | Every change; CI runs it (in three parallel groups) | about 4 min (`test:fast`: 30 s) |
 | Smoke | `npm run test:smoke` | Small simulations: every Jack against every police (4 games each), seeded determinism, the deduction against the exhaustive reference, the improved police from the research harness, Jack AI v2 against both police (each game twice), strategic waiting against Detective AI v3 (each game twice) | Any change to the AIs, rules, engine, map or research scripts; CI runs it too | 30 s (Jack v2's part 7 s) |
 | Medium | `npm run eval:medium` | 500 games per Jack against the deductive police; the original against the study's improved police and against Detective AI v2 (300 games per Jack); Strategic, Detour and [Jack AI v2](jack-ai-v2.md) against Detective AI v2 (100 games each); [Detective AI v3](detective-ai-v3.md) against v2 (30 games each against a short-return Jack and Strategic Jack); a 10-game soundness check. Development seeds only. Results in `experiments/medium/` | Algorithmic changes to the AIs, the police or the deduction, before running the full tier | 13 min |
 | Full | `npm run research:full` (set `WHITECHAPELR_CLONE` for the whitechapelR comparisons) | The [Detective AI v3](detective-ai-v3.md) study's comparison, ablation and confirmation (`research/detective-v3/`), the [Jack AI v2](jack-ai-v2.md) study's screening, comparison and ablation (`research/jack-v2/`), the [Detective AI v2](detective-ai-v2.md) evaluation (`research/detective-v2/run-evaluation.sh`), the whole detective study (`research/detective-inference/run-all.sh`) and the four 5,000-game evaluations of [Jack's AI](jack-ai.md) | Research milestones, and before publishing or relying on new numbers. Never routine | about 3 h 50 min: the Detective v3 study 35 min, the Jack v2 study 25 min, the v2 evaluation 63 min, the study 52 min, the four Jack evaluations about 50 min |
@@ -133,11 +167,12 @@ If a core module touched the page, it would fail to load in the core loader. Tha
 | `test/regression/bugs.test.js` | Page | One test for each bug that has been fixed |
 | `test/regression/ui-flows.test.js` | Page | Search, failed arrest, switching a patrol between real and fake, and Stay; in Clues and suspicion one policeman acts at a time and a clue found never strands another (the reported softlock), policemen beside the same circle keep their own tokens, and the two faster search buttons; zooming the board (it scrolls when larger than the space), the board scrollable while watching the computer police, destination rings above the Stay pill, and a tapped policeman's pills brought to the front |
 | `test/regression/full-game.test.js` | Page | Plays 8 seeded games to the end, checking the rules after every action |
-| `test/regression/golden-traces.test.js` | Page | Plays 10 seeded games and compares them with recorded traces, step by step |
+| `test/regression/golden-traces.test.js`, `golden-traces-even.test.js` | Page | Plays the 10 recorded seeded games (odd and even seeds, so they run in parallel; `test/helpers/golden.js`) and compares them with the traces, step by step |
+| `test/unit/ci.test.js` | Source | The CI tooling: the groups cover every test file exactly once, `test:fast` loads no page, the two golden files check every recorded game, the change scopes (from a real git history, and conservative on any doubt), and the workflows' safeguards |
 
 ### Golden traces
 
-`test/fixtures/golden-traces.json` records ten seeded games played through the page. For each game it keeps:
+`test/fixtures/golden-traces.json` records ten seeded games played through the page. `golden-traces.test.js` checks the odd seeds and `golden-traces-even.test.js` the even ones, through `test/helpers/golden.js`. For each game it keeps:
 
 - every police action;
 - Jack's moves and routes;
