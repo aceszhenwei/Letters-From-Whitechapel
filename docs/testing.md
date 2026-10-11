@@ -232,6 +232,11 @@ Tips:
 - **Seed everything that is random**, so a failure can be replayed exactly.
 - **When fixing a bug, add a regression test first** and check that it fails without the fix.
 - **Prefer the core over the page** unless the test is about what the player sees.
+- **Wait for events, not for time.** Never assert that something has happened after a fixed sleep. CI runners are slower and busier than a laptop, and a 20 ms wait failed there once (`playtest-submission.test.js`, after PR #38). Instead:
+  - resolve a promise when the event happens (a fake `fetch` being called, for example), and await it with a generous deadline;
+  - or poll until a deadline.
+
+  A short sleep is fine only before checking that something did *not* happen.
 
 ## Checking in a real browser
 

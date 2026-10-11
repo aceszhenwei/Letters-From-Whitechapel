@@ -163,14 +163,19 @@ test('refused for good (invalid, conflict): marked permanently rejected and neve
 
 test('opting out: waiting games are cancelled, a request in flight is stopped, games kept while off are never sent later', async () => {
 	let release;
+	let started;
+	const sent = new Promise((resolve) => { started = resolve; });
 	const hanging = (url, init) => new Promise((resolve, reject) => {
 		release = resolve;
 		init.signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' })));
+		started();
 	});
 	const s = await setup({ script: [hanging] });
 	await keep(s);
 	const running = s.submitter.process();
-	await new Promise((r) => setTimeout(r, 20));
+	// Wait until the request is actually in flight: the queue's storage steps before it take as long as the machine
+	// needs (a fixed 20 ms wait failed on a busy CI runner)
+	await Promise.race([sent, new Promise((r, reject) => setTimeout(() => reject(new Error('the request was never sent')), 20000))]);
 	assert.strictEqual(s.net.calls.length, 1);
 	assert.strictEqual((await s.store.get(firstId)).submission.status, 'submitting');
 	await s.submitter.setEnabled(false);
