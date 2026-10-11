@@ -1,0 +1,10 @@
+{
+  "name": "whitechapel-playtests-worker",
+  "private": true,
+  "type": "module",
+  "description": "The playtest submission Worker (docs/automatic-playtest-collection.md). Deployed separately from the GitHub Pages site.",
+  "scripts": {
+    "deploy": "node scripts/deploy.mjs",
+    "check": "node scripts/deploy.mjs --dry-run"
+  }
+}

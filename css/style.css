@@ -1620,3 +1620,66 @@ h2 {
     font-size: 13px;
     color: #5d4d3e;
 }
+
+/* Anonymous Gameplay Research (js/ui/research.js): the notice in the setup dialog, the settings dialog, the ending line */
+.research-notice {
+    margin: 0 0 16px;
+    padding: 10px 12px;
+    border: 1px solid var(--paper-dim);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.research-notice h3, .research-dialog h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+}
+
+.research-notice p {
+    margin: 0 0 8px;
+}
+
+.research-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px; /* An easy target on phones */
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.research-switch input {
+    width: 20px;
+    height: 20px;
+}
+
+.link-button {
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.research-state {
+    font-size: 13px;
+    color: #5d4d3e;
+}
+
+.research-privacy {
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.research-privacy li {
+    margin-bottom: 6px;
+}
+
+.playtest-submitted {
+    font-size: 13px;
+    color: #5d4d3e;
+}

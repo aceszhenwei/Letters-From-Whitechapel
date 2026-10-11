@@ -24,6 +24,7 @@
     <div class="difficulty-badge" hidden></div>
     <button type="button" class="button button-secondary export-open topbar-button" hidden>Game log</button>
     <button type="button" class="button button-secondary playtests-open topbar-button" hidden>Playtests</button>
+    <button type="button" class="button button-secondary research-open topbar-button" hidden>Research</button>
     <div class="night-info" aria-live="polite">
         <div class="night-name">Night 1 of 4</div>
         <div class="night-date">31 August 1888</div>
@@ -177,6 +178,12 @@
             <div class="police-options"></div>
             <p class="police-note difficulty-note"></p>
         </fieldset>
+        <div class="research-notice" hidden>
+            <h3>Anonymous Gameplay Research</h3>
+            <p>Completed games are automatically submitted to help improve Jack and the detectives. Records include gameplay actions, AI versions and outcomes. No name or account is required.</p>
+            <label class="research-switch"><input type="checkbox" class="research-toggle"> Submit my completed games</label>
+            <button type="button" class="link-button research-about">What is collected, and privacy</button>
+        </div>
         <button type="button" class="button button-primary start-game">Begin the investigation</button>
         <button type="button" class="button button-secondary playtests-open" hidden>Playtest records</button>
     </div>
@@ -188,6 +195,7 @@
         <h2 id="ending-title" class="game-over"></h2>
         <ul class="ending-summary" hidden></ul>
         <p class="playtest-saved" hidden></p>
+        <p class="playtest-submitted" aria-live="polite" hidden></p>
         <button type="button" class="button button-primary new-game">Play again</button>
         <button type="button" class="button button-secondary review-case">Review the case</button>
         <button type="button" class="button button-secondary export-open">Export game log</button>
@@ -199,7 +207,7 @@
         <div class="dialog-kicker">Case records</div>
         <h2 id="export-title">Export the game log</h2>
         <p class="export-status" aria-live="polite"></p>
-        <p class="export-privacy">The file is made on this device and saved where your browser saves downloads. Nothing is sent anywhere: share it only if you choose to.</p>
+        <p class="export-privacy">The file is made on this device and saved where your browser saves downloads. Exporting sends nothing anywhere: share it only if you choose to.</p>
         <div class="export-choice">
             <button type="button" class="button button-primary export-public">Download the police's record</button>
             <p class="export-note">No spoilers: only what the police could see.</p>
@@ -230,7 +238,7 @@
     <div class="dialog dialog-wide">
         <div class="dialog-kicker">Developer Mode</div>
         <h2 id="playtests-title">Playtest records</h2>
-        <p>Every game a person finishes is kept here, in this browser, as its full game record: nothing is sent anywhere. Exporting saves files on this device; it does <strong>not</strong> upload them to GitHub. To add games to the research collection, upload the exported files as described in <code>docs/playtests.md</code>.</p>
+        <p>Every game a person finishes is kept here, in this browser, as its full game record. Exporting saves files on this device; it does <strong>not</strong> upload them to GitHub. To add games to the research collection by hand, upload the exported files as described in <code>docs/playtests.md</code>. Separately, when Anonymous Gameplay Research is on (Research in the top bar), completed games are also submitted online; the Online column shows each game's status, independent of exporting.</p>
         <p class="playtests-count"></p>
         <div class="playtests-actions">
             <button type="button" class="button button-primary playtests-export-new">Export new playtests</button>
@@ -243,7 +251,7 @@
         <p class="playtests-empty">No games kept yet. Finish a game and it appears here.</p>
         <div class="playtests-scroll">
             <table class="playtests-table" hidden>
-                <thead><tr><th><span class="visually-hidden">Select</span></th><th>Date</th><th>Role</th><th>Opponent</th><th>Difficulty</th><th>Outcome</th><th>Game ID</th><th>Exported</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+                <thead><tr><th><span class="visually-hidden">Select</span></th><th>Date</th><th>Role</th><th>Opponent</th><th>Difficulty</th><th>Outcome</th><th>Game ID</th><th>Exported</th><th>Online</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
                 <tbody class="playtests-rows"></tbody>
             </table>
         </div>
@@ -255,7 +263,29 @@
     </div>
 </div>
 
-<!-- Data, then the game (no page access), then Jack's AI, then the interface. See docs/architecture.md -->
+<div class="overlay research-dialog" role="dialog" aria-modal="true" aria-labelledby="research-title">
+    <div class="dialog">
+        <div class="dialog-kicker">Settings</div>
+        <h2 id="research-title">Anonymous Gameplay Research</h2>
+        <p>Completed games are automatically submitted to help improve Jack and the detectives. Records include gameplay actions, AI versions and outcomes. No name or account is required.</p>
+        <label class="research-switch"><input type="checkbox" class="research-toggle"> Submit my completed games</label>
+        <p class="research-state" aria-live="polite"></p>
+        <h3>Privacy notice</h3>
+        <ul class="research-privacy">
+            <li><strong>What is sent:</strong> once a game you played is over, its full game record: every move both sides made, the computer opponent and its level, the outcome, the game version, the date (without the time) and a random game ID made for that game. Nothing is sent during play, and games you leave unfinished or end by hand are never sent.</li>
+            <li><strong>What is not:</strong> no name, email, account, cookie or device identifier. The service does not store your IP address or browser details. Notes you write in the export dialog are never sent.</li>
+            <li><strong>Why:</strong> to study how people play against the computer, and to find and fix weaknesses in Jack and the detectives.</li>
+            <li><strong>Where:</strong> a private database (Cloudflare) that only the game's developer can read. The developer reviews submitted games, and selected games may be published in the game's public GitHub repository as research data.</li>
+            <li><strong>How long:</strong> up to 12 months in the private database. Games published in the repository are kept there as research records.</li>
+            <li><strong>Turning it off:</strong> nothing more is sent, and games waiting to be sent are cancelled. Your games are still kept in this browser and can still be exported, and you can play as before.</li>
+            <li><strong>Removal:</strong> the ending screen shows each submitted game's ID. To have a game removed, open an issue at github.com/aceszhenwei/Letters-From-Whitechapel quoting its game ID (the ID is not linked to you, so it is the only way to find your game).</li>
+        </ul>
+        <button type="button" class="button button-secondary research-close">Close</button>
+    </div>
+</div>
+
+<!-- Configuration, data, then the game (no page access), then Jack's AI, then the interface. See docs/architecture.md -->
+<script src="js/config.js"></script>
 <script src="js/data/map.js"></script>
 <script src="js/data/content.js"></script>
 <script src="js/core/random.js"></script>
@@ -280,6 +310,8 @@
 <script src="js/ui/zip.js"></script>
 <script src="js/ui/playtest-store.js"></script>
 <script src="js/ui/playtests.js"></script>
+<script src="js/ui/submission.js"></script>
+<script src="js/ui/research.js"></script>
 <script src="js/ui/setup.js"></script>
 <script src="js/main.js"></script>
 

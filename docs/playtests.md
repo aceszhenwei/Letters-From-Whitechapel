@@ -1,10 +1,11 @@
 # Human playtests
 
-How games played by people are collected, checked and kept as research evidence, so the AIs can later be studied against real play. The pipeline is deliberately small: no server, account, cloud storage or automatic upload.
+How games played by people are collected, checked and kept as research evidence, so the AIs can later be studied against real play. Records reach the collection in two ways: **automatically**, when the site has a playtest intake and the player hasn't opted out ([Automatic playtest collection](automatic-playtest-collection.md)), or **by hand**, exported from the browser and uploaded (sections 2–3). Either way they are checked the same way and enter the same collection. No account is involved.
 
 ```
-Play → saved automatically in the browser → export a batch (ZIP) → upload the records to GitHub by hand
-     → GitHub Actions checks them → five new games make a research batch → a short triage report, commissioned by hand
+Play → saved automatically in the browser ─┬→ submitted online (unless opted out) → private intake → daily import, full replay → pull request
+                                           └→ export a batch (ZIP) → upload the records to GitHub by hand → pull request
+     → GitHub Actions checks them → merged → five new games make a research batch → a short triage report, commissioned by hand
      → targeted investigations only where triage finds a reason
 ```
 
@@ -31,6 +32,8 @@ Play → saved automatically in the browser → export a batch (ZIP) → upload 
 **What each entry holds:** the game ID, the date, the player's role, the AI opponent and its difficulty, the outcome, the app version, the rule set, and the full record with every action.
 - **Once per game:** a game is kept once, by its ID, so the same game is never saved twice.
 - **Survives sessions:** records stay after closing the page, until they are deleted.
+
+**Submitted online too,** if the site was built with an intake and the player hasn't turned off **Anonymous Gameplay Research**: after the game is kept, its record is sent in the background, and the ending dialog says so ([Automatic playtest collection §2](automatic-playtest-collection.md#2-for-players)). That status is separate from exporting; the manager's **Online** column shows it.
 
 **If storage fails,** the game is unaffected. The ending dialog says the game couldn't be kept, and the existing **Game log › Download the full record** still saves it as a file. This can happen in private browsing, with site storage blocked, or with a full disk.
 
@@ -64,7 +67,7 @@ records/…
 
 ## 3. Uploading records to GitHub
 
-The research collection is `research/human-playtests/records/` in the repository: one file per game, named `<game id>.json` ([README](../research/human-playtests/README.md)).
+The research collection is `research/human-playtests/records/` in the repository: one file per game, named `<game id>.json` ([README](../research/human-playtests/README.md)). Games submitted online arrive in a daily **Import human playtests** pull request instead ([Automatic playtest collection §7](automatic-playtest-collection.md#7-the-import-workflow)); uploading by hand remains for everything else.
 
 **On the GitHub website:**
 1. Extract the exported ZIP on your computer. You only need the files inside its `records/` folder; `manifest.json` stays out.
@@ -251,8 +254,9 @@ These describe a small, uncontrolled collection of casual games. They are not es
 
 ## 9. Privacy and browser storage
 
-- **Local only:** records are kept only on the device, in the browser's IndexedDB for this site. Nothing is sent anywhere. Files leave the device only when the player exports them and chooses to upload them.
-- **No personal data:** a record holds game data only, as described in [Game records](game-records.md#9-privacy). The optional note in the export dialog is the player's own, and only in files exported from that dialog.
+- **Kept on the device:** records are kept in the browser's IndexedDB for this site. Exporting sends nothing: files leave the device only when the player exports them and chooses to upload them.
+- **Submitted online only with the intake, and only if the player allows it:** when the site was built with a playtest intake, a finished game's full record is also sent to it, unless the player turned off **Anonymous Gameplay Research**. The privacy notice, retention and removal are in [Automatic playtest collection §3](automatic-playtest-collection.md#3-privacy). A site built without an intake (the default) sends nothing anywhere.
+- **No personal data:** a record holds game data only, as described in [Game records](game-records.md#9-privacy). The optional note in the export dialog is the player's own, only in files exported from that dialog, and never accepted online.
 - **Browser storage is not a backup:**
   - clearing site data, uninstalling the browser, private browsing or the browser's own clean-up can delete it;
   - another browser or device doesn't see it.
@@ -268,4 +272,5 @@ These describe a small, uncontrolled collection of casual games. They are not es
 | ZIP files (no dependency) | `js/ui/zip.js` (`WC.zip`), also used by the tools in Node |
 | The collection's checks, state and statistics | `tools/playtests/dataset.js` (`npm run playtests`, `npm run playtests:add`) |
 | The workflow | `.github/workflows/playtests.yml` |
+| Online submission, the intake Worker and the daily import | [Automatic playtest collection §17](automatic-playtest-collection.md#17-for-developers) |
 | Tests | `test/unit/playtests-store.test.js`, `test/unit/playtests-dataset.test.js`, `test/regression/playtests-ui.test.js` ([Testing](testing.md)) |

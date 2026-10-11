@@ -1,5 +1,7 @@
 // Stages the website for GitHub Pages (docs/deployment.md): only what the game loads, nothing else.
 //   node tools/site/build.js [output folder, default _site]
+//   PLAYTEST_API_URL=https://… node tools/site/build.js   also writes the playtest intake's address into js/config.js
+//   (docs/automatic-playtest-collection.md); without it, the staged site sends nothing anywhere, as committed
 // Copies index.html, css/, js/, images/ and fonts/ (no research, tests, tools, docs or data sets), then checks that
 // every local file index.html and the stylesheets refer to is in the site, and that none is referred to from the root
 // ("/..."), which would break under https://aceszhenwei.github.io/Letters-From-Whitechapel/. Exits 1 on a problem.
@@ -16,6 +18,23 @@ for (const item of include) {
 	fs.cpSync(path.join(root, item), path.join(out, item), { recursive: true });
 }
 fs.writeFileSync(path.join(out, '.nojekyll'), ''); // Serve the files as they are
+
+// The playtest intake's address (a public URL, never a secret), from the repository variable PLAYTEST_API_URL
+const intake = (process.env.PLAYTEST_API_URL || '').trim().replace(/\/+$/, '');
+if (intake) {
+	if (!/^https:\/\/[A-Za-z0-9.-]+(:\d+)?(\/[A-Za-z0-9._~\/-]*)?$/.test(intake)) {
+		console.error(`PLAYTEST_API_URL must be an https:// address such as https://whitechapel-playtests.example.workers.dev (got ${JSON.stringify(intake)})`);
+		process.exit(1);
+	}
+	const config = path.join(out, 'js', 'config.js');
+	const text = fs.readFileSync(config, 'utf8');
+	const filled = text.replace(/playtestApiUrl: ''/, `playtestApiUrl: ${JSON.stringify(intake)}`);
+	if (filled === text) {
+		console.error('js/config.js has no empty playtestApiUrl to fill in');
+		process.exit(1);
+	}
+	fs.writeFileSync(config, filled);
+}
 
 const problems = [];
 const local = (ref) => !/^(https?:|data:|#|mailto:)/.test(ref);
@@ -43,3 +62,4 @@ if (problems.length) {
 	process.exit(1);
 }
 console.log(`Site staged in ${out}: ${include.join(', ')} (${(size(out) / 1024 / 1024).toFixed(1)} MB); every local reference resolves`);
+console.log(intake ? `Anonymous Gameplay Research: on, submitting to ${intake}` : 'Anonymous Gameplay Research: off (no PLAYTEST_API_URL); the site sends nothing');

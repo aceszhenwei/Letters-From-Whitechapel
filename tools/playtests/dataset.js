@@ -15,9 +15,12 @@
 // completed or no person played), duplicate (the same game twice), conflict (different records with one game id).
 // Incompatible records (another schema version or rule set) are historical evidence: they are kept, reported and left
 // out of current statistics; a newly submitted one (--changed) is a problem. Records are data: nothing in them is run.
+// Games imported from online submissions (tools/playtests/intake.js) are listed in intake.json with the SHA-256 of
+// the record received; each such file must still match it, and the statistics count games by source.
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
+const crypto = require('crypto');
 const { validate } = require('../game-log/validate');
 const { loadCore } = require('../game-log/core');
 
@@ -101,6 +104,14 @@ function emptyState() {
 	return { format: stateFormat, version: 1, methodologyVersion: 1, batchThreshold: 5, methodology: {}, reports: [], analysed: {}, aiChanges: [], snapshot: null };
 }
 
+function readIntake(dir) {
+	// intake.json (tools/playtests/intake.js): { submissions: { <game id>: { verdict, sha256, ... } } }, or nothing
+	const file = path.join(dir, 'intake.json');
+	if (!fs.existsSync(file)) return {};
+	const ledger = JSON.parse(fs.readFileSync(file, 'utf8'));
+	return ledger && typeof ledger.submissions === 'object' ? ledger.submissions : {};
+}
+
 function readState(dir) {
 	const file = path.join(dir, 'analysis-state.json');
 	if (!fs.existsSync(file)) return emptyState();
@@ -177,6 +188,18 @@ function scan(dir, options = {}) {
 	const problems = files.filter((f) => f.verdict === 'invalid' || f.verdict === 'ineligible' || f.misnamed || f.duplicate || f.conflict ||
 		(f.verdict === 'incompatible' && f.changed));
 	const stateProblems = Object.keys(state.analysed).filter((id) => !byId[id]).map((id) => `analysis-state.json marks ${id} as analysed, but records/ has no such game`);
+	// Provenance: games imported from online submissions, which must still be exactly what was received
+	const intake = readIntake(dir);
+	for (const [id, entry] of Object.entries(intake)) {
+		if (entry.verdict !== 'imported') continue;
+		const f = files.find((x) => x.name === id + '.json');
+		if (!f) {
+			stateProblems.push(`intake.json lists ${id} as imported, but records/ has no such game`);
+		} else if (entry.sha256 && crypto.createHash('sha256').update(fs.readFileSync(path.join(recordsDir, f.name))).digest('hex') !== entry.sha256) {
+			stateProblems.push(`records/${f.name} is not the record that was submitted (its SHA-256 differs from intake.json): records are never edited`);
+		}
+	}
+	for (const f of valid) f.source = intake[f.id] && intake[f.id].verdict === 'imported' ? 'online submission' : 'manual upload';
 	const outstanding = valid.filter((f) => f.research === 'collected');
 	const batch = {
 		threshold: state.batchThreshold || 5,
@@ -232,6 +255,7 @@ function statistics(files, valid) {
 		byAppVersion: count(valid.map((f) => f.cohort.appVersion)),
 		byRuleset: count(valid.map((f) => f.cohort.ruleset)),
 		research: count(valid.map((f) => f.research)),
+		bySource: count(valid.map((f) => f.source || 'manual upload')),
 		problems: {
 			invalid: files.filter((f) => f.verdict === 'invalid').length,
 			ineligible: files.filter((f) => f.verdict === 'ineligible').length,
@@ -274,6 +298,7 @@ function lines(result) {
 	if (stats.actions) out.push(`  Actions per game: min ${stats.actions.min}, median ${stats.actions.median}, max ${stats.actions.max}; Jack's moves: min ${stats.jackMoves.min}, median ${stats.jackMoves.median}, max ${stats.jackMoves.max}`);
 	out.push(`  Difficulty: ${fmt(stats.byLevel)}; opponent: ${fmt(stats.byOpponent)}; app version: ${fmt(stats.byAppVersion)}; rule set: ${fmt(stats.byRuleset)}`);
 	out.push(`  Research status: ${fmt(stats.research)}`);
+	out.push(`  Source: ${fmt(stats.bySource)}`);
 	return out;
 }
 

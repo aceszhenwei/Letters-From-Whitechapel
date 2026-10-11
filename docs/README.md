@@ -22,6 +22,7 @@ npm install && npm test  # run the automated tests (Node.js 22 or later)
 | Run the tests or reproduce an experiment | [Testing](testing.md) |
 | Export a game I played, or check and analyse exported games | [Game records](game-records.md) |
 | Collect human playtests, upload them, or commission an analysis | [Human playtests](playtests.md) |
+| Set up, run or switch off the automatic online collection of playtests | [Automatic playtest collection](automatic-playtest-collection.md) |
 | Make a change | [Contributing](contributing.md) |
 | Know why an AI is the way it is | [Research reports](#research-reports), below |
 
@@ -40,6 +41,7 @@ The current description of the game and the code. Each topic has one page; the o
 | [Playing Jack](playing-jack.md) | Playing Jack against the computer's detectives: the choices, the interface, how it is built, hidden information, records, tests and limitations |
 | [Game records](game-records.md) | Exporting a game (public or full record), the record format and its versions, hidden information, checking and replaying records, summaries, test fixtures, privacy |
 | [Human playtests](playtests.md) | Games people play: kept in the browser, exported in batches, uploaded to `research/human-playtests/`, checked by GitHub Actions, research batches and analyses, cohorts, statistics, privacy |
+| [Automatic playtest collection](automatic-playtest-collection.md) | Anonymous Gameplay Research: the opt-out setting, the Cloudflare Worker and its private D1 store, the daily import pull request, privacy, zero-cost limits, owner setup, troubleshooting and rollback |
 | [Deployment](deployment.md) | How the game is published on GitHub Pages, redeploying, running it locally, and browser limitations |
 | [Testing](testing.md) | Running the tests, the test tiers, seeds and reproducibility, the test helpers, and writing new tests |
 | [Contributing](contributing.md) | Setting up, code conventions, and the pull request checklist |

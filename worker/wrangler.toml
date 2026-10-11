@@ -1,0 +1,49 @@
+# The playtest submission Worker (docs/automatic-playtest-collection.md). Everything here is public configuration:
+# secrets (IMPORT_TOKEN) are never written in this file. Deploy with worker/scripts/deploy.mjs (or the "Deploy
+# playtest Worker" workflow), which finds or creates the D1 database, fills in its id in a generated copy of this file
+# (worker/.wrangler.deploy.toml, never committed), applies the migrations and deploys. Nothing here costs money on the
+# Workers Free plan: when a free daily limit is reached, requests fail until midnight UTC; nothing is billed.
+name = "whitechapel-playtests"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+preview_urls = false
+
+# No Workers Logs: no request (and so no IP address or header) is logged by the platform for us. Monitoring uses the
+# daily counts in D1 instead (GET /api/v1/admin/stats)
+[observability]
+enabled = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "whitechapel-playtests"
+database_id = "filled-in-by-deploy-script"
+migrations_dir = "migrations"
+
+# At most 10 submissions per minute from one IP address, per Cloudflare location. The address is only the limiter's
+# key, counted in memory by Cloudflare; the Worker stores nothing about it
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1888"
+simple = { limit = 10, period = 60 }
+
+# Once a day: delete submissions older than RETENTION_DAYS, and statistics older than 90 days (src/index.js retain)
+[triggers]
+crons = ["23 4 * * *"]
+
+[vars]
+# Pages that may submit from a browser (comma-separated origins, no trailing slash)
+ALLOWED_ORIGINS = "https://aceszhenwei.github.io"
+# Rule sets accepted (js/core/record.js ruleset.id). A test keeps the first one equal to the game's current rule set
+ACCEPTED_RULESETS = "whitechapel-fff8e378d715"
+# Caps that keep the free allowances out of reach: one record's size (real ones are 100–200 KB; a bigger one would
+# approach the Free plan's 10 ms of CPU per request), records accepted per UTC day, records kept
+MAX_BODY_BYTES = "524288"
+DAILY_LIMIT = "50"
+MAX_STORED = "2000"
+# Total size kept: below D1 Free's 500 MB per database
+MAX_STORED_BYTES = "400000000"
+# Emergency stop: "true" refuses every submission with 503, and browsers keep their records and retry much later
+INTAKE_PAUSED = "false"
+# How long a submission stays in the private database after it was received
+RETENTION_DAYS = "365"

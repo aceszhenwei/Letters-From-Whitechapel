@@ -12,10 +12,10 @@ const firstFile = path.join(root, 'research', 'human-playtests', 'records', 'g91
 const firstId = 'g91d4014f17ae09e6';
 
 function loadStore() {
-	// The core, the record, the ZIP and the playtest store, as the page loads them, without a page
-	const context = vm.createContext({ console, TextEncoder, TextDecoder, Promise, setTimeout });
+	// The core, the record, the ZIP, the playtest store and its submission queue, as the page loads them, without a page
+	const context = vm.createContext({ console, TextEncoder, TextDecoder, Promise, setTimeout, clearTimeout, AbortController });
 	for (const f of ['js/vendor/underscore-min.js', 'js/data/map.js', 'js/core/random.js', 'js/core/board.js', 'js/core/rules.js',
-		'js/core/engine.js', 'js/core/record.js', 'js/core/deduction.js', 'js/ui/zip.js', 'js/ui/playtest-store.js']) {
+		'js/core/engine.js', 'js/core/record.js', 'js/core/deduction.js', 'js/ui/zip.js', 'js/ui/playtest-store.js', 'js/ui/submission.js']) {
 		vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), context, { filename: f });
 	}
 	return context.WC;

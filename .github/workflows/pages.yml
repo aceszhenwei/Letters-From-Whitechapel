@@ -1,6 +1,7 @@
 # Publishes the game to GitHub Pages (docs/deployment.md): https://aceszhenwei.github.io/Letters-From-Whitechapel/
 # On every push to master, or by hand (Actions > Deploy to GitHub Pages > Run workflow). The fast tests run first, so
-# a commit that fails them is never published; then tools/site/build.js stages only what the game loads.
+# a commit that fails them is never published; then tools/site/build.js stages only what the game loads, with the
+# playtest intake's address from the repository variable PLAYTEST_API_URL, if it is set.
 name: Deploy to GitHub Pages
 
 on:
@@ -30,7 +31,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      # The playtest intake's public address (docs/automatic-playtest-collection.md): unset, the site sends nothing
       - run: node tools/site/build.js _site
+        env:
+          PLAYTEST_API_URL: ${{ vars.PLAYTEST_API_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

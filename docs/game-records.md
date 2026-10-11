@@ -233,7 +233,8 @@ From there a test can ask any police AI what it would do (`ai.turn(game, WC.rule
 
 ## 9. Privacy
 
-- **The game makes files only when the player asks.** It never uploads, sends or stores them remotely: no server, account, telemetry or analytics was added.
+- **Exporting makes files only when the player asks,** and sends nothing. No account, telemetry or analytics was added.
+- **Online submission is separate and optional:** when the site has a playtest intake, the full record of a game a person finished is sent to it, unless the player turned off Anonymous Gameplay Research. Nothing else is sent, and never the optional note ([Automatic playtest collection §3](automatic-playtest-collection.md#3-privacy)).
 - **No personal data:** no names, emails, accounts, IP addresses, browser or device details, and no persistent identifier. The game identifier is random, made per game, and stored nowhere.
 - **The date has no time of day.** The optional label and comments are length-limited, and only included when written.
 - **The full record says plainly that it reveals Jack's secrets,** and needs the game to be over, or ended on purpose.
