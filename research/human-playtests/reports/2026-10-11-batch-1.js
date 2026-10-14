@@ -1,13 +1,15 @@
 // Batch 1 triage, 2026-10-11 (docs/playtests.md#batch-triage-every-5-games): the night summaries of the five games it
 // covers, read from the records' own `nights` and `actions`, and the earlier investigation's belief measurements
 // (2026-10-11-investigation-arrests.js, reused unchanged) on these games, to recheck its pattern to watch.
-//   node research/human-playtests/reports/2026-10-11-batch-1.js [--json]
+//   node research/human-playtests/reports/2026-10-11-batch-1.js [--json] [--games id,id,...]
 // Read-only: it changes no record and no AI. Circle numbers are the printed ones, as players see them.
 const path = require('path');
 const { loadCore, loadWithAI } = require('../../../tools/game-log/core');
 const { study, summarise } = require('./2026-10-11-investigation-arrests');
 
-const games = ['g98c41370f7344474', 'gcdf6409ed736eaf5', 'g2358629abcf5b51d', 'g4e86b6b6af7cc2e1', 'g6b7af2a30b071ae6'];
+// Batch 1's games, unless game IDs are given (later batch triages reuse this script: --games id,id,...)
+const listed = process.argv.indexOf('--games');
+const games = listed > 0 ? process.argv[listed + 1].split(',') : ['g98c41370f7344474', 'gcdf6409ed736eaf5', 'g2358629abcf5b51d', 'g4e86b6b6af7cc2e1', 'g6b7af2a30b071ae6'];
 const records = path.join(__dirname, '..', 'records');
 const core = loadCore();
 const WC = core.WC;

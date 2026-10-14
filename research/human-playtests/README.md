@@ -36,4 +36,8 @@ Two investigations followed it, both of games already analysed (they record no g
   - **Police proximity:** the same for every Jack.
   - **Inconclusive:** these differences may explain only part of v3's weaker tracking. Within sets of the same size it still ranked people lower, mostly after ordinary walks.
   - **Update, all seven games:** every game shows the same patterns. Human nights also began with a policeman in reach more often (9 of 26 against 4–10 of about 90), always after a wait, and were answered by a coach out of reach.
+- [2026-10-14-batch-2](reports/2026-10-14-batch-2.md), the second batch triage (three 1.0.0 and two 1.1.0 games):
+  - **Outcomes:** Jack won 3. Two police wins on night 2, an arrest by deduction and a Jack walled off until out of moves, both firsts.
+  - **Findings:** no defect candidates. The diffuse-belief pattern recurs, but more weakly.
+  - **Recommendation:** no new investigation.
 - [2026-10-11-investigation-night4](reports/2026-10-11-investigation-night4.md): the night-4 escape in `g6b7af2a30b071ae6` came from v3 itself moving the waited-for Wretched next to Jack's hideout, ignoring its own threat model. This is a confirmed decision-level flaw, but it costs no measurable games, even against a Jack who lures on purpose. No AI was changed.
