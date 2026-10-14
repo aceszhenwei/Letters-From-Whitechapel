@@ -69,11 +69,17 @@
 	},
 	"aiChanges": [],
 	"snapshot": {
-		"updated": "2026-10-11",
-		"validGames": 7,
-		"outstanding": [],
-		"awaitingReview": 0,
-		"status": "Collecting",
+		"updated": "2026-10-14",
+		"validGames": 12,
+		"outstanding": [
+			"g501f2c8dac46cc21",
+			"ga54eabee54e630eb",
+			"gd296d31240708371",
+			"gecb1b3640a82b230",
+			"gf2a5d26e5ddb01dd"
+		],
+		"awaitingReview": 5,
+		"status": "Ready for Review",
 		"reanalysis": []
 	}
 }
