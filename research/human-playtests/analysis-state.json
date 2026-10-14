@@ -35,6 +35,23 @@
 			"cohorts": [
 				"1.0.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)"
 			]
+		},
+		{
+			"id": "2026-10-14-batch-2",
+			"date": "2026-10-14",
+			"file": "reports/2026-10-14-batch-2.md",
+			"methodologyVersion": 1,
+			"games": [
+				"g501f2c8dac46cc21",
+				"ga54eabee54e630eb",
+				"gd296d31240708371",
+				"gecb1b3640a82b230",
+				"gf2a5d26e5ddb01dd"
+			],
+			"cohorts": [
+				"1.1.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)",
+				"1.0.0 · whitechapel-fff8e378d715 · human jack vs Detective AI v3 (normal)"
+			]
 		}
 	],
 	"analysed": {
@@ -65,21 +82,35 @@
 		"gcdf6409ed736eaf5": {
 			"report": "2026-10-11-batch-1",
 			"methodologyVersion": 1
+		},
+		"g501f2c8dac46cc21": {
+			"report": "2026-10-14-batch-2",
+			"methodologyVersion": 1
+		},
+		"ga54eabee54e630eb": {
+			"report": "2026-10-14-batch-2",
+			"methodologyVersion": 1
+		},
+		"gd296d31240708371": {
+			"report": "2026-10-14-batch-2",
+			"methodologyVersion": 1
+		},
+		"gecb1b3640a82b230": {
+			"report": "2026-10-14-batch-2",
+			"methodologyVersion": 1
+		},
+		"gf2a5d26e5ddb01dd": {
+			"report": "2026-10-14-batch-2",
+			"methodologyVersion": 1
 		}
 	},
 	"aiChanges": [],
 	"snapshot": {
 		"updated": "2026-10-14",
 		"validGames": 12,
-		"outstanding": [
-			"g501f2c8dac46cc21",
-			"ga54eabee54e630eb",
-			"gd296d31240708371",
-			"gecb1b3640a82b230",
-			"gf2a5d26e5ddb01dd"
-		],
-		"awaitingReview": 5,
-		"status": "Ready for Review",
+		"outstanding": [],
+		"awaitingReview": 0,
+		"status": "Collecting",
 		"reanalysis": []
 	}
 }

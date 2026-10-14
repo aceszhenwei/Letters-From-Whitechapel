@@ -132,7 +132,7 @@ Reference: [docs/playtests.md](docs/playtests.md).
 - **Finding labels:** pattern to watch, defect candidate, confirmed defect (needs a failing test), confirmed strategic weakness (needs evidence across several games plus a targeted test).
 - **Where findings get confirmed:** triage only flags; confirmation comes from an investigation, or from a cumulative review backed by a test.
 
-**Collection so far:** seven valid games, all a person as Jack against Detective AI v3 (Normal); Jack won 6. All are analysed:
+**Collection so far:** twelve valid games (ten 1.0.0, two 1.1.0), all a person as Jack against Detective AI v3 (Normal); Jack won 9. All are analysed:
 - **`reports/2026-10-11-investigation-arrests.md`** (the first two games, a one-off workflow test):
   - **Finding:** v3 never arrested because no arrest was likely. That was not a defect.
   - **Pattern to watch:** v3's belief stayed diffuse.
@@ -151,6 +151,12 @@ Reference: [docs/playtests.md](docs/playtests.md).
     - **v3's tracking:** it still ranks people lower within sets of the same size, mostly after walks. That is inconclusive, and a pattern to watch.
     - **Updated to all seven games:** every game agrees. Human nights began with a policeman in reach on 9 of 26 nights, always after a wait. In 8 of them Jack coached out of reach first, which accounts for most of the coaches that lost ground.
   - **`reports/2026-10-11-investigation-night4.md`:** v3 moved a waited-for Wretched from 158 to 142, next to Jack's hideout, ignoring its own threat model. This is a confirmed decision-level flaw. `containWretched` closes these escapes but changes no win rate, even against a lure Jack (seeds 614001–614200). It is not a strategic weakness, and no AI was changed.
+
+- **`reports/2026-10-14-batch-2.md`** (the second batch triage, five more online games, cohorts 1.0.0 ×3 and 1.1.0 ×2):
+  - **Outcomes:** Jack won 3. Two police wins on night 2 are firsts: an arrest at belief 1.0, and a Jack walled off until out of moves.
+  - **No defect candidates.** The diffuse belief recurs, but more weakly (top 10 at 23% against 15%).
+  - **Changed:** coaches came later in 2 games; threatened starts were rarer; and there were new hideouts.
+  - **No new investigation.** The calibration check stays proposed, and a cumulative review is due at about 20 games.
 
 ### Automatic public playtest submission (implemented; awaiting owner setup)
 

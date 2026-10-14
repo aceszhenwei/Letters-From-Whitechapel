@@ -4,7 +4,18 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 ## Unreleased
 
-Nothing yet.
+#### Human playtest research
+
+- **Batch 2 triage** ([report](research/human-playtests/reports/2026-10-14-batch-2.md)): five online submissions.
+  - **Cohorts:** three 1.0.0 games and two 1.1.0 games, reported separately. All are a person as Jack against Detective AI v3 (Normal).
+  - **Outcomes:** Jack won 3. The police won twice on night 2, both firsts:
+    - an arrest at belief 1.0 after four clues;
+    - a Jack walled off from home until he ran out of moves.
+  - **No defect candidates;** both arrests follow v3's threshold.
+  - **Recurring, but weaker:** v3's diffuse belief (Jack in its top 10 at 23% of decisions, against 15% in the first seven games). Waiting, longer routes and every coach spent recur unchanged.
+  - **Changed:** coaches came later in 2 games; threatened starts were rarer (2 of 16 nights); and there were new hideouts.
+  - **No new investigation.** The proposed calibration check stays the outstanding proposal, and a cumulative review is due at about 20 games. The five games are recorded as analysed. No AI was changed.
+  - **Tools:** batch 1's script takes `--games`, so later triages reuse it; its default output is unchanged.
 
 ## v1.1.0 (2026-10-11)
 
