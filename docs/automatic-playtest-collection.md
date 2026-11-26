@@ -8,7 +8,7 @@ A person finishes a game (Jack or the detectives)
   → setting on? queued, sent in the background, retried if needed  js/ui/submission.js
   → Worker: cheap structural checks, rate limits, caps             worker/src/
   → private D1 database: one row per game id, never overwritten    worker/migrations/
-  → daily GitHub Action: download new ones, full replay            tools/playtests/intake.js
+  → GitHub Action, run by hand: download new ones, full replay            tools/playtests/intake.js
   → one pull request "Import human playtests — <date>"             tools/playtests/import-pr.js
   → the owner reviews and merges
   → research/human-playtests/records/: "collected", counts toward the five-game batch (docs/playtests.md)
@@ -217,7 +217,7 @@ The import pull request warns when different game IDs share identical moves (a c
 ## 7. The import workflow
 
 `.github/workflows/playtest-import.yml` (**Import human playtests**):
-- **When:** daily at 05:41 UTC, or by hand from **Actions › Import human playtests › Run workflow**, with an optional **dry run** that downloads and replays but opens no pull request.
+- **When:** by hand only, from **Actions › Import human playtests › Run workflow**, with an optional **dry run** that downloads and replays but opens no pull request. It used to run daily; the schedule was removed to save the owner's Actions minutes. Submissions wait safely in the intake until the next run, but the Worker deletes them after 365 days, so run it at least that often.
 - **Skipped** while the repository variable `PLAYTEST_API_URL` is unset.
 - **Permissions:**
   - `contents: write` for its own branch, `pull-requests: write` and `actions: write`;
@@ -285,7 +285,7 @@ Checked against Cloudflare's documentation (its source on GitHub, `cloudflare/cl
 | **Account** | The existing repository | Free to create | Included in Workers Free |
 | **Payment card** | No | Not needed for the Free plan ("By default, users have access to the Workers Free plan") | No |
 | **Billing to enable** | No | No: never subscribe to **Workers Paid** | No |
-| **Free allowance** | Pages: unchanged. Actions: free for public repositories; this adds one short daily run | 100,000 requests a day; 10 ms CPU per request; cron triggers | 5 million rows read and 100,000 rows written a day; 5 GB in total, 500 MB per database; 10 databases |
+| **Free allowance** | Pages: unchanged. Actions: one short run each time the import is started by hand | 100,000 requests a day; 10 ms CPU per request; cron triggers | 5 million rows read and 100,000 rows written a day; 5 GB in total, 500 MB per database; 10 databases |
 | **What could charge** | Nothing on a public repository | Only a Workers Paid subscription | Only Workers Paid (then usage is billed) |
 | **At the limit** | Runs queue or fail | Error 1027 until midnight UTC; browsers keep records and retry | Queries fail until midnight UTC (storage: until data is deleted); the Worker answers 503 |
 | **Spending cap** | Not needed | The Free plan is the cap: it has no billing | The same |
@@ -295,7 +295,7 @@ Checked against Cloudflare's documentation (its source on GitHub, `cloudflare/cl
 - **Requests:** 2 (the preflight and the POST).
 - **D1:** about 6 row writes and a few row reads.
 
-The daily import costs about one row read per stored game. At 50 games a day that is about 100 requests and 300 rows written, under 0.3% of the free allowances.
+Each import run costs about one row read per stored game. At 50 games a day that is about 100 requests and 300 rows written, under 0.3% of the free allowances.
 
 **R2 is not used.** It needs a payment method on file and bills beyond its allowance. If R2 is ever wanted (for example for records over 2 MB), that is a change of risk the owner must approve.
 
@@ -310,7 +310,7 @@ Every value is named once, here. **Public** values may be seen by anyone; **secr
 
 | Name | Where it is set | Public or secret | What it is |
 |---|---|---|---|
-| `PLAYTEST_API_URL` | GitHub › Settings › Secrets and variables › Actions › **Variables** | Public | The Worker's address, e.g. `https://whitechapel-playtests.example.workers.dev`. Turns on submission in the Pages build and the daily import |
+| `PLAYTEST_API_URL` | GitHub › Settings › Secrets and variables › Actions › **Variables** | Public | The Worker's address, e.g. `https://whitechapel-playtests.example.workers.dev`. Turns on submission in the Pages build and the import |
 | `PLAYTEST_IMPORT_TOKEN` | GitHub › … › **Secrets** | Secret | A random string of at least 32 characters. The deploy workflow copies it to the Worker's secret `IMPORT_TOKEN`; the import workflow uses it to read |
 | `CLOUDFLARE_API_TOKEN` | GitHub › … › **Secrets** | Secret | A Cloudflare API token allowed to edit Workers scripts and D1, used only by the deploy workflow |
 | `CLOUDFLARE_ACCOUNT_ID` | GitHub › … › **Secrets** | Public, kept with the token | The Cloudflare account's ID |

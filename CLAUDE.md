@@ -180,7 +180,7 @@ Reference: [docs/automatic-playtest-collection.md](docs/automatic-playtest-colle
   - no IP or header is stored, and Workers Logs are off.
   - `ACCEPTED_RULESETS` in `worker/wrangler.toml` must list the current `ruleset.id`: a test fails otherwise.
 - **Import:**
-  - `playtest-import.yml` runs daily or by hand;
+  - `playtest-import.yml` runs by hand only (Actions › Import human playtests › Run workflow); its daily schedule was removed to save Actions minutes. Submissions wait in the intake (365-day retention);
   - `tools/playtests/intake.js` downloads new submissions and runs `dataset.checkRecord` (full replay), writing `records/<id>.json` byte for byte and the ledger `research/human-playtests/intake.json`;
   - `import-pr.js` updates ONE pull request from the bot branch `playtest-import`. Its path guard allows only records, the ledger, and `analysis-state.json` when only its `snapshot` changed (the import refreshes it).
   - Importing never marks a game analysed. `dataset.js` checks that imported files still match their SHA-256.
@@ -246,7 +246,7 @@ Reference: [docs/testing.md](docs/testing.md).
     - anything else gets the whole suite in 3 groups (`tools/ci/tests.js`: golden / browser / core + smoke), about 3 minutes;
     - on a push to `master` it then calls `pages.yml`.
   - `pages.yml` runs only when `test.yml` calls it, or by hand, when it runs `npm test` first. It passes `vars.PLAYTEST_API_URL` to the build.
-  - The other workflows: `playtests.yml`, `release.yml`, `playtest-import.yml` (daily import PR), `playtest-worker.yml` (Worker deploy, by hand).
+  - The other workflows: `playtests.yml`, `release.yml`, `playtest-import.yml` (import PR, by hand), `playtest-worker.yml` (Worker deploy, by hand).
 
 ## Known limitations and precautions
 

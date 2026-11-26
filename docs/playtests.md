@@ -3,7 +3,7 @@
 How games played by people are collected, checked and kept as research evidence, so the AIs can later be studied against real play. Records reach the collection in two ways: **automatically**, when the site has a playtest intake and the player hasn't opted out ([Automatic playtest collection](automatic-playtest-collection.md)), or **by hand**, exported from the browser and uploaded (sections 2–3). Either way they are checked the same way and enter the same collection. No account is involved.
 
 ```
-Play → saved automatically in the browser ─┬→ submitted online (unless opted out) → private intake → daily import, full replay → pull request
+Play → saved automatically in the browser ─┬→ submitted online (unless opted out) → private intake → import (run by hand), full replay → pull request
                                            └→ export a batch (ZIP) → upload the records to GitHub by hand → pull request
      → GitHub Actions checks them → merged → five new games make a research batch → a short triage report, commissioned by hand
      → targeted investigations only where triage finds a reason
@@ -67,7 +67,7 @@ records/…
 
 ## 3. Uploading records to GitHub
 
-The research collection is `research/human-playtests/records/` in the repository: one file per game, named `<game id>.json` ([README](../research/human-playtests/README.md)). Games submitted online arrive in a daily **Import human playtests** pull request instead ([Automatic playtest collection §7](automatic-playtest-collection.md#7-the-import-workflow)); uploading by hand remains for everything else.
+The research collection is `research/human-playtests/records/` in the repository: one file per game, named `<game id>.json` ([README](../research/human-playtests/README.md)). Games submitted online arrive in an **Import human playtests** pull request instead, when the owner runs the import ([Automatic playtest collection §7](automatic-playtest-collection.md#7-the-import-workflow)); uploading by hand remains for everything else.
 
 **On the GitHub website:**
 1. Extract the exported ZIP on your computer. You only need the files inside its `records/` folder; `manifest.json` stays out.
@@ -275,5 +275,5 @@ These describe a small, uncontrolled collection of casual games. They are not es
 | ZIP files (no dependency) | `js/ui/zip.js` (`WC.zip`), also used by the tools in Node |
 | The collection's checks, state and statistics | `tools/playtests/dataset.js` (`npm run playtests`, `npm run playtests:add`) |
 | The workflow | `.github/workflows/playtests.yml` |
-| Online submission, the intake Worker and the daily import | [Automatic playtest collection §17](automatic-playtest-collection.md#17-for-developers) |
+| Online submission, the intake Worker and the import | [Automatic playtest collection §17](automatic-playtest-collection.md#17-for-developers) |
 | Tests | `test/unit/playtests-store.test.js`, `test/unit/playtests-dataset.test.js`, `test/regression/playtests-ui.test.js` ([Testing](testing.md)) |
