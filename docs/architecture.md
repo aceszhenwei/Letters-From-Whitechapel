@@ -211,7 +211,7 @@ A policeman moving, from click to screen:
 | `js/ui/jack-player.js` | Playing Jack: his side of the board and his decisions |
 | `js/ui/playtest-store.js`, `js/ui/playtests.js`, `js/ui/zip.js` | Human playtests: games a person finishes kept in the browser (IndexedDB), the Developer Mode manager, and ZIP batches ([Human playtests](playtests.md)) |
 | `js/config.js`, `js/ui/submission.js`, `js/ui/research.js` | Anonymous Gameplay Research: the intake address (filled in by the Pages build), the submission queue, and its setting and notice ([Automatic playtest collection](automatic-playtest-collection.md)) |
-| `worker/`, `tools/playtests/intake.js`, `tools/playtests/import-pr.js` | The playtest intake Worker (a separate Cloudflare deployment) and the daily import into a pull request |
+| `worker/`, `tools/playtests/intake.js`, `tools/playtests/import-pr.js` | The playtest intake Worker (a separate Cloudflare deployment) and the import into a pull request (run by hand) |
 | `research/human-playtests/`, `tools/playtests/` | The collection of human games, and the tool that checks it, tracks research batches and gives its statistics |
 | `tools/` | Simulations and analysis: `simulate.js` and `sim/` (see [Jack's AI](jack-ai.md#8-evaluation-method)); `game-log/`, which checks, replays and summarises exported game records (see [Game records](game-records.md)) |
 | `experiments/` | Recorded simulation results |

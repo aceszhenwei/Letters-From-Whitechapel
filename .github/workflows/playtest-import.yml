@@ -1,5 +1,5 @@
-# Imports human playtests submitted online (docs/automatic-playtest-collection.md#the-import-workflow): once a day, or
-# by hand (Actions > Import human playtests > Run workflow). It downloads new submissions from the intake Worker with a
+# Imports human playtests submitted online (docs/automatic-playtest-collection.md#the-import-workflow), by hand only
+# (Actions > Import human playtests > Run workflow): the daily schedule was removed to save Actions minutes. It downloads new submissions from the intake Worker with a
 # read-only import token, replays each one with the collection's own checks (tools/playtests/intake.js ->
 # tools/game-log/validate.js), and opens or updates ONE pull request, "Import human playtests — <date>", adding the
 # eligible records to research/human-playtests/records/. It never commits to master and never merges: a person reviews.
@@ -7,8 +7,6 @@
 name: Import human playtests
 
 on:
-  schedule:
-    - cron: '41 5 * * *' # Daily, 05:41 UTC
   workflow_dispatch:
     inputs:
       dry_run:

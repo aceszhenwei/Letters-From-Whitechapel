@@ -4,6 +4,11 @@ All notable changes to *Letters From Whitechapel*, newest first. Versions follow
 
 ## Unreleased
 
+#### Actions minutes
+
+- **The playtest import runs by hand only.** Its daily schedule is removed; run it from **Actions › Import human playtests › Run workflow**. Submissions wait in the intake until then, but the Worker deletes them after 365 days, so run it at least that often. No other workflow ran on a schedule.
+- **Docs:** `docs/automatic-playtest-collection.md`, `docs/playtests.md`, the README and CLAUDE.md.
+
 #### Human playtest research
 
 - **Batch 2 triage** ([report](research/human-playtests/reports/2026-10-14-batch-2.md)): five online submissions.
